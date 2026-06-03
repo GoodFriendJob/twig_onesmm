@@ -1677,6 +1677,9 @@
        min-width: 180px;
        background: var(--ctrl-bg);
    }
+   .dropdown-menu li {
+    list-style: none;
+   }
    .open > .dropdown-menu,
    .dropdown-menu.show {
        display: block;
@@ -1804,7 +1807,7 @@
   .dropdown-currencies { position: relative; display: inline-flex; align-items: center; }
   .dropdown-currencies .dropdown-menu { display: none !important; }
   .dropdown-currencies.open .dropdown-menu { display: block !important; }
-  .dropdown-currencies .dropdown-menu > li { display: list-item !important; }
+  .dropdown-currencies .dropdown-menu > li { display: list-item !important; list-style:none; }
 
    /* Logo is theme-agnostic (transparent bg, works on both light/dark) */
 
@@ -15607,25 +15610,30 @@ img.sidebar-lang-flag {
     flex-shrink: 0;
     letter-spacing: .3px;
 }
+img.topbar-avatar { object-fit: cover; background: var(--bg-3); }
 .topbar-user-meta {
     display: flex;
     flex-direction: column;
-    line-height: 1.15;
+    justify-content: center;
+    gap: 2px;
+    line-height: 1.1;
     text-align: start;
     min-width: 0;
 }
+.topbar-user-namerow { display: flex; align-items: center; gap: 5px; }
 .topbar-user-name {
     font-family: 'Poppins','Inter',sans-serif;
     font-weight: 600;
     font-size: 14px;
-    line-height: 18px;
+    line-height: 16px;
     color: var(--shell-title);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 180px;
 }
-.topbar-user-level { font-size: 9px; line-height: 15px; color: var(--line-3); }
+.topbar-user-level { font-size: 10px; line-height: 1; color: var(--shell-icon); }
+.topbar-user-level .accent-text { font-weight: 600; }
 .topbar-user-caret { width: 14px; height: 14px; color: var(--shell-icon); flex-shrink: 0; }
 .topbar-user .dropdown-menu { left: 0; right: auto; min-width: 190px; }
 .topbar-user.open .dropdown-menu { display: block; }

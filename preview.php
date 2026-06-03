@@ -220,8 +220,10 @@ $context = [
     ],
     'user' => [
         'auth'              => $isAuth,
-        'balance_formatted' => '$100.00',
-        'username'          => 'demo_user',
+        'balance_formatted' => '$125.50',
+        'username'          => 'Marco Roorkee',
+        'avatar'            => 'https://randomuser.me/api/portraits/men/32.jpg',
+        'level'             => 2,
         'email'             => 'demo@onesmm.com',
         'lang'              => 'en',
         'timezone'          => 'UTC',

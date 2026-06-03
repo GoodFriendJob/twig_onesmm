@@ -548,12 +548,18 @@
         {# ── User identity (left) — avatar + name + account/logout menu ── #}
         <div class="topbar-user dropdown" id="topbar-user">
           <button type="button" class="topbar-user-btn" aria-haspopup="true" aria-expanded="false">
-            <span class="topbar-avatar" aria-hidden="true">{{ user['username']|default('U')|slice(0, 2)|upper }}</span>
+            {% if user['avatar'] %}
+              <img class="topbar-avatar" src="{{ user['avatar'] }}" alt="{{ user['username']|default('User') }}">
+            {% else %}
+              <span class="topbar-avatar" aria-hidden="true">{{ user['username']|default('U')|slice(0, 2)|upper }}</span>
+            {% endif %}
             <span class="topbar-user-meta">
-              <span class="topbar-user-name">{{ user['username']|default('Account') }}</span>
+              <span class="topbar-user-namerow">
+                <span class="topbar-user-name">{{ user['username']|default('Account') }}</span>
+                <svg class="topbar-user-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </span>
               <span class="topbar-user-level">Level: <b class="accent-text">{{ user['level']|default('1') }}</b></span>
             </span>
-            <svg class="topbar-user-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
           <ul class="dropdown-menu">
             {% for menu in site['account_menu'] %}
