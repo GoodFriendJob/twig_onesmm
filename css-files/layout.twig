@@ -20,6 +20,17 @@
   'فارسی': '🇮🇷', 'Português': '🇧🇷', 'Français': '🇫🇷', '中文': '🇨🇳',
   'हिन्दी': '🇮🇳', 'Indonesian': '🇮🇩', 'Italiano': '🇮🇹', 'Nederlands': '🇳🇱'
 } %}
+{# ISO country codes for flag images (emoji flags don't render on Windows). #}
+{% set lang_cc = {
+  'English': 'gb', 'Русский': 'ru', 'Türkçe': 'tr', '한국어': 'kr',
+  'العربية': 'sa', 'Español': 'es', 'ไทย': 'th', 'Tiếng Việt': 'vn',
+  'Deutsch': 'de', '日本語': 'jp', 'Polski': 'pl', 'Українська': 'ua',
+  'فارسی': 'ir', 'Português': 'br', 'Français': 'fr', '中文': 'cn',
+  'हिन्दी': 'in', 'Indonesian': 'id', 'Italiano': 'it', 'Nederlands': 'nl'
+} %}
+{% macro langFlag(cc, cls) %}
+  {% if cc %}<img class="{{ cls }}" src="https://flagcdn.com/{{ cc }}.svg" alt="" width="20" height="14" loading="lazy">{% else %}<span class="{{ cls }} {{ cls }}--globe">🌐</span>{% endif %}
+{% endmacro %}
 {# ── Sidebar nav macros (used by the authenticated app shell) ── #}
 {# Iconsax line icons (ic_*.svg) inlined with currentColor so they inherit
    the muted sidebar color, flip to white when active, and adapt to dark mode. #}
@@ -486,18 +497,24 @@
 
       <div class="sidebar-foot">
         {% if site['languages']|length > 1 %}
+          {% import _self as nav %}
           <div class="sidebar-lang dropdown" id="sidebar-lang">
             {% for l in site['languages'] %}{% if l['active'] %}
               <button type="button" class="sidebar-lang-btn" id="sidebar-lang-btn"
                       aria-haspopup="true" aria-expanded="false">
-                <span class="sidebar-lang-flag">{{ lang_flags[l['name']]|default('🌐') }}</span>
-                <span class="sidebar-lang-name">{{ l['name'] }}</span>
+                {{ nav.langFlag(lang_cc[l['name']]|default(''), 'sidebar-lang-flag') }}
+                <span class="sidebar-lang-name">{{ l['name'] }}{% if lang_cc[l['name']] %} [{{ lang_cc[l['name']]|upper }}]{% endif %}</span>
                 <svg class="sidebar-lang-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
               </button>
             {% endif %}{% endfor %}
             <ul class="dropdown-menu">
               {% for l in site['languages'] %}
-                <li {% if l['active'] %}class="active"{% endif %}><a href="{{ l['url'] }}">{{ lang_flags[l['name']]|default('🌐') }} {{ l['name'] }}</a></li>
+                <li {% if l['active'] %}class="active"{% endif %}>
+                  <a href="{{ l['url'] }}">
+                    {{ nav.langFlag(lang_cc[l['name']]|default(''), 'sidebar-lang-flag') }}
+                    <span>{{ l['name'] }}</span>
+                  </a>
+                </li>
               {% endfor %}
             </ul>
           </div>

@@ -430,6 +430,7 @@
        padding: 12px 10px;
        display: flex;
        flex-direction: column;
+       padding: 28px 50px 12px;
        gap: 2px;
    }
    
@@ -451,12 +452,6 @@
        color: var(--ink-1);
        text-decoration: none;
    }
-   .sidebar-item.active {
-       background: var(--brand);
-       color: #fff;
-   }
-   .sidebar-item.active:hover { background: var(--brand-2); color: #fff; }
-   
    .sidebar-icon, .sidebar-icon-placeholder {
        width: 18px; height: 18px;
        display: inline-flex;
@@ -498,6 +493,8 @@
        display: flex;
        flex-direction: column;
        overflow-x: clip;
+       /* Offset content below the fixed topbar */
+       padding-top: var(--topbar-h);
    }
 
    .topbar {
@@ -509,7 +506,10 @@
        box-sizing: border-box;
        background: var(--bg-1);
        border-bottom: 1px solid var(--line);
-       position: sticky; top: 0;
+       position: fixed;
+       top: 0;
+       left: var(--sidebar-w);
+       right: 0;
        z-index: 40;
    }
    .topbar-inner {
@@ -15454,7 +15454,6 @@ html[dir="rtl"] .story-ch--flip p { margin-left: 0; margin-right: auto; }
 .sidebar-collapse-btn svg { width: 42px; height: 42px; transition: transform .2s; }
 
 /* ── Grouped nav ── */
-.sidebar-nav { padding: 28px 50px 12px; gap: 2px; }
 .sidebar-group { margin-bottom: 6px; }
 .sidebar-group-head {
     display: flex;
@@ -15495,11 +15494,11 @@ html[dir="rtl"] .story-ch--flip p { margin-left: 0; margin-right: auto; }
     font-weight: 400; font-size: 14px;
     border-radius: 8px;
 }
-.sidebar-group-items .sidebar-item svg.mi { width: 16px; height: 16px; opacity: .9; color: var(--shell-icon); }
+.sidebar-group-items .sidebar-item svg.mi { width: 16px; height: 16px; opacity: .9; }
 .sidebar-group-items .sidebar-item:hover { background: rgba(255,255,255,.55); color: var(--shell-title); }
 [data-theme="dark"] .sidebar-group-items .sidebar-item:hover { background: rgba(255,255,255,.06); }
-.sidebar-group-items .sidebar-item.active { background: var(--brand); color: #fff; box-shadow: 0 6px 14px rgba(74,108,247,.25); }
-.sidebar-group-items .sidebar-item.active svg.mi { color: #fff; opacity: 1; }
+.sidebar-group-items .sidebar-item.active { color: var(--accent);}
+.sidebar-group-items .sidebar-item.active svg.mi { opacity: 1; }
 
 /* ── Sidebar footer: language row + full-bleed Telegram CTA ── */
 .sidebar-foot {
@@ -15530,7 +15529,15 @@ html[dir="rtl"] .story-ch--flip p { margin-left: 0; margin-right: auto; }
 }
 .sidebar-lang-btn:hover { background: rgba(255,255,255,.55); }
 [data-theme="dark"] .sidebar-lang-btn:hover { background: rgba(255,255,255,.06); }
-.sidebar-lang-flag { font-size: 16px; line-height: 1; }
+img.sidebar-lang-flag {
+    width: 20px;
+    height: 14px;
+    border-radius: 3px;
+    object-fit: cover;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 1px rgba(51,68,102,.10), 0 1px 3px rgba(51,68,102,.18);
+}
+.sidebar-lang-flag--globe { font-size: 16px; line-height: 1; flex-shrink: 0; }
 .sidebar-lang-name { flex: 1; text-align: start; }
 .sidebar-lang-caret { width: 14px; height: 14px; color: var(--shell-icon); flex-shrink: 0; }
 /* Footer dropdown opens upward */
@@ -15546,6 +15553,12 @@ html[dir="rtl"] .story-ch--flip p { margin-left: 0; margin-right: auto; }
 }
 .sidebar-lang.open .dropdown-menu { display: block !important; }
 .sidebar-lang .dropdown-menu > li { display: list-item !important; }
+.sidebar-lang .dropdown-menu > li > a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+}
 .sidebar-telegram {
     display: flex;
     align-items: center;
@@ -15672,6 +15685,7 @@ html[dir="rtl"] .story-ch--flip p { margin-left: 0; margin-right: auto; }
     .app.is-rail { grid-template-columns: var(--sidebar-rail-w) 1fr; }
     .app.is-rail .sidebar { width: var(--sidebar-rail-w); }
     .app.is-rail .app-main { max-width: calc(100vw - var(--sidebar-rail-w)); }
+    .app.is-rail .topbar { left: var(--sidebar-rail-w); }
     .app.is-rail .sidebar-label,
     .app.is-rail .sidebar-tagline,
     .app.is-rail .sidebar-group-head,
@@ -15680,7 +15694,7 @@ html[dir="rtl"] .story-ch--flip p { margin-left: 0; margin-right: auto; }
     .app.is-rail .sidebar-lang-flag,
     .app.is-rail .brand-logo-text,
     .app.is-rail .sidebar-telegram span { display: none; }
-    .app.is-rail .sidebar-brand .brand-logo-icon { height: 32px; margin-top: 40px; }
+    .app.is-rail .sidebar-brand .brand-logo-icon { height: 32px; margin-top: 32px; }
     .app.is-rail .sidebar-head { padding: 16px 10px 14px; }
     .app.is-rail .sidebar-nav { padding: 10px 12px; }
     .app.is-rail .sidebar-item { justify-content: center; padding: 10px 0; }
@@ -15696,7 +15710,11 @@ html[dir="rtl"] .story-ch--flip p { margin-left: 0; margin-right: auto; }
         backdrop-filter: none;
         box-shadow: 2px 0 12px rgba(0,0,0,0.08);
     }
-    .topbar { background: var(--bg-1); gap: 10px; }
+    /* Sidebar is an overlay drawer on mobile — topbar spans full width */
+    .topbar { background: var(--bg-1); gap: 10px; left: 0; }
+    .sidebar-nav { padding: 8px 15px 12px; }
+    /* Rail collapse is desktop-only — hide the toggle in the mobile drawer */
+    .sidebar-collapse-btn { display: none; }
 }
 @media (max-width: 639px) {
     .topbar { gap: 6px; padding-left: 12px; padding-right: 12px; }
