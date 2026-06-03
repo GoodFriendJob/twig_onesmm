@@ -169,7 +169,8 @@ $context = [
         'iso_lang_code'  => $_GET['lang'] ?? 'en',
         'rtl'            => in_array($_GET['lang'] ?? 'en', ['fa', 'ar']),
         'favicon'        => '/favicon.ico',
-        'logo'           => 'https://onesmm.com/uploads/logo/onesmm-logo.png',
+        // 'logo'           => 'https://onesmm.com/uploads/logo/onesmm-logo.png',
+        'logo'           => 'https://storage.perfectcdn.com/aedutt/bw77pj1h9ga51qfs.svg',
         'seo_key'        => 'smm panel, buy instagram followers, buy telegram members',
         'seo_desc'       => 'OneSMM — #1 SMM Panel with 5,000+ services. Buy Instagram followers, Telegram members, TikTok views & more.',
         'custom_header'  => '',
@@ -198,6 +199,7 @@ $context = [
         'account_menu'   => [
             ['name' => 'Account',  'link' => '/account'],
             ['name' => '$100.00',  'link' => null],
+            ['name' => 'Sign Out', 'link' => '/logout'],
         ],
         'languages'      => [
             ['name' => 'English',  'url' => '/?lang=en',  'active' => true],

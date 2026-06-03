@@ -20,6 +20,62 @@
   'فارسی': '🇮🇷', 'Português': '🇧🇷', 'Français': '🇫🇷', '中文': '🇨🇳',
   'हिन्दी': '🇮🇳', 'Indonesian': '🇮🇩', 'Italiano': '🇮🇹', 'Nederlands': '🇳🇱'
 } %}
+{# ── Sidebar nav macros (used by the authenticated app shell) ── #}
+{% macro navIcon(link) %}
+  {% set _ml = link|lower %}
+  {% if '/neworder' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M12 12v5"/><path d="M9.5 14.5 12 12l2.5 2.5"/></svg>
+  {% elseif '/massorder' in _ml or 'mass-order' in _ml or 'mass_order' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="12" height="13" rx="2"/><path d="M7 5h12a2 2 0 0 1 2 2v12"/><path d="M9 12h6"/><path d="M9 15h4"/></svg>
+  {% elseif '/services' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7"/><path d="M14 17.5h7"/></svg>
+  {% elseif '/orders' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-5"/></svg>
+  {% elseif '/addfunds' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h6"/><path d="M2 10h20"/><circle cx="19" cy="18" r="3"/><path d="M19 16.5v3"/><path d="M17.5 18h3"/></svg>
+  {% elseif '/api' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m7 8-4 4 4 4"/><path d="m17 8 4 4-4 4"/><path d="m14 4-4 16"/></svg>
+  {% elseif '/tickets' in _ml or '/support' in _ml or '/contact' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/><path d="M8 10h8"/><path d="M8 13h5"/></svg>
+  {% elseif '/subscriptions' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3v4a1 1 0 0 0 1 1h3"/><path d="M21 8v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12l4 4Z"/><path d="M12 11v5"/><path d="M9 14h6"/></svg>
+  {% elseif '/drip' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 7.5 5 10.5 5 14.5a7 7 0 0 0 14 0C19 10.5 16 7.5 12 2Z"/><path d="M12 22v-3"/><path d="M8 19c0-2.2 1.8-4 4-4"/></svg>
+  {% elseif '/refill' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7"/><path d="M21 12a9 9 0 0 1-15 6.7"/><path d="M18 2v4h-4"/><path d="M6 22v-4h4"/></svg>
+  {% elseif '/refund' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h12a4 4 0 0 1 0 8h-3"/><path d="m6 10-3-3 3-3"/><path d="M14 18h2a4 4 0 0 0 3.46-2"/></svg>
+  {% elseif '/giveaway' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7Z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7Z"/></svg>
+  {% elseif '/level' in _ml or '/reward' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+  {% elseif '/blog' in _ml or '/updates' in _ml or '/news' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5Z"/><path d="M8 7h8"/><path d="M8 11h5"/></svg>
+  {% elseif '/faq' in _ml or '/howto' in _ml or '/how-to' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 2.5-3 5"/><circle cx="12" cy="19" r=".5" fill="currentColor"/></svg>
+  {% elseif '/account' in _ml or '/profile' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/><path d="M15 12l2.5 2"/></svg>
+  {% elseif '/child' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  {% elseif '/affiliate' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+  {% elseif '/free' in _ml %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.91 8.84 8.56 21.18a4.3 4.3 0 0 1-6.07-6.07L14.84 2.77a3 3 0 0 1 4.24 4.24l-9.9 9.9a1.5 1.5 0 0 1-2.12-2.12l8.49-8.49"/></svg>
+  {% else %}
+    <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+  {% endif %}
+{% endmacro %}
+
+{% macro navItem(item) %}
+  {% import _self as nav %}
+  <a href="{{ item['link'] }}"
+     class="sidebar-item {% if item['active'] %}active{% endif %}"
+     {% if item['external'] %}target="_blank" rel="noopener"{% endif %}>
+    {{ nav.navIcon(item['link']) }}
+    <span class="sidebar-label">{{ item['name'] }}</span>
+  </a>
+{% endmacro %}
+
 <!DOCTYPE html>
 <html lang="{{ site['iso_lang_code'] }}" {% if site['rtl'] %}dir="rtl"{% endif %} data-theme="light">
 <head>
@@ -370,75 +426,95 @@
 
 {% if user['auth'] %}
   {# ───────────── Authenticated app shell ───────────── #}
-  <div class="app">
+  <div class="app" id="app-shell">
+  <script>try{if(localStorage.getItem('pulse-rail')==='1')document.getElementById('app-shell').classList.add('is-rail');}catch(e){}</script>
 
-    {# ─── Sidebar (replaces horizontal navbar.navbar-left-block) ─── #}
-    <aside class="sidebar">
-      <a href="{{ page_url('index') }}" class="sidebar-brand">
-        {% if site['logo'] %}
-          <img src="{{ site['logo'] }}" alt="{{ site['name'] }}" title="{{ site['name'] }}">
-        {% else %}
+    {# ─── Sidebar: brand head + grouped nav + footer ─── #}
+    {% import _self as nav %}
+    <aside class="sidebar" id="pulse-sidebar">
+
+      <div class="sidebar-head">
+        <a href="{{ page_url('index') }}" class="sidebar-brand">
           <span class="brand-logo-combo">
-            <img src="https://storage.perfectcdn.com/aedutt/bw77pj1h9ga51qfs.svg" alt="" class="brand-logo-icon" aria-hidden="true">
-            <img src="https://storage.perfectcdn.com/aedutt/zi4z1ahe8mr69yfl.svg" alt="OneSMM" class="brand-logo-text">
+            {% if site['logo'] %}
+              <img src="{{ site['logo'] }}" alt="{{ site['name'] }}" title="{{ site['name'] }}" class="brand-logo-icon" aria-hidden="true">
+            {% else %}
+              <img src="https://storage.perfectcdn.com/aedutt/bw77pj1h9ga51qfs.svg" alt="OneSMM" class="brand-logo-icon" aria-hidden="true">
+            {% endif %}
+            <span class="brand-logo-text">ONE<b class="blue-part">SMM</b></span>
           </span>
+          <span class="sidebar-tagline">Social growth Finally reliable</span>
+        </a>
+        <button type="button" class="sidebar-collapse-btn" id="pulse-sidebar-collapse" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+      </div>
+
+      {# Bucket the flat Perfect Panel menu into labelled groups by link.
+         Anything unmatched falls into "More" so nothing ever disappears. #}
+      {% set _g_quick = [] %}
+      {% set _g_pay = [] %}
+      {% set _g_support = [] %}
+      {% set _g_more = [] %}
+      {% for menu in site['menu'] %}
+        {% set _ml = menu['link']|lower %}
+        {% if '/neworder' in _ml or '/massorder' in _ml or 'mass-order' in _ml or 'mass_order' in _ml or '/services' in _ml or '/orders' in _ml or '/subscriptions' in _ml or '/drip' in _ml or '/refill' in _ml or '/free' in _ml %}
+          {% set _g_quick = _g_quick|merge([menu]) %}
+        {% elseif '/addfunds' in _ml or '/refund' in _ml or '/affiliate' in _ml or '/child' in _ml or '/api' in _ml or '/level' in _ml or '/reward' in _ml or '/giveaway' in _ml or '/payout' in _ml %}
+          {% set _g_pay = _g_pay|merge([menu]) %}
+        {% elseif '/ticket' in _ml or '/support' in _ml or '/contact' in _ml or '/howto' in _ml or '/how-to' in _ml or '/faq' in _ml or '/updates' in _ml or '/blog' in _ml or '/news' in _ml %}
+          {% set _g_support = _g_support|merge([menu]) %}
+        {% else %}
+          {% set _g_more = _g_more|merge([menu]) %}
         {% endif %}
-      </a>
+      {% endfor %}
+
+      {% set _groups = [
+        { 'title': 'Quick Links',        'items': _g_quick },
+        { 'title': 'Payments & Payouts', 'items': _g_pay },
+        { 'title': 'Support',            'items': _g_support },
+        { 'title': 'More',               'items': _g_more }
+      ] %}
 
       <nav class="sidebar-nav">
-        {% for menu in site['menu'] %}
-          {% set _ml = menu['link'] %}
-          <a href="{{ _ml }}"
-             class="sidebar-item {% if menu['active'] %}active{% endif %}"
-             {% if menu['external'] %}target="_blank" rel="noopener"{% endif %}>
-            {% if '/neworder' in _ml %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M12 12v5"/><path d="M9.5 14.5 12 12l2.5 2.5"/></svg>
-            {% elseif '/massorder' in _ml or 'mass-order' in _ml or 'mass_order' in _ml %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="12" height="13" rx="2"/><path d="M7 5h12a2 2 0 0 1 2 2v12"/><path d="M9 12h6"/><path d="M9 15h4"/></svg>
-            {% elseif '/services' in _ml %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7"/><path d="M14 17.5h7"/></svg>
-            {% elseif '/orders' in _ml %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-5"/></svg>
-            {% elseif '/addfunds' in _ml %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h6"/><path d="M2 10h20"/><circle cx="19" cy="18" r="3"/><path d="M19 16.5v3"/><path d="M17.5 18h3"/></svg>
-            {% elseif '/api' in _ml %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m7 8-4 4 4 4"/><path d="m17 8 4 4-4 4"/><path d="m14 4-4 16"/></svg>
-            {% elseif '/tickets' in _ml or '/support' in _ml %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/><path d="M8 10h8"/><path d="M8 13h5"/></svg>
-            {% elseif '/subscriptions' in _ml %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3v4a1 1 0 0 0 1 1h3"/><path d="M21 8v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12l4 4Z"/><path d="M12 11v5"/><path d="M9 14h6"/></svg>
-            {% elseif '/drip' in _ml %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 7.5 5 10.5 5 14.5a7 7 0 0 0 14 0C19 10.5 16 7.5 12 2Z"/><path d="M12 22v-3"/><path d="M8 19c0-2.2 1.8-4 4-4"/></svg>
-            {% elseif '/refill' in _ml %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7"/><path d="M21 12a9 9 0 0 1-15 6.7"/><path d="M18 2v4h-4"/><path d="M6 22v-4h4"/></svg>
-            {% elseif '/refund' in _ml %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h12a4 4 0 0 1 0 8h-3"/><path d="m6 10-3-3 3-3"/><path d="M14 18h2a4 4 0 0 0 3.46-2"/></svg>
-            {% elseif '/blog' in _ml or '/updates' in _ml %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5Z"/><path d="M8 7h8"/><path d="M8 11h5"/></svg>
-            {% elseif '/faq' in _ml %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 2.5-3 5"/><circle cx="12" cy="19" r=".5" fill="currentColor"/></svg>
-            {% elseif '/account' in _ml or '/profile' in _ml %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/><path d="M15 12l2.5 2"/></svg>
-            {% elseif '/child' in _ml %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            {% else %}
-              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-            {% endif %}
-            <span class="sidebar-label">{{ menu['name'] }}</span>
-          </a>
+        {% for grp in _groups %}
+          {% if grp.items|length %}
+            <div class="sidebar-group">
+              <button type="button" class="sidebar-group-head" aria-expanded="true">
+                <svg class="sidebar-group-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                <span class="sidebar-group-title">{{ grp.title }}</span>
+              </button>
+              <div class="sidebar-group-items">
+                {% for menu in grp.items %}{{ nav.navItem(menu) }}{% endfor %}
+              </div>
+            </div>
+          {% endif %}
         {% endfor %}
       </nav>
 
-      <div class="sidebar-greeting" id="sidebar-greeting" style="display:none">
-        <span class="sidebar-greeting-wave">👋</span>
-        <span class="sidebar-greeting-text">Welcome back, {{ user['username'] }}</span>
+      <div class="sidebar-foot">
+        {% if site['languages']|length > 1 %}
+          <div class="sidebar-lang dropdown" id="sidebar-lang">
+            {% for l in site['languages'] %}{% if l['active'] %}
+              <button type="button" class="sidebar-lang-btn" id="sidebar-lang-btn"
+                      aria-haspopup="true" aria-expanded="false">
+                <span class="sidebar-lang-flag">{{ lang_flags[l['name']]|default('🌐') }}</span>
+                <span class="sidebar-lang-name">{{ l['name'] }}</span>
+                <svg class="sidebar-lang-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+            {% endif %}{% endfor %}
+            <ul class="dropdown-menu">
+              {% for l in site['languages'] %}
+                <li {% if l['active'] %}class="active"{% endif %}><a href="{{ l['url'] }}">{{ lang_flags[l['name']]|default('🌐') }} {{ l['name'] }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        <a href="https://t.me/onesmmofficial" class="sidebar-telegram" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+          <span>Telegram Channel</span>
+        </a>
       </div>
-      <script>
-        (function(){
-          var el=document.getElementById('sidebar-greeting');
-          if(el && localStorage.getItem('onesmm_has_orders')){el.style.display='';}
-        })();
-      </script>
 
     </aside>
 
@@ -449,9 +525,7 @@
     <div class="app-main">
 
       <header class="topbar" id="navbar">
-        {# Hamburger sits inside the topbar, left of search (best-practice mobile layout).
-           Toggles the sidebar drawer; PP's BS3 `data-toggle` removed because it targets
-           the wrong element. JS handler is below, after the closing </body> region. #}
+        {# Hamburger — opens the sidebar drawer on mobile (hidden ≥992px). #}
         <button type="button" class="navbar-toggle navbar-toggle-mobile collapsed"
                 id="pulse-sidebar-toggle"
                 aria-expanded="false" aria-controls="pulse-sidebar"
@@ -461,79 +535,77 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        {# Search bar removed — not needed in panel nav #}
+
+        {# ── User identity (left) — avatar + name + account/logout menu ── #}
+        <div class="topbar-user dropdown" id="topbar-user">
+          <button type="button" class="topbar-user-btn" aria-haspopup="true" aria-expanded="false">
+            <span class="topbar-avatar" aria-hidden="true">{{ user['username']|default('U')|slice(0, 2)|upper }}</span>
+            <span class="topbar-user-meta">
+              <span class="topbar-user-name">{{ user['username']|default('Account') }}</span>
+              <span class="topbar-user-level">Level: <b class="accent-text">{{ user['level']|default('1') }}</b></span>
+            </span>
+            <svg class="topbar-user-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <ul class="dropdown-menu">
+            {% for menu in site['account_menu'] %}
+              {% if menu['link'] %}
+                <li {% if menu['active'] %}class="active"{% endif %}>
+                  <a href="{{ menu['link'] }}" {% if menu['external'] %}target="_blank" rel="noopener"{% endif %}>{{ menu['name'] }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
 
         <div class="topbar-spacer"></div>
 
         {# ── Compact icon row (right side of topbar) ── #}
         <div class="topbar-icons">
 
+          {# Orders #}
+          <a href="{{ page_url('orders') }}" class="topbar-icon-btn" aria-label="Orders" title="Orders">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </a>
+
+          {# Wallet group — standalone wallet icon, green balance pill, currency selector #}
+          <div class="topbar-wallet">
+            <svg class="topbar-wallet-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14v3"/><path d="M3 7v12a2 2 0 0 0 2 2h16V10H5a2 2 0 0 1-2-2"/><path d="M16 14h.01"/></svg>
+            {% for menu in site['account_menu'] %}{% if not menu['link'] %}
+              <span class="topbar-balance-pill" title="Balance">
+                <span class="topbar-balance-amount tabular">{{ user.balance_formatted }}</span>
+              </span>
+            {% endif %}{% endfor %}
+            {# Currency selector — keeps PP's #currencies-item hooks intact #}
+            {% if site.currencies %}
+              <div class="dropdown dropdown-currencies">
+                <button type="button" class="topbar-currency-btn" aria-haspopup="true" aria-expanded="false" title="Change currency">
+                  <span class="topbar-currency-code tabular">{{ site.currency.label|default('USD') }}</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" id="currencies-list">
+                  {% for key, rate in site.currencies %}
+                    <li>
+                      <a href="#" id="currencies-item" data-rate-key="{{ key }}" data-rate-symbol="{{ rate.symbol }}">
+                        <span class="tabular">{{ key }}</span>
+                        <span class="muted">{{ rate.symbol }}</span>
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+          </div>
+
+          {# Notifications #}
+          <a href="{{ page_url('updates') }}" class="topbar-icon-btn" aria-label="Notifications" title="Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          </a>
+
           {# Theme toggle #}
           <button type="button" class="topbar-icon-btn theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">
             <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg>
             <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
           </button>
-
-          {# Language — flag-only icon button #}
-          {% if site['languages']|length > 1 %}
-            <div class="topbar-lang dropdown">
-              {% for l in site['languages'] %}{% if l['active'] %}
-                <button class="topbar-icon-btn topbar-lang-btn" id="topbar-lang-btn" aria-haspopup="true" aria-expanded="false" aria-label="Change language" title="{{ l['name'] }}">
-                  <span class="topbar-lang-flag">{{ lang_flags[l['name']]|default('🌐') }}</span>
-                </button>
-              {% endif %}{% endfor %}
-              <ul class="dropdown-menu dropdown-menu-right">
-                {% for l in site['languages'] %}
-                  <li {% if l['active'] %}class="active"{% endif %}><a href="{{ l['url'] }}">{{ lang_flags[l['name']]|default('🌐') }} {{ l['name'] }}</a></li>
-                {% endfor %}
-              </ul>
-            </div>
-          {% endif %}
-
-          {# Balance / currency — compact pill with amount only #}
-          {% for menu in site['account_menu'] %}
-            {% if not menu['link'] %}
-              {% if site.currencies %}
-                <div class="dropdown dropdown-currencies">
-                  <button class="topbar-balance-btn" aria-haspopup="true" aria-expanded="false" title="Balance & currency">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M3 7a2 2 0 0 1 2-2h14v3"/><path d="M3 7v12a2 2 0 0 0 2 2h16V10H5a2 2 0 0 1-2-2"/>
-                    </svg>
-                    <span class="topbar-balance-amount tabular">{{ user.balance_formatted }}</span>
-                  </button>
-                  <ul class="dropdown-menu dropdown-menu-right" id="currencies-list">
-                    {% for key, rate in site.currencies %}
-                      <li>
-                        <a href="#" id="currencies-item" data-rate-key="{{ key }}" data-rate-symbol="{{ rate.symbol }}">
-                          <span class="tabular">{{ key }}</span>
-                          <span class="muted">{{ rate.symbol }}</span>
-                        </a>
-                      </li>
-                    {% endfor %}
-                  </ul>
-                </div>
-              {% endif %}
-            {% endif %}
-          {% endfor %}
-
-          {# Divider #}
-          <span class="topbar-divider"></span>
-
-          {# Account & Logout — icon-only #}
-          {% for menu in site['account_menu'] %}
-            {% if menu['link'] %}
-              {% set _is_logout = 'logout' in menu['link']|lower or 'signout' in menu['link']|lower %}
-              <a href="{{ menu['link'] }}" class="topbar-icon-btn {% if menu['active'] %}is-active{% endif %}"
-                 {% if menu['external'] %}target="_blank" rel="noopener"{% endif %}
-                 aria-label="{{ menu['name'] }}" title="{{ menu['name'] }}">
-                {% if _is_logout %}
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                {% else %}
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                {% endif %}
-              </a>
-            {% endif %}
-          {% endfor %}
         </div>
       </header>
 
@@ -1159,10 +1231,10 @@
   });
 })();
 
-/* ── Balance / currency dropdown (authenticated topbar) ── */
+/* ── Currency dropdown (authenticated topbar) ── */
 (function(){
   var wrap = document.querySelector('.dropdown-currencies');
-  var btn  = wrap ? wrap.querySelector('.topbar-balance-btn') : null;
+  var btn  = wrap ? wrap.querySelector('.topbar-currency-btn') : null;
   if (!btn || !wrap) return;
   btn.addEventListener('click', function(e){
     e.preventDefault();
@@ -1175,6 +1247,67 @@
     if (e.target.closest('.dropdown-currencies')) return;
     wrap.classList.remove('open');
     btn.setAttribute('aria-expanded', 'false');
+  });
+})();
+
+/* ── User identity dropdown (topbar, left) ── */
+(function(){
+  var wrap = document.getElementById('topbar-user');
+  var btn  = wrap ? wrap.querySelector('.topbar-user-btn') : null;
+  if (!btn || !wrap) return;
+  btn.addEventListener('click', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    wrap.classList.toggle('open');
+    btn.setAttribute('aria-expanded', wrap.classList.contains('open') ? 'true' : 'false');
+  });
+  document.addEventListener('click', function(e){
+    if (!wrap.classList.contains('open')) return;
+    if (e.target.closest('#topbar-user')) return;
+    wrap.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  });
+})();
+
+/* ── Sidebar language dropdown (footer, opens upward) ── */
+(function(){
+  var wrap = document.getElementById('sidebar-lang');
+  var btn  = wrap ? wrap.querySelector('.sidebar-lang-btn') : null;
+  if (!btn || !wrap) return;
+  btn.addEventListener('click', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    wrap.classList.toggle('open');
+    btn.setAttribute('aria-expanded', wrap.classList.contains('open') ? 'true' : 'false');
+  });
+  document.addEventListener('click', function(e){
+    if (!wrap.classList.contains('open')) return;
+    if (e.target.closest('#sidebar-lang')) return;
+    wrap.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  });
+})();
+
+/* ── Collapsible sidebar groups ── */
+(function(){
+  document.addEventListener('click', function(e){
+    var head = e.target.closest('.sidebar-group-head');
+    if (!head) return;
+    var group = head.closest('.sidebar-group');
+    if (!group) return;
+    var collapsed = group.classList.toggle('is-collapsed');
+    head.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+  });
+})();
+
+/* ── Sidebar rail collapse (desktop) — persists to localStorage ── */
+(function(){
+  var shell = document.getElementById('app-shell');
+  if (!shell) return;
+  document.addEventListener('click', function(e){
+    if (!e.target.closest('#pulse-sidebar-collapse')) return;
+    var rail = shell.classList.toggle('is-rail');
+    try { localStorage.setItem('pulse-rail', rail ? '1' : '0'); } catch(err) {}
   });
 })();
 
