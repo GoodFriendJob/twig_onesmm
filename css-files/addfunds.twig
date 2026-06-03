@@ -1,0 +1,460 @@
+{# addfunds.twig — Pulse split-layout
+   Variables: paymentsList[], currentPayment, site.cpf_field, site.rtl,
+              addfunds (HTML), paymentList[], pagination, success/successText,
+              error/errorText, csrftoken, page, lang(...)
+   PP also sets: window.modules.paymentMethods.fieldOptions[id].instruction.value
+#}
+<div class="addfunds-page">
+
+  {% if paymentsList %}
+    <div class="addfunds-grid">
+
+      {# ─── LEFT: payment form ─── #}
+      <div class="card">
+        <div class="card-body">
+          <form method="post" action="" id="addfunds-form" {% if site['rtl'] %}class="rtl-form"{% endif %}>
+            <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+
+            {% if success %}
+              <div class="alert alert-success alert-dismissible {% if site['rtl'] %}rtl-alert{% endif %}">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ successText }}
+              </div>
+            {% endif %}
+            {% if error %}
+              <div class="alert alert-danger alert-dismissible {% if site['rtl'] %}rtl-alert{% endif %}">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ errorText }}
+              </div>
+            {% endif %}
+
+            <div class="form-group method-group">
+              <label class="control-label">{{ lang('addfunds.method') }}</label>
+              <div class="method-cards" id="method-cards">
+                {% for payment in paymentsList %}
+                  <label class="method-card{% if currentPayment == payment['id'] or (currentPayment is empty and loop.first) %} selected{% endif %}" data-payment-id="{{ payment['id'] }}">
+                    <input type="radio" class="method-radio" name="AddFoundsForm[type]" value="{{ payment['id'] }}"{% if currentPayment == payment['id'] or (currentPayment is empty and loop.first) %} checked{% endif %}>
+                    <span class="mc-logo"></span>
+                    <span class="mc-name-wrap">
+                      <span class="mc-provider">{{ payment['name'] }}</span>
+                    </span>
+                    <span class="method-card-check">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </span>
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
+
+            {# ─── Trust signals (between method + amount for visibility) ─── #}
+            <div class="deposit-benefits-bar">
+              <div class="db-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span>Instant credit</span>
+              </div>
+              <div class="db-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Verified gateways</span>
+              </div>
+              <div class="db-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <span>100+ crypto accepted</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div id="amount-fields">
+                <label for="amount" class="control-label">{{ lang('addfunds.amount') }}</label>
+                <input type="text" inputmode="decimal" class="form-control tabular" name="AddFoundsForm[amount]" id="amount" placeholder="0.00" autocomplete="off">
+                <div class="amount-presets" role="group" aria-label="Quick amount presets">
+                  <button type="button" class="amount-preset" data-amount="10" aria-pressed="false">$10</button>
+                  <button type="button" class="amount-preset" data-amount="25" aria-pressed="false">$25</button>
+                  <button type="button" class="amount-preset" data-amount="50" aria-pressed="false">$50</button>
+                  <button type="button" class="amount-preset" data-amount="100" aria-pressed="false">$100</button>
+                  <button type="button" class="amount-preset" data-amount="250" aria-pressed="false">$250</button>
+                </div>
+                <small class="amount-hint">Minimum deposit: $1.00</small>
+                <div class="amount-error" id="amount-error" role="alert"></div>
+              </div>
+            </div>
+
+            {% if site['cpf_field'] %}
+              <div class="form-group">
+                <label for="cpf" class="control-label">{{ lang('addfunds.cpf') }}</label>
+                <input type="text" class="form-control" name="AddFoundsForm[cpf]" id="cpf">
+              </div>
+            {% endif %}
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block addfunds-pay" id="addfunds-submit">
+              <span class="pay-label">
+                <svg class="pay-lock" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                {{ lang('addfunds.button.pay') }}
+              </span>
+              <span class="pay-loading" style="display:none">
+                <span class="btn-spinner"></span>
+                Processing&hellip;
+              </span>
+            </button>
+
+            <div class="addfunds-trust-line">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              256-bit SSL encrypted &middot; Funds credited instantly
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {# ─── RIGHT: provider info & instructions ─── #}
+      <div class="card addfunds-aside">
+        <div class="card-body">
+          <div class="provider-desc-empty" id="provider-desc-empty">
+            <div class="provider-desc-empty-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+            </div>
+            <div class="provider-desc-empty-text">Select a payment method to see details</div>
+          </div>
+          <div class="provider-desc-content" id="provider-desc-content" style="display:none">
+            <div class="provider-desc-header">
+              <span class="provider-desc-logo" id="provider-desc-logo"></span>
+              <span class="provider-desc-name" id="provider-desc-name"></span>
+            </div>
+            <div class="provider-desc-body" id="provider-desc-body"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  {% endif %}
+
+  {% if addfunds %}
+    <div class="card addfunds-instructions">
+      <div class="card-body {% if site['rtl'] %}rtl-content{% endif %}">
+        <div class="instructions-header">
+          <div class="instructions-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          </div>
+          <div class="instructions-header-text">
+            <div class="instructions-title">Payment Instructions</div>
+            <div class="instructions-subtitle">Follow the steps below to complete your payment</div>
+          </div>
+        </div>
+        <div class="instructions-body">
+          {{ addfunds }}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if paymentList %}
+    <div class="addfunds-history-head">
+      <h2 class="h2">Payment history</h2>
+    </div>
+    <div class="card">
+      <div class="table-responsive">
+        <table class="table addfunds-table">
+          <thead>
+            <tr>
+              <th class="col-id">{{ lang('addfunds.id') }}</th>
+              <th class="col-date">{{ lang('addfunds.date') }}</th>
+              <th>{{ lang('addfunds.method') }}</th>
+              <th class="col-amount">{{ lang('addfunds.amount') }}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for payment in paymentList %}
+              <tr>
+                <td class="tabular muted">#{{ payment['id'] }}</td>
+                <td class="nowrap muted">{{ payment['date'] }}</td>
+                <td>{{ payment['method'] }}</td>
+                <td class="tabular ink">
+                  {% if payment['original_amount'] %}
+                    <span data-toggle="tooltip" data-placement="left" title="{{ payment['original_amount'] }}&nbsp;{{ payment['original_currency'] }}">≈ {{ payment['amount'] }}</span>
+                  {% else %}
+                    {{ payment['amount'] }}
+                  {% endif %}
+                </td>
+                <td class="text-right">
+                  {% if payment.download_invoice_url %}
+                    <a href="{{ payment.download_invoice_url }}" class="link-invoice">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:middle"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                      {{ lang('addfunds.button.invoice') }}
+                    </a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+            {% if paymentList is empty %}
+              <tr>
+                <td colspan="5" class="empty-row">
+                  <div class="empty-state">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                    <div class="empty-state-text">Your payment history will appear here</div>
+                    <div class="empty-state-sub">Completed deposits show up automatically</div>
+                  </div>
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {% if pagination['count'] > 50 %}
+      <ul class="pagination {% if site['rtl'] %}rtl-pagination{% endif %}">
+        {% if pagination['current'] != 1 %}
+          <li><a href="{{ page['url'] }}/{{ pagination['last'] }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        {% endif %}
+
+        {% set r, l = 3, 3 %}
+        {% if pagination['current'] == 1 %}{% set r = 6 %}{% endif %}
+        {% if pagination['current'] == 2 %}{% set r = 5 %}{% endif %}
+        {% if pagination['current'] >= pagination['pages'] %}{% set l = 5 %}{% endif %}
+
+        {% for i in 1..ceil(pagination['pages']) %}
+          {% if i >= (pagination['current']-l) and i <= (pagination['current']+r) %}
+            <li{% if i == pagination['current'] %} class="active"{% endif %}><a href="{{ page['url'] }}/{{i}}">{{i}}</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if pagination['current'] < pagination['pages'] %}
+          <li><a href="{{ page['url'] }}/{{ pagination['next'] }}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+        {% endif %}
+      </ul>
+    {% endif %}
+  {% endif %}
+
+</div>
+
+<script>
+(function() {
+  // ── Provider logo map ──
+  var PROVIDERS = [
+    { key: 'cryptomus',    abbr: 'CM', bg: '#7c3aed' },
+    { key: 'heleket',      abbr: 'HK', bg: '#d97706' },
+    { key: 'cryptogate',   abbr: 'CG', bg: '#2563eb' },
+    { key: 'paypal',       abbr: 'PP', bg: '#003087' },
+    { key: 'stripe',       abbr: 'ST', bg: '#635bff' },
+    { key: 'payeer',       abbr: 'PE', bg: '#1e40af' },
+    { key: 'perfectmoney', abbr: 'PM', bg: '#16a34a' },
+    { key: 'webmoney',     abbr: 'WM', bg: '#b45309' },
+    { key: 'coinbase',     abbr: 'CB', bg: '#0052ff' },
+    { key: 'nowpayments',  abbr: 'NP', bg: '#4f46e5' },
+    { key: 'coinpayments', abbr: 'CP', bg: '#26a17b' },
+    { key: 'bitcoin',      abbr: '\u20bf',  bg: '#f7931a' },
+    { key: 'ethereum',     abbr: '\u039e',  bg: '#627eea' },
+    { key: 'oxapay',       abbr: 'OX', bg: '#059669' },
+    { key: 'plisio',       abbr: 'PL', bg: '#7c3aed' },
+  ];
+
+  // ── Fallback trust content when provider has no instructions ──
+  var FALLBACK_ASIDE = '<div class="aside-fallback">'
+    + '<ul class="aside-list">'
+    + '<li><div class="aside-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div><div class="aside-list-title">Instant processing</div><div class="aside-list-desc">Auto methods credit your balance within seconds of confirmation.</div></div></li>'
+    + '<li><div class="aside-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><div class="aside-list-title">Secure payments</div><div class="aside-list-desc">All transactions are encrypted and processed by verified payment gateways.</div></div></li>'
+    + '<li><div class="aside-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="aside-list-title">24/7 support</div><div class="aside-list-desc">Deposit issues are handled with priority. Contact support anytime.</div></div></li>'
+    + '</ul></div>';
+
+  function getProviderInfo(nameKey) {
+    for (var i = 0; i < PROVIDERS.length; i++) {
+      if (nameKey.indexOf(PROVIDERS[i].key) !== -1) return PROVIDERS[i];
+    }
+    var h = 0;
+    for (var j = 0; j < nameKey.length; j++) h = (h * 31 + nameKey.charCodeAt(j)) & 0xffff;
+    return { abbr: nameKey.slice(0,2).toUpperCase(), bg: 'hsl(' + (h % 300 + 30) + ',55%,42%)' };
+  }
+
+  // ── Get PP instruction HTML for a payment ID ──
+  function getInstruction(paymentId) {
+    try {
+      var fo = window.modules.paymentMethods.fieldOptions;
+      if (fo[paymentId] && fo[paymentId].instruction && fo[paymentId].instruction.value) {
+        return fo[paymentId].instruction.value;
+      }
+    } catch(e) {}
+    return '';
+  }
+
+  // ── Parse & enhance method cards ──
+  document.querySelectorAll('.method-card').forEach(function(card) {
+    var provEl = card.querySelector('.mc-provider');
+    var logoEl = card.querySelector('.mc-logo');
+    if (!provEl) return;
+
+    var raw = provEl.textContent.trim();
+    var providerName = raw.split(/\s*[–\-]\s*/)[0].trim();
+    provEl.textContent = providerName;
+
+    if (logoEl) {
+      var info = getProviderInfo(providerName.toLowerCase().replace(/[^a-z]/g, ''));
+      logoEl.style.background = info.bg;
+      logoEl.textContent = info.abbr;
+    }
+  });
+
+  // ── Show provider aside with instructions from PP data ──
+  function showProviderAside(card) {
+    var emptyEl = document.getElementById('provider-desc-empty');
+    var contentEl = document.getElementById('provider-desc-content');
+    var logoEl = document.getElementById('provider-desc-logo');
+    var nameEl = document.getElementById('provider-desc-name');
+    var bodyEl = document.getElementById('provider-desc-body');
+    if (!contentEl) return;
+
+    var mcLogo = card.querySelector('.mc-logo');
+    var provEl = card.querySelector('.mc-provider');
+    var providerName = provEl ? provEl.textContent.trim() : '';
+    var radio = card.querySelector('.method-radio');
+    var paymentId = card.getAttribute('data-payment-id') || (radio ? radio.value : null);
+
+    if (mcLogo && logoEl) {
+      logoEl.style.background = mcLogo.style.background;
+      logoEl.textContent = mcLogo.textContent;
+    }
+    if (nameEl) nameEl.textContent = providerName;
+
+    var instruction = getInstruction(paymentId);
+    var html = instruction
+      ? '<div class="provider-desc-text">' + instruction + '</div>'
+      : FALLBACK_ASIDE;
+
+    if (bodyEl) bodyEl.innerHTML = html;
+
+    if (emptyEl) emptyEl.style.display = 'none';
+    contentEl.style.display = '';
+  }
+
+  function paymentIdFromCard(card) {
+    if (!card) return null;
+    var radio = card.querySelector('.method-radio');
+    return card.getAttribute('data-payment-id') || (radio ? radio.value : null);
+  }
+
+  function selectedMethodCard() {
+    var grid = document.getElementById('method-cards');
+    var sel = document.querySelector('.method-card.selected');
+    if (!sel && grid) {
+      var cr = grid.querySelector('.method-radio:checked');
+      if (cr) sel = cr.closest('.method-card');
+    }
+    return sel || null;
+  }
+
+  function syncAsideWhenInstructionsReady(card, maxWaitMs) {
+    if (!card) return;
+    var pid = paymentIdFromCard(card);
+    var deadline = Date.now() + (typeof maxWaitMs === 'number' ? maxWaitMs : 5000);
+    function tick() {
+      showProviderAside(card);
+      if (!pid || getInstruction(pid)) return;
+      if (Date.now() < deadline) setTimeout(tick, 50);
+    }
+    tick();
+  }
+
+  // ── Method card click ──
+  document.querySelectorAll('.method-card').forEach(function(card) {
+    card.addEventListener('click', function() {
+      document.querySelectorAll('.method-card').forEach(function(c) { c.classList.remove('selected'); });
+      card.classList.add('selected');
+      card.querySelector('.method-radio').checked = true;
+      showProviderAside(card);
+    });
+  });
+
+  // ── Default first method if nothing is checked ──
+  var grid = document.getElementById('method-cards');
+  if (grid && !grid.querySelector('.method-radio:checked')) {
+    var firstCard = grid.querySelector('.method-card');
+    var firstRadio = firstCard && firstCard.querySelector('.method-radio');
+    if (firstRadio) {
+      firstRadio.checked = true;
+      document.querySelectorAll('.method-card').forEach(function(c) { c.classList.remove('selected'); });
+      if (firstCard) firstCard.classList.add('selected');
+    }
+  }
+  var selCard = selectedMethodCard();
+  if (selCard) syncAsideWhenInstructionsReady(selCard);
+  window.addEventListener('load', function() {
+    var c = selectedMethodCard();
+    if (c) syncAsideWhenInstructionsReady(c, 3000);
+  });
+
+  // ── Amount input: sanitize + validate ──
+  var amtInput = document.getElementById('amount');
+  var amtError = document.getElementById('amount-error');
+  var MIN_DEPOSIT = 1;
+
+  function sanitizeAmount(val) {
+    return val.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+  }
+
+  function validateAmount() {
+    if (!amtInput || !amtError) return true;
+    var raw = amtInput.value.trim();
+    if (raw === '') {
+      amtError.textContent = '';
+      amtInput.classList.remove('input-error');
+      return false;
+    }
+    var val = parseFloat(raw);
+    if (isNaN(val) || val < MIN_DEPOSIT) {
+      amtError.textContent = 'Minimum deposit is $' + MIN_DEPOSIT.toFixed(2);
+      amtInput.classList.add('input-error');
+      return false;
+    }
+    amtError.textContent = '';
+    amtInput.classList.remove('input-error');
+    return true;
+  }
+
+  if (amtInput) {
+    amtInput.addEventListener('input', function() {
+      amtInput.value = sanitizeAmount(amtInput.value);
+      document.querySelectorAll('.amount-preset').forEach(function(b) {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      validateAmount();
+    });
+    amtInput.addEventListener('blur', validateAmount);
+  }
+
+  // ── Amount preset buttons ──
+  if (amtInput) {
+    document.querySelectorAll('.amount-preset').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        amtInput.value = btn.getAttribute('data-amount');
+        amtInput.focus();
+        document.querySelectorAll('.amount-preset').forEach(function(b) {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+        if (amtError) amtError.textContent = '';
+        amtInput.classList.remove('input-error');
+      });
+    });
+  }
+
+  // ── Form submit: validate + loading state ──
+  var form = document.getElementById('addfunds-form');
+  var submitBtn = document.getElementById('addfunds-submit');
+  if (form && submitBtn) {
+    form.addEventListener('submit', function(e) {
+      if (!validateAmount()) {
+        e.preventDefault();
+        if (amtInput) amtInput.focus();
+        return;
+      }
+      submitBtn.disabled = true;
+      submitBtn.classList.add('loading');
+      var label = submitBtn.querySelector('.pay-label');
+      var loading = submitBtn.querySelector('.pay-loading');
+      if (label) label.style.display = 'none';
+      if (loading) loading.style.display = '';
+    });
+  }
+})();
+</script>

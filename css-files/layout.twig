@@ -1,0 +1,1209 @@
+{# layout.twig — Pulse theme for Perfect Panel
+   Drop-in replacement: same variable contract as the default layout.
+   Companion CSS: assets/css/theme.css (port from styles.css)
+
+   Uses ALL the existing globals:
+     site.iso_lang_code, site.rtl, site.favicon, site.logo, site.name
+     site.seo_key, site.seo_desc, site.custom_header, site.custom_footer
+     site.styles[], site.scripts[]
+     site.menu[]          → main nav (each: name, link, icon, active, external)
+     site.account_menu[]  → topbar nav (balance entry has no link, see {% if not menu.link %})
+     site.languages[]     → each: name, url, active
+     site.currencies      → { KEY: { symbol, ... } }
+     user.auth, user.balance_formatted
+     page.title
+#}
+{% set lang_flags = {
+  'English': '🇬🇧', 'Русский': '🇷🇺', 'Türkçe': '🇹🇷', '한국어': '🇰🇷',
+  'العربية': '🇸🇦', 'Español': '🇪🇸', 'ไทย': '🇹🇭', 'Tiếng Việt': '🇻🇳',
+  'Deutsch': '🇩🇪', '日本語': '🇯🇵', 'Polski': '🇵🇱', 'Українська': '🇺🇦',
+  'فارسی': '🇮🇷', 'Português': '🇧🇷', 'Français': '🇫🇷', '中文': '🇨🇳',
+  'हिन्दी': '🇮🇳', 'Indonesian': '🇮🇩', 'Italiano': '🇮🇹', 'Nederlands': '🇳🇱'
+} %}
+<!DOCTYPE html>
+<html lang="{{ site['iso_lang_code'] }}" {% if site['rtl'] %}dir="rtl"{% endif %} data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  {# ── Title: "Page Name | Site Name" or just "Site Name" for homepage/signin ── #}
+  {% set _page_path_raw = page['url']|split('?')|first %}
+  {% set _page_path_check = page['url']|split('?')|first %}
+  {% if '/our-story' in _page_path_check %}
+    {% set _seo_title = 'Our Story — About OneSMM | The SMM Panel Built Different' %}
+  {% elseif '/careers' in _page_path_check %}
+    {% set _seo_title = 'Careers at OneSMM — Join the Team | OneSMM' %}
+  {% elseif page['title'] and page['title']|lower not in ['sign in', 'signin', 'login'] %}
+    {% set _seo_title = page['title'] ~ ' | ' ~ site['name'] %}
+  {% else %}
+    {% set _seo_title = site['name'] ~ ' — Cheapest SMM Panel 2026 | Followers, Members & Views' %}
+  {% endif %}
+  <title>{{ _seo_title }}</title>
+  {# ── Per-page meta keywords ── #}
+  {% set _page_path = page['url']|split('?')|first %}
+  {% if '/our-story' in _page_path %}
+    {% set _seo_keys = 'about onesmm, smm panel story, onesmm mission, social media marketing panel, who is onesmm, onesmm about us' %}
+  {% elseif '/careers' in _page_path %}
+    {% set _seo_keys = 'onesmm careers, smm panel jobs, social media marketing jobs, work at onesmm, onesmm hiring, remote smm jobs' %}
+  {% else %}
+    {% set _seo_keys = site['seo_key'] %}
+  {% endif %}
+  <meta name="keywords" content="{{ _seo_keys }}">
+  {# ── Per-page meta description ── #}
+  {% if '/blog/telegram-vs-other-platforms-for-growth' in _page_path %}
+    {% set _seo_desc = 'Telegram vs YouTube, LinkedIn & WhatsApp — which platform grows your audience fastest in 2026? Data-backed comparison of reach, engagement rates and monetisation for creators and businesses.' %}
+  {% elseif '/blog/does-bot-activity-affect-telegram-channel-growth' in _page_path %}
+    {% set _seo_desc = 'Does bot activity hurt or help Telegram channel growth? How Telegram counts monthly users, what algorithms detect, and how to grow real engagement without risking your channel.' %}
+  {% elseif '/blog/telegram-non-drop-members' in _page_path %}
+    {% set _seo_desc = 'Telegram non-drop member panel — how zero-drop services work, what affects retention, and how to verify a panel keeps its refill promise. Buyers guide for 2026.' %}
+  {% elseif '/blog/telegram-members-auto-refill' in _page_path %}
+    {% set _seo_desc = 'Telegram members auto refill — what it means, when it helps, and why refill terms can matter more than cheap pricing. How to verify refill warranties.' %}
+  {% elseif '/blog/telegram-member' in _page_path %}
+    {% set _seo_desc = 'Buy Telegram members from $0.03/1K for channels and groups. Compare member types, pricing tiers and delivery speed. Non-drop and auto-refill options available.' %}
+  {% elseif '/blog/how-to-grow-telegram-bot-users' in _page_path %}
+    {% set _seo_desc = 'How to grow Telegram bot users — organic strategies, cross-promotion, inline mode, group integration and paid acquisition. Step-by-step guide for bot developers.' %}
+  {% elseif '/blog/telegram-growth-for-business-accounts' in _page_path %}
+    {% set _seo_desc = 'Telegram growth strategies for business accounts — channel setup, content calendar, member acquisition and retention tactics that work in 2026.' %}
+  {% elseif '/blog/cheap-telegram-subscribers' in _page_path %}
+    {% set _seo_desc = 'Cheap Telegram subscribers from $0.03/1K — how to buy affordable channel subscribers without sacrificing quality. Wholesale pricing, bulk discounts and refill guarantees.' %}
+  {% elseif '/blog/telegram-post-views' in _page_path %}
+    {% set _seo_desc = 'Buy Telegram post views to boost channel visibility. Instant delivery from $0.01/1K, auto-views available. How post views affect reach and subscriber growth.' %}
+  {% elseif '/instagram-followers' in _page_path %}
+    {% set _seo_desc = 'Buy Instagram followers from $0.21/1,000 — instant start, no password needed, auto-refill available. Economy, standard, premium and drip-feed tiers for every budget.' %}
+  {% elseif '/telegram-members' in _page_path %}
+    {% set _seo_desc = 'Buy Telegram members and subscribers from $0.03/1,000 — channels and groups, instant start, no admin rights needed. Non-drop tiers with 30-day auto-refill.' %}
+  {% elseif '/services' in _page_path %}
+    {% set _seo_desc = 'Browse 5,000+ SMM services — Instagram, Telegram, YouTube, TikTok, Twitter & more. Followers from $0.02/1K, watch time, views, likes. Cheapest wholesale prices, instant delivery.' %}
+  {% elseif '/blog/youtube-subscribers-smm-panel' in _page_path %}
+    {% set _seo_desc = 'YouTube subscribers SMM panel guide — how panels work, subscriber quality tiers, pricing from $0.50/1K, retention rates, and how to order safely in 2026.' %}
+  {% elseif '/blog/youtube-watch-time-smm-panel' in _page_path %}
+    {% set _seo_desc = 'YouTube watch time SMM panel — buy 4,000 hours watch time for monetization. How watchtime panels work, pricing, delivery speed, and what YouTube detects.' %}
+  {% elseif '/blog/youtube-views-smm-panel' in _page_path %}
+    {% set _seo_desc = 'YouTube views SMM panel — cheapest YouTube views from $0.10/1K. High-retention vs economy tiers, delivery speed, and how views affect the algorithm.' %}
+  {% elseif '/blog/youtube-monetization-smm-panel' in _page_path %}
+    {% set _seo_desc = 'SMM panel for YouTube monetization — how to reach 1,000 subscribers and 4,000 watch hours using panel services. What works, what risks exist, and pricing guide.' %}
+  {% elseif '/blog/twitter-smm-panel' in _page_path %}
+    {% set _seo_desc = 'Twitter SMM panel guide — buy Twitter followers, likes, and retweets. How SMM panels work for Twitter/X, pricing tiers, and safe ordering in 2026.' %}
+  {% elseif '/blog/twitter-likes-retweets' in _page_path %}
+    {% set _seo_desc = 'Buy Twitter likes and retweets — pricing from $0.20/1K, instant delivery. How Twitter engagement services work and which tiers to choose for real results.' %}
+  {% elseif '/blog/twitter-subscribers-vs-followers' in _page_path %}
+    {% set _seo_desc = 'X subscribers and X followers are different products. Learn what each means, whether SMM panels sell genuine subscription services, and how creators monetize X subscriptions in 2026.' %}
+  {% elseif '/blog/cheap-twitter-followers-reddit' in _page_path %}
+    {% set _seo_desc = 'What do cheap Twitter followers actually cost in 2026? Budget tier breakdown, real Reddit user experiences, and how to test providers safely before committing to larger orders.' %}
+  {% elseif '/blog/twitter-growth-strategy-2026' in _page_path %}
+    {% set _seo_desc = 'A 90-day Twitter/X growth plan combining organic tactics with panel services. Covers X detection systems, safe delivery pacing, and what changed post-acquisition in 2026.' %}
+  {% elseif '/blog/twitter-followers' in _page_path %}
+    {% set _seo_desc = 'Buy Twitter followers — pricing, quality tiers, and what to expect. How follower services work on Twitter/X and how to avoid low-quality providers.' %}
+  {% elseif '/blog/tiktok-smm-panel' in _page_path %}
+    {% set _seo_desc = 'TikTok SMM panel — buy TikTok followers, likes, and views. How TikTok panels work, pricing from $0.10/1K, and what the algorithm rewards.' %}
+  {% elseif '/blog/tiktok-followers-likes-panel' in _page_path %}
+    {% set _seo_desc = 'TikTok followers and likes panel — pricing tiers, delivery speed, and which services actually help TikTok growth. Practical ordering guide for 2026.' %}
+  {% elseif '/blog/facebook-followers-likes-panel' in _page_path %}
+    {% set _seo_desc = 'FB followers panel — buy Facebook followers and likes. Page vs profile followers, quality tiers, Meta detection, and pricing guide for 2026.' %}
+  {% elseif '/blog/best-cheapest-smm-panel' in _page_path %}
+    {% set _seo_desc = 'Best and cheapest SMM panel in 2026 — what separates good panels from scams. Pricing benchmarks, service quality tiers, Reddit recommendations, and how to test before committing.' %}
+  {% elseif '/blog/smm-reseller-panel' in _page_path %}
+    {% set _seo_desc = 'SMM reseller panel guide — how to start reselling social media services. Provider selection, pricing strategy, API setup, and scaling a reseller business in 2026.' %}
+  {% elseif '/blog/telegram-smm-panel-guide' in _page_path %}
+    {% set _seo_desc = 'Complete Telegram SMM panel guide — all services available, how to evaluate tiers, ordering safely, and using the panel API as a reseller. Covers tele SMM panel basics.' %}
+  {% elseif '/blog/telegram-smm-panel' in _page_path %}
+    {% set _seo_desc = 'Telegram SMM panel — compare Telegram SMM services, pricing, delivery speed, and refill terms. Guide to choosing the best tele SMM panel for members and views.' %}
+  {% elseif '/blog/real-telegram-members' in _page_path %}
+    {% set _seo_desc = 'Buy real Telegram members and subscribers — what "real" means, how to tell genuine quality from marketing language, and which service tiers to trust.' %}
+  {% elseif '/blog/telegram-group-members-reseller' in _page_path %}
+    {% set _seo_desc = 'Telegram group members reseller guide — how to pick services for clients, manage margins, and deliver quality group members without support headaches.' %}
+  {% elseif '/blog/telegram-group-members' in _page_path %}
+    {% set _seo_desc = 'Buy Telegram group members — how group member services differ from channel members, which tiers to use, and what to expect after delivery.' %}
+  {% elseif '/blog/telegram-subscribers' in _page_path %}
+    {% set _seo_desc = 'Buy Telegram subscribers for channel growth — what to check, which service tiers to use, and how to avoid low-quality providers that drop fast.' %}
+  {% elseif '/blog/telegram-followers' in _page_path %}
+    {% set _seo_desc = 'Buy Telegram followers — what the term means in different contexts, which services apply, and what to look for before ordering channel or group growth.' %}
+  {% elseif '/blog' in _page_path %}
+    {% set _seo_desc = 'SMM reseller guides, Instagram growth tips, Telegram channel strategies and social media marketing insights. Updated weekly for panel operators and agencies.' %}
+  {% elseif '/terms' in _page_path %}
+    {% set _seo_desc = 'OneSMM Terms of Service — refill policy, usage rules and service guarantees for all SMM panel orders.' %}
+  {% elseif '/contact' in _page_path %}
+    {% set _seo_desc = 'Contact OneSMM — Get support, join our Telegram community, or reach our team via email. Fast response times, real-time support available.' %}
+  {% elseif '/free-instagram-likes' in _page_path %}
+    {% set _seo_desc = 'Get 10–50 free Instagram likes instantly — no account, no password, no credit card. Test our quality before you buy. Delivery in 6–12 hours.' %}
+  {% elseif '/free-instagram-followers' in _page_path %}
+    {% set _seo_desc = 'Get 10 free Instagram followers — no password, no signup needed. Test our quality risk-free. Real followers, 24–48h delivery.' %}
+  {% elseif '/free-youtube-likes' in _page_path %}
+    {% set _seo_desc = 'Get 10–50 free YouTube likes on any public video — no account needed. Test our quality before ordering. Delivery in 6–12 hours.' %}
+  {% elseif '/free-telegram-members' in _page_path %}
+    {% set _seo_desc = 'Get 100 free Telegram members for your channel — no admin access needed. Direct provider, 12–24h delivery. Test our quality first.' %}
+  {% elseif '/free-instagram-views' in _page_path %}
+    {% set _seo_desc = 'Get 500 free Instagram views on any post or reel — no account, no password. Real views delivered in 1–6 hours. Test our quality risk-free.' %}
+  {% elseif '/free-youtube-subscribers' in _page_path %}
+    {% set _seo_desc = 'Get 20 free YouTube subscribers — no Google login, no password needed. Real subscribers, 24–48h delivery. Test our quality before you buy.' %}
+  {% elseif '/free-tiktok-likes' in _page_path %}
+    {% set _seo_desc = 'Get 50 free TikTok likes on any public video — no account, no login. Real likes delivered in 1–6 hours. Test our quality risk-free.' %}
+  {% elseif '/free-tiktok-followers' in _page_path %}
+    {% set _seo_desc = 'Get 10 free TikTok followers — no password, no signup needed. Real followers, 12–24h delivery. Test our quality before ordering.' %}
+  {% elseif '/free-facebook-followers' in _page_path %}
+    {% set _seo_desc = 'Get 50 free Facebook followers on your profile — no login, no password. Real followers delivered in 12–24h. Test our quality first.' %}
+  {% elseif '/free-facebook-likes' in _page_path %}
+    {% set _seo_desc = 'Get 50 free Facebook page likes — no admin access, no login needed. Real page likes, 12–24h delivery. Test our quality risk-free.' %}
+  {% elseif '/free-twitter-followers' in _page_path %}
+    {% set _seo_desc = 'Get 10 free Twitter (X) followers — no password, no login needed. Real followers, 24–48h delivery. Test our quality before you buy.' %}
+  {% elseif '/free-twitch-followers' in _page_path %}
+    {% set _seo_desc = 'Get 50 free Twitch followers — no login, no password needed. Real followers delivered in 6–12 hours. Test our quality risk-free.' %}
+  {% elseif '/free-discord-members' in _page_path %}
+    {% set _seo_desc = 'Get 20 free Discord server members — no bot installation needed. Real members, 12–24h delivery. Test our quality before ordering.' %}
+  {% elseif '/instagram-smm-panel' in _page_path %}
+    {% set _seo_desc = 'Best Instagram SMM panel — 420+ services from $0.02/1K. Buy Instagram followers, likes, views & comments. Instant delivery, auto-refill warranty, reseller API.' %}
+  {% elseif '/telegram-smm-panel' in _page_path %}
+    {% set _seo_desc = 'Cheapest Telegram SMM panel — 120+ services from $0.01/1K. Buy Telegram members, views & reactions. Instant start, zero-drop tiers, reseller API.' %}
+  {% elseif '/tiktok-smm-panel' in _page_path %}
+    {% set _seo_desc = 'Best TikTok SMM panel — 380+ services from $0.04/1K. Buy TikTok followers, likes, views & shares. Instant delivery, wholesale pricing, reseller API.' %}
+  {% elseif '/youtube-smm-panel' in _page_path %}
+    {% set _seo_desc = 'Cheapest YouTube SMM panel — 290+ services from $0.62/1K. Buy YouTube subscribers, views, likes & watch time. Instant delivery, reseller API.' %}
+  {% elseif '/twitter-smm-panel' in _page_path %}
+    {% set _seo_desc = 'Best Twitter / X SMM panel — 180+ services from $0.02/1K. Buy Twitter followers, likes, retweets & views. Instant delivery, reseller API.' %}
+  {% elseif '/spotify-smm-panel' in _page_path %}
+    {% set _seo_desc = 'Best Spotify SMM panel — 140+ services from $0.62/1K. Buy Spotify plays, followers & monthly listeners. Real streams, playlist promotion, reseller API.' %}
+  {% elseif '/facebook-smm-panel' in _page_path %}
+    {% set _seo_desc = 'Cheapest Facebook SMM panel — 210+ services from $0.03/1K. Buy Facebook page likes, followers, post likes & video views. Instant delivery, reseller API.' %}
+  {% elseif '/twitch-smm-panel' in _page_path %}
+    {% set _seo_desc = 'Best Twitch SMM panel — 95+ services from $0.75/1K. Buy Twitch followers, live viewers & chatters. Reach Affiliate faster, reseller API available.' %}
+  {% elseif '/our-story' in _page_path %}
+    {% set _seo_desc = 'Learn how OneSMM became one of the most trusted SMM panels worldwide. Our story, mission, and the values that drive 5,000+ services across 32+ platforms.' %}
+  {% elseif '/careers' in _page_path %}
+    {% set _seo_desc = 'Join the OneSMM team. We\'re building one of the fastest-growing SMM panels and looking for talented people in engineering, marketing, and support.' %}
+  {% elseif _page_path matches '#^https?://[^/]+/?$#' or _page_path == '/' or _page_path == '' %}
+    {% set _seo_desc = 'Cheapest SMM panel in 2026 — 5,000+ services from $0.01/1K. Instagram followers, Telegram members, YouTube subscribers & more. Instant delivery, auto-refill, reseller API.' %}
+  {% else %}
+    {% set _seo_desc = site['seo_desc'] %}
+  {% endif %}
+  <meta name="description" content="{{ _seo_desc }}">
+
+  {# ── Canonical URL ── #}
+  {% if page['url'] %}
+    <link rel="canonical" href="{{ page['url'] }}">
+  {% endif %}
+
+  {# ── Open Graph ── #}
+  <meta property="og:type" content="website">
+  {% if page['url'] %}<meta property="og:url" content="{{ page['url'] }}">{% endif %}
+  <meta property="og:site_name" content="{{ site['name'] }}">
+  <meta property="og:title" content="{{ _seo_title }}">
+  <meta property="og:description" content="{{ _seo_desc }}">
+  {% if site['logo'] %}<meta property="og:image" content="{{ site['logo'] }}">{% endif %}
+
+  {# ── Twitter / X Card ── #}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ _seo_title }}">
+  <meta name="twitter:description" content="{{ _seo_desc }}">
+  {% if site['logo'] %}<meta name="twitter:image" content="{{ site['logo'] }}">{% endif %}
+
+  {# ── JSON-LD: Organization ── #}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": {{ site['name']|json_encode }},
+    "url": "https://onesmm.com",
+    "logo": {{ site['logo']|json_encode }},
+    "description": "Cheapest SMM panel with 5,000+ services across 32+ platforms. Buy Instagram followers, Telegram members, YouTube subscribers and more at wholesale prices.",
+    "sameAs": [
+      "https://t.me/onesmmcom"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "Customer Support",
+      "email": "support@onesmm.com",
+      "availableLanguage": ["English"]
+    }
+  }
+  </script>
+
+  {# ── JSON-LD: WebSite + SearchAction (enables sitelinks search box in SERP) ── #}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": {{ site['name']|json_encode }},
+    "url": "https://onesmm.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://onesmm.com/services?search={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  {# ── JSON-LD: BreadcrumbList (all pages) ── #}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://onesmm.com/"
+      }
+      {% if '/blog/' in _page_path %}
+      ,{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": "https://onesmm.com/blog"
+      }
+      ,{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "{{ page['title'] }}",
+        "item": "https://onesmm.com{{ _page_path }}"
+      }
+      {% elseif _page_path != '/' and _page_path != '' and page['title']|lower not in ['sign in', 'signin', 'login'] %}
+      ,{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "{{ page['title'] }}",
+        "item": "https://onesmm.com{{ _page_path }}"
+      }
+      {% endif %}
+    ]
+  }
+  </script>
+
+  {# ── JSON-LD: Person (blog author — GEO authority signal) ── #}
+  {% if '/blog/' in _page_path %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "OneSMM Editorial",
+    "jobTitle": "Marketing &amp; Growth Team",
+    "worksFor": {
+      "@type": "Organization",
+      "name": {{ site['name']|json_encode }},
+      "url": "https://onesmm.com"
+    },
+    "url": "https://onesmm.com/our-story",
+    "description": "SMM industry analysts covering social media growth strategies, panel mechanics, and platform-specific marketing across Instagram, Telegram, YouTube, TikTok, and Twitter/X."
+  }
+  </script>
+  {% endif %}
+
+  {# ── Sitemap link ── #}
+  <link rel="sitemap" href="https://onesmm.com/sitemap.xml">
+  <link rel="ai-agent" href="https://storage.perfectcdn.com/aedutt/ho3wxopw6q4ho6wy.txt" type="text/plain" title="llms.txt">
+
+  {# RSS feed removed — /blog/feed.xml returns 404 on Perfect Panel.
+     Re-add if PP ever supports RSS: <link rel="alternate" type="application/rss+xml" title="OneSMM Blog" href="https://onesmm.com/blog/feed.xml"> #}
+
+  {% if site['favicon'] %}
+    <link rel="shortcut icon" type="image/ico" href="{{ site['favicon'] }}"/>
+  {% endif %}
+
+  {# IE 8 polyfills removed — IE is dead, these are wasted bytes #}
+
+  {{ site['custom_header'] }}
+
+  {# ── Dark mode: apply theme before CSS renders to prevent flash of wrong theme ── #}
+  <script>
+  (function(){
+    try {
+      var t = localStorage.getItem('pulse-theme');
+      if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    } catch(e) {}
+  })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://storage.perfectcdn.com" crossorigin>
+  <link rel="preconnect" href="https://us.i.posthog.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  {# JetBrains Mono: lazy-loaded (only used for code snippets, not critical path) #}
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  {% if site['rtl'] %}
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+  {% endif %}
+
+  {% for style in site['styles'] %}
+    <link rel="stylesheet" type="text/css" href="{{ style['href'] }}">
+  {% endfor %}
+
+  <script>window.modules = {};</script>
+  {# Lottie player — uncomment when ready to use animated hero #}
+  {# <script src="https://unpkg.com/@dotlottie/player-component@2/dist/dotlottie-player.mjs" type="module"></script> #}
+
+  {# ── PostHog Analytics & A/B Testing ── #}
+  <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_nk9hgvT67KAG5jEyAxjsDzhnj3nu9NzgsVq4T4sAxsV3', {
+      api_host: 'https://us.i.posthog.com',
+      person_profiles: 'identified_only',
+      autocapture: true,
+      capture_pageview: true,
+      capture_pageleave: true
+    });
+
+    {# Identify logged-in users for cohort analysis & experiments #}
+    {% if user['auth'] is defined and user['auth'] %}
+      posthog.identify('{{ user["username"]|default("anonymous") }}');
+    {% endif %}
+
+    {# Tag page category for segmentation #}
+    {% if '/blog' in _page_path %}
+      posthog.register({ page_category: 'blog' });
+    {% elseif '/free-' in _page_path %}
+      posthog.register({ page_category: 'trial' });
+    {% elseif '/instagram-followers' in _page_path or '/telegram-members' in _page_path %}
+      posthog.register({ page_category: 'landing' });
+    {% elseif '/neworder' in _page_path or '/services' in _page_path or '/orders' in _page_path or '/addfunds' in _page_path %}
+      posthog.register({ page_category: 'panel' });
+    {% elseif '/tools/' in _page_path %}
+      posthog.register({ page_category: 'tool' });
+    {% else %}
+      posthog.register({ page_category: 'other' });
+    {% endif %}
+  </script>
+</head>
+<body class="theme-pulse {% if site['rtl'] %}rtl{% endif %}">
+
+{% if user['auth'] %}
+  {# ───────────── Authenticated app shell ───────────── #}
+  <div class="app">
+
+    {# ─── Sidebar (replaces horizontal navbar.navbar-left-block) ─── #}
+    <aside class="sidebar">
+      <a href="{{ page_url('index') }}" class="sidebar-brand">
+        {% if site['logo'] %}
+          <img src="{{ site['logo'] }}" alt="{{ site['name'] }}" title="{{ site['name'] }}">
+        {% else %}
+          <span class="brand-logo-combo">
+            <img src="https://storage.perfectcdn.com/aedutt/bw77pj1h9ga51qfs.svg" alt="" class="brand-logo-icon" aria-hidden="true">
+            <img src="https://storage.perfectcdn.com/aedutt/zi4z1ahe8mr69yfl.svg" alt="OneSMM" class="brand-logo-text">
+          </span>
+        {% endif %}
+      </a>
+
+      <nav class="sidebar-nav">
+        {% for menu in site['menu'] %}
+          {% set _ml = menu['link'] %}
+          <a href="{{ _ml }}"
+             class="sidebar-item {% if menu['active'] %}active{% endif %}"
+             {% if menu['external'] %}target="_blank" rel="noopener"{% endif %}>
+            {% if '/neworder' in _ml %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M12 12v5"/><path d="M9.5 14.5 12 12l2.5 2.5"/></svg>
+            {% elseif '/massorder' in _ml or 'mass-order' in _ml or 'mass_order' in _ml %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="12" height="13" rx="2"/><path d="M7 5h12a2 2 0 0 1 2 2v12"/><path d="M9 12h6"/><path d="M9 15h4"/></svg>
+            {% elseif '/services' in _ml %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7"/><path d="M14 17.5h7"/></svg>
+            {% elseif '/orders' in _ml %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-5"/></svg>
+            {% elseif '/addfunds' in _ml %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h6"/><path d="M2 10h20"/><circle cx="19" cy="18" r="3"/><path d="M19 16.5v3"/><path d="M17.5 18h3"/></svg>
+            {% elseif '/api' in _ml %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m7 8-4 4 4 4"/><path d="m17 8 4 4-4 4"/><path d="m14 4-4 16"/></svg>
+            {% elseif '/tickets' in _ml or '/support' in _ml %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/><path d="M8 10h8"/><path d="M8 13h5"/></svg>
+            {% elseif '/subscriptions' in _ml %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3v4a1 1 0 0 0 1 1h3"/><path d="M21 8v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12l4 4Z"/><path d="M12 11v5"/><path d="M9 14h6"/></svg>
+            {% elseif '/drip' in _ml %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 7.5 5 10.5 5 14.5a7 7 0 0 0 14 0C19 10.5 16 7.5 12 2Z"/><path d="M12 22v-3"/><path d="M8 19c0-2.2 1.8-4 4-4"/></svg>
+            {% elseif '/refill' in _ml %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7"/><path d="M21 12a9 9 0 0 1-15 6.7"/><path d="M18 2v4h-4"/><path d="M6 22v-4h4"/></svg>
+            {% elseif '/refund' in _ml %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h12a4 4 0 0 1 0 8h-3"/><path d="m6 10-3-3 3-3"/><path d="M14 18h2a4 4 0 0 0 3.46-2"/></svg>
+            {% elseif '/blog' in _ml or '/updates' in _ml %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5Z"/><path d="M8 7h8"/><path d="M8 11h5"/></svg>
+            {% elseif '/faq' in _ml %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 2.5-3 5"/><circle cx="12" cy="19" r=".5" fill="currentColor"/></svg>
+            {% elseif '/account' in _ml or '/profile' in _ml %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/><path d="M15 12l2.5 2"/></svg>
+            {% elseif '/child' in _ml %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            {% else %}
+              <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+            {% endif %}
+            <span class="sidebar-label">{{ menu['name'] }}</span>
+          </a>
+        {% endfor %}
+      </nav>
+
+      <div class="sidebar-greeting" id="sidebar-greeting" style="display:none">
+        <span class="sidebar-greeting-wave">👋</span>
+        <span class="sidebar-greeting-text">Welcome back, {{ user['username'] }}</span>
+      </div>
+      <script>
+        (function(){
+          var el=document.getElementById('sidebar-greeting');
+          if(el && localStorage.getItem('onesmm_has_orders')){el.style.display='';}
+        })();
+      </script>
+
+    </aside>
+
+    {# ─── Mobile sidebar trigger + backdrop ─── #}
+    <div class="sidebar-backdrop" id="pulse-sidebar-backdrop" aria-hidden="true"></div>
+
+    {# ─── Main column: topbar + content ─── #}
+    <div class="app-main">
+
+      <header class="topbar" id="navbar">
+        {# Hamburger sits inside the topbar, left of search (best-practice mobile layout).
+           Toggles the sidebar drawer; PP's BS3 `data-toggle` removed because it targets
+           the wrong element. JS handler is below, after the closing </body> region. #}
+        <button type="button" class="navbar-toggle navbar-toggle-mobile collapsed"
+                id="pulse-sidebar-toggle"
+                aria-expanded="false" aria-controls="pulse-sidebar"
+                aria-label="Toggle menu">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        {# Search bar removed — not needed in panel nav #}
+
+        <div class="topbar-spacer"></div>
+
+        {# ── Compact icon row (right side of topbar) ── #}
+        <div class="topbar-icons">
+
+          {# Theme toggle #}
+          <button type="button" class="topbar-icon-btn theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          </button>
+
+          {# Language — flag-only icon button #}
+          {% if site['languages']|length > 1 %}
+            <div class="topbar-lang dropdown">
+              {% for l in site['languages'] %}{% if l['active'] %}
+                <button class="topbar-icon-btn topbar-lang-btn" id="topbar-lang-btn" aria-haspopup="true" aria-expanded="false" aria-label="Change language" title="{{ l['name'] }}">
+                  <span class="topbar-lang-flag">{{ lang_flags[l['name']]|default('🌐') }}</span>
+                </button>
+              {% endif %}{% endfor %}
+              <ul class="dropdown-menu dropdown-menu-right">
+                {% for l in site['languages'] %}
+                  <li {% if l['active'] %}class="active"{% endif %}><a href="{{ l['url'] }}">{{ lang_flags[l['name']]|default('🌐') }} {{ l['name'] }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+          {# Balance / currency — compact pill with amount only #}
+          {% for menu in site['account_menu'] %}
+            {% if not menu['link'] %}
+              {% if site.currencies %}
+                <div class="dropdown dropdown-currencies">
+                  <button class="topbar-balance-btn" aria-haspopup="true" aria-expanded="false" title="Balance & currency">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M3 7a2 2 0 0 1 2-2h14v3"/><path d="M3 7v12a2 2 0 0 0 2 2h16V10H5a2 2 0 0 1-2-2"/>
+                    </svg>
+                    <span class="topbar-balance-amount tabular">{{ user.balance_formatted }}</span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-right" id="currencies-list">
+                    {% for key, rate in site.currencies %}
+                      <li>
+                        <a href="#" id="currencies-item" data-rate-key="{{ key }}" data-rate-symbol="{{ rate.symbol }}">
+                          <span class="tabular">{{ key }}</span>
+                          <span class="muted">{{ rate.symbol }}</span>
+                        </a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+
+          {# Divider #}
+          <span class="topbar-divider"></span>
+
+          {# Account & Logout — icon-only #}
+          {% for menu in site['account_menu'] %}
+            {% if menu['link'] %}
+              {% set _is_logout = 'logout' in menu['link']|lower or 'signout' in menu['link']|lower %}
+              <a href="{{ menu['link'] }}" class="topbar-icon-btn {% if menu['active'] %}is-active{% endif %}"
+                 {% if menu['external'] %}target="_blank" rel="noopener"{% endif %}
+                 aria-label="{{ menu['name'] }}" title="{{ menu['name'] }}">
+                {% if _is_logout %}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                {% else %}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                {% endif %}
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </header>
+
+      <main class="app-content">
+        {# ─── Welcome strip (hidden once user has placed orders) ─── #}
+        <div class="welcome-strip" id="welcome-strip" style="display:none">
+          <div class="welcome-strip-left">
+            <h2 class="welcome-strip-greeting">
+              Welcome back, <span class="welcome-strip-user">{{ user['username'] }}</span>
+            </h2>
+            <p class="welcome-strip-sub">What would you like to do today?</p>
+          </div>
+          <div class="welcome-strip-actions">
+            {% if page['url'] != page_url('neworder') and '/neworder' not in _page_path %}
+            <a href="{{ page_url('neworder') }}" class="welcome-strip-btn welcome-strip-btn--primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              New Order
+            </a>
+            {% endif %}
+            {% if user.balance_formatted matches '/^[^\\d]*0[.,]?0*$/' %}
+            <a href="{{ page_url('addfunds') }}" class="welcome-strip-btn welcome-strip-btn--secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+              Add Funds
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        <script>
+          (function(){
+            var el=document.getElementById('welcome-strip');
+            if(!el)return;
+            if(!localStorage.getItem('onesmm_has_orders')){el.style.display='';}
+          })();
+        </script>
+
+        {{ content }}
+      </main>
+    </div>
+  </div>
+
+{% else %}
+  {# ───────────── Public / unauthenticated shell ───────────── #}
+  {% set _is_auth_page = (page['title']|lower in ['sign up', 'signup', 'register', 'registration']) or ('/signup' in _page_path) or ('/register' in _page_path) %}
+
+  {# ── Announcement bar ── #}
+  <div class="pn-announce" id="pn-announce">
+    <div class="pn-announce__inner">
+      <span class="pn-announce__text">
+        <svg class="pn-announce__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Free trials available — no signup needed
+      </span>
+      <a class="pn-announce__link" href="#free-trials">Try now &rarr;</a>
+      <button class="pn-announce__close" aria-label="Dismiss" onclick="this.closest('.pn-announce').remove()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-default navbar-static-top public-navbar {% if site['rtl'] %}rtl-navbar{% endif %}" id="pn-nav">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="{{ page_url('index') }}">
+          {% if site['logo'] %}
+            <img src="{{ site['logo'] }}" alt="{{ site['name'] }}">
+          {% else %}
+            <span class="brand-logo-combo">
+              <img src="https://storage.perfectcdn.com/aedutt/bw77pj1h9ga51qfs.svg" alt="" class="brand-logo-icon" aria-hidden="true">
+              <img src="https://storage.perfectcdn.com/aedutt/zi4z1ahe8mr69yfl.svg" alt="OneSMM" class="brand-logo-text">
+            </span>
+          {% endif %}
+        </a>
+        {# Mobile-only theme toggle — sits next to hamburger #}
+        <button type="button" class="theme-toggle theme-toggle--mobile" aria-label="Toggle dark mode">
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg>
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
+        {# Mobile-only language switcher — globe icon next to theme toggle #}
+        {% if site['languages']|length > 1 %}
+          <div class="lang-mobile-wrap" id="lang-mobile-wrap">
+            <button type="button" class="lang-mobile-btn" id="lang-mobile-btn" aria-label="Change language" aria-haspopup="true" aria-expanded="false">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </button>
+            <ul class="lang-mobile-menu" id="lang-mobile-menu" style="display:none !important">
+              {% for l in site['languages'] %}
+                <li {% if l['active'] %}class="active"{% endif %}><a href="{{ l['url'] }}">{{ lang_flags[l['name']]|default('🌐') }} {{ l['name'] }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        <button type="button" class="public-menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span class="public-menu-toggle__bar"></span>
+          <span class="public-menu-toggle__bar"></span>
+          <span class="public-menu-toggle__bar"></span>
+        </button>
+      </div>
+
+      <div id="public-navbar" class="collapse navbar-collapse">
+
+
+        {# ── Services mega-dropdown + nav links ── #}
+        <ul class="nav navbar-nav pn-nav-links">
+          <li class="pn-services-drop" id="pn-services-drop">
+            <button class="pn-services-trigger" type="button" aria-expanded="false" aria-haspopup="true">
+              Services
+              <svg class="pn-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="pn-mega" id="pn-mega" aria-hidden="true">
+              <div class="pn-mega__head">
+                <span class="pn-mega__title">SMM Services by Platform</span>
+                <a class="pn-mega__all" href="{{ page_url('services') }}">Browse all 5,000+ &rarr;</a>
+              </div>
+              <div class="pn-mega__grid">
+                <a href="/instagram-smm-panel" class="pn-mega__card">
+                  <span class="pn-mega__icon" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="#fff" stroke="none"/></svg>
+                  </span>
+                  <div class="pn-mega__text"><span class="pn-mega__name">Instagram</span><span class="pn-mega__count">420+ services</span></div>
+                </a>
+                <a href="/telegram-smm-panel" class="pn-mega__card">
+                  <span class="pn-mega__icon" style="background:#0088cc">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                  </span>
+                  <div class="pn-mega__text"><span class="pn-mega__name">Telegram</span><span class="pn-mega__count">120+ services</span></div>
+                </a>
+                <a href="/tiktok-smm-panel" class="pn-mega__card">
+                  <span class="pn-mega__icon" style="background:#000">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1 0-5.78c.32 0 .63.05.93.14V9.01a6.34 6.34 0 0 0-.93-.07 6.34 6.34 0 0 0-6.34 6.36 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.97a8.27 8.27 0 0 0 4.76 1.5V7.03a4.83 4.83 0 0 1-1-.34z"/></svg>
+                  </span>
+                  <div class="pn-mega__text"><span class="pn-mega__name">TikTok</span><span class="pn-mega__count">380+ services</span></div>
+                </a>
+                <a href="/youtube-smm-panel" class="pn-mega__card">
+                  <span class="pn-mega__icon" style="background:#ff0000">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.55A3.02 3.02 0 0 0 .5 6.19 31.7 31.7 0 0 0 0 12a31.7 31.7 0 0 0 .5 5.81 3.02 3.02 0 0 0 2.12 2.14c1.87.56 9.38.56 9.38.56s7.5 0 9.38-.56a3.02 3.02 0 0 0 2.12-2.14A31.7 31.7 0 0 0 24 12a31.7 31.7 0 0 0-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>
+                  </span>
+                  <div class="pn-mega__text"><span class="pn-mega__name">YouTube</span><span class="pn-mega__count">290+ services</span></div>
+                </a>
+                <a href="/twitter-smm-panel" class="pn-mega__card">
+                  <span class="pn-mega__icon" style="background:#000">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  </span>
+                  <div class="pn-mega__text"><span class="pn-mega__name">Twitter / X</span><span class="pn-mega__count">180+ services</span></div>
+                </a>
+                <a href="/spotify-smm-panel" class="pn-mega__card">
+                  <span class="pn-mega__icon" style="background:#1db954">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                  </span>
+                  <div class="pn-mega__text"><span class="pn-mega__name">Spotify</span><span class="pn-mega__count">140+ services</span></div>
+                </a>
+                <a href="/facebook-smm-panel" class="pn-mega__card">
+                  <span class="pn-mega__icon" style="background:#1877f2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                  </span>
+                  <div class="pn-mega__text"><span class="pn-mega__name">Facebook</span><span class="pn-mega__count">210+ services</span></div>
+                </a>
+                <a href="/twitch-smm-panel" class="pn-mega__card">
+                  <span class="pn-mega__icon" style="background:#9146ff">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
+                  </span>
+                  <div class="pn-mega__text"><span class="pn-mega__name">Twitch</span><span class="pn-mega__count">95+ services</span></div>
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li{% if '/services' in _page_path %} class="active"{% endif %}><a href="{{ page_url('services') }}">Pricing</a></li>
+          <li><a href="{{ page_url('index') }}#how-it-works">How It Works</a></li>
+          <li{% if '/our-story' in _page_path %} class="active"{% endif %}><a href="/our-story">Our Story</a></li>
+        </ul>
+
+        {# ── CTA group (right side) ── #}
+        <ul class="nav navbar-nav navbar-right pn-cta-group">
+          <li class="pn-cta-item pn-cta-signin">
+            <a href="{{ page_url('signup') }}#signin">Sign In</a>
+          </li>
+          <li class="pn-cta-item pn-cta-signup">
+            <a href="{{ page_url('signup') }}">
+              Get Started
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </li>
+
+          <li class="pn-cta-item">
+          {% if site['languages']|length > 1 %}
+            <ul class="nav navbar-nav navbar-left-block">
+              <li class="dropdown">
+                {% for lang in site['languages'] %}
+                  {% if lang['active'] %}
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                      {{ lang_flags[lang['name']]|default('🌐') }} {{ lang['name'] }} <span class="caret"></span>
+                    </a>
+                  {% endif %}
+                {% endfor %}
+                <ul class="dropdown-menu dropdown-max-height">
+                  {% for lang in site['languages'] %}
+                    <li {% if lang['active'] %}class="active"{% endif %}>
+                      <a href="{{ lang['url'] }}">{{ lang_flags[lang['name']]|default('🌐') }} {{ lang['name'] }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </li>
+            </ul>
+          {% endif %}
+          </li>
+          <li class="pn-cta-item" style="display:inline-flex;align-items:center;padding:0 4px;">
+            <button type="button" class="theme-toggle" aria-label="Toggle dark mode">
+              <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg>
+              <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="public-shell {% if _is_auth_page %}public-shell--auth{% endif %}">
+    {{ content }}
+  </main>
+
+  {% if not _is_auth_page or ('/signup' in _page_path) or ('/register' in _page_path) %}
+  <footer class="lp-footer">
+
+    <div class="lp-footer__top">
+      <div class="lp-container">
+        <div class="lp-footer__brand">
+          <img src="https://storage.perfectcdn.com/aedutt/dlk4cn5rbt48dw4k.png" alt="{{ site.name|default('OneSMM') }}" class="lp-footer__trust-logo" loading="lazy">
+          <div class="lp-footer__brand-content">
+            <p class="lp-footer__tagline"><span class="lp-footer__brand-accent">ONE<span class="lp-footer__brand-highlight">SMM</span></span> is one of the most trusted SMM panel providers worldwide. Buy affordable social media marketing services to grow your Instagram, Telegram, and other platforms with real, active accounts. We offer 5,000+ services, instant delivery, and 24/7 support - making us one of the fastest SMM panels online.</p>
+            <div class="lp-footer__trust">
+              <span class="lp-footer__trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Secure payments
+              </span>
+              <span class="lp-footer__trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                Automatic refill
+              </span>
+              <span class="lp-footer__trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Instant delivery
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="lp-footer__socials">
+          <a href="https://t.me/onesmmofficial" class="lp-footer__social-icon" aria-label="Telegram" target="_blank" rel="noopener">
+            <img src="https://storage.perfectcdn.com/aedutt/9glonryzj7kh13rt.svg" width="24" height="24" alt="" aria-hidden="true" loading="lazy">
+          </a>
+          <a href="#" class="lp-footer__social-icon" aria-label="WhatsApp" target="_blank" rel="noopener">
+            <img src="https://storage.perfectcdn.com/aedutt/s6hljftl6y535ehc.svg" width="24" height="24" alt="" aria-hidden="true" loading="lazy">
+          </a>
+          <a href="#" class="lp-footer__social-icon" aria-label="YouTube" target="_blank" rel="noopener">
+            <img src="https://storage.perfectcdn.com/aedutt/pwe3qa19n8htld0u.svg" width="24" height="17" alt="" aria-hidden="true" loading="lazy">
+          </a>
+          <a href="#" class="lp-footer__social-icon" aria-label="TikTok" target="_blank" rel="noopener">
+            <img src="https://storage.perfectcdn.com/aedutt/8j06dbp9o8okdiip.svg" width="24" height="24" alt="" aria-hidden="true" loading="lazy">
+          </a>
+          <a href="#" class="lp-footer__social-icon" aria-label="Facebook" target="_blank" rel="noopener">
+            <img src="https://storage.perfectcdn.com/aedutt/o6y861bcuf9mn43i.svg" width="24" height="24" alt="" aria-hidden="true" loading="lazy">
+          </a>
+          <a href="#" class="lp-footer__social-icon" aria-label="LinkedIn" target="_blank" rel="noopener">
+            <img src="https://storage.perfectcdn.com/aedutt/wie6lc9ex2oyhg1n.svg" width="24" height="24" alt="" aria-hidden="true" loading="lazy">
+          </a>
+          <a href="#" class="lp-footer__social-icon" aria-label="X / Twitter" target="_blank" rel="noopener">
+            <img src="https://storage.perfectcdn.com/aedutt/owo2kjk4phkde11t.svg" width="20" height="18" alt="" aria-hidden="true" loading="lazy">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="lp-footer__grid">
+      <div class="lp-container">
+        <div class="lp-footer__grid-inner">
+
+          <div class="lp-footer__col lp-footer__col--services">
+            <div class="lp-footer__col-head">SMM Panels</div>
+            <ul class="lp-footer__links">
+              <li><a href="/instagram-smm-panel">Instagram SMM Panel</a></li>
+              <li><a href="/telegram-smm-panel">Telegram SMM Panel</a></li>
+              <li><a href="/tiktok-smm-panel">TikTok SMM Panel</a></li>
+              <li><a href="/youtube-smm-panel">YouTube SMM Panel</a></li>
+              <li><a href="/twitter-smm-panel">Twitter SMM Panel</a></li>
+              <li><a href="/spotify-smm-panel">Spotify SMM Panel</a></li>
+              <li><a href="/facebook-smm-panel">Facebook SMM Panel</a></li>
+              <li><a href="/twitch-smm-panel">Twitch SMM Panel</a></li>
+            </ul>
+          </div>
+
+          <div class="lp-footer__col">
+            <div class="lp-footer__col-head">Services</div>
+            <ul class="lp-footer__links">
+              <li><a href="{{ page_url('services') }}">All services</a></li>
+              <li><a href="/buy-instagram-followers">Buy Instagram followers</a></li>
+              <li><a href="/buy-telegram-members">Buy Telegram members</a></li>
+              <li><a href="{{ page_url('neworder') }}">New order</a></li>
+              <li><a href="{{ page_url('addfunds') }}">Add funds</a></li>
+            </ul>
+          </div>
+
+          <div class="lp-footer__col lp-footer__col--tools" id="free-trials">
+            <div class="lp-footer__col-head">Free Tools &amp; Trials</div>
+            <ul class="lp-footer__links">
+              <li><a href="/free-instagram-likes">Free Instagram likes</a></li>
+              <li><a href="/free-instagram-followers">Free Instagram followers</a></li>
+              <li><a href="/free-youtube-likes">Free YouTube likes</a></li>
+              <li><a href="/free-telegram-members">Free Telegram members</a></li>
+              <li><a href="/free-instagram-views">Free Instagram views</a></li>
+              <li><a href="/free-youtube-subscribers">Free YouTube subscribers</a></li>
+              <li><a href="/free-tiktok-likes">Free TikTok likes</a></li>
+              <li><a href="/free-tiktok-followers">Free TikTok followers</a></li>
+              <li><a href="/free-facebook-followers">Free Facebook followers</a></li>
+              <li><a href="/free-facebook-likes">Free Facebook page likes</a></li>
+              <li><a href="/free-twitter-followers">Free Twitter followers</a></li>
+              <li><a href="/free-twitch-followers">Free Twitch followers</a></li>
+              <li><a href="/free-discord-members">Free Discord members</a></li>
+              <li><a href="/free-telegram-channel-audit">Telegram channel audit</a></li>
+              <li><a href="/smm-growth-planner">Growth planner</a></li>
+              <li><a href="/engagement-calculator">Engagement calculator</a></li>
+            </ul>
+          </div>
+
+          <div class="lp-footer__col">
+            <div class="lp-footer__col-head">Company</div>
+            <ul class="lp-footer__links">
+              <li><a href="/our-story">Our story</a></li>
+              <li><a href="/careers">Careers</a></li>
+              <li><a href="/howto">How to use</a></li>
+              <li><a href="https://onesmm.com/terms" target="_blank" rel="noopener">Terms of service</a></li>
+              <li><a href="{{ page_url('blog') }}">Blog &amp; guides</a></li>
+              <li><a href="/contact">Contact us</a></li>
+              <li><a href="{{ page_url('faq') }}">FAQ</a></li>
+              <li><a href="/api">API</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="lp-footer__rainbow" aria-hidden="true"></div>
+
+    <div class="lp-footer__bottom">
+      <div class="lp-container">
+        <span class="lp-footer__copy">&copy; {{ "now"|date("Y") }} <a href="/" class="lp-footer__copy-link">{{ site['name']|default('onesmm.com') }}</a> All rights reserved.</span>
+        <span class="lp-footer__bottom-links">
+          <a href="https://onesmm.com/terms" target="_blank" rel="noopener">Terms</a>
+          <span aria-hidden="true">&middot;</span>
+          <a href="https://onesmm.com/terms" target="_blank" rel="noopener">Privacy Policy</a>
+          <span aria-hidden="true">&middot;</span>
+          <a href="/contact">Contact</a>
+          <span aria-hidden="true">&middot;</span>
+          <a href="{{ page_url('signup') }}">Sign up</a>
+        </span>
+        <div class="lp-footer__payments">
+          <span class="lp-footer__pay-label">We accept</span>
+          <div class="lp-footer__pay-logos">
+            <span class="lp-footer__pay-logo" title="Visa">
+              <img src="https://storage.perfectcdn.com/aedutt/n91yw5o2hw489e03.svg" width="45" height="30" alt="Visa" loading="lazy">
+            </span>
+            <span class="lp-footer__pay-logo" title="Mastercard">
+              <img src="https://storage.perfectcdn.com/aedutt/y060d2js5cmcrtjd.svg" width="45" height="30" alt="Mastercard" loading="lazy">
+            </span>
+            <span class="lp-footer__pay-logo" title="PayPal">
+              <img src="https://storage.perfectcdn.com/aedutt/r83u279hqliinx60.svg" width="45" height="30" alt="PayPal" loading="lazy">
+            </span>
+            <span class="lp-footer__pay-logo" title="Apple Pay">
+              <img src="https://storage.perfectcdn.com/aedutt/okf8zi0t7zxsfycg.svg" width="45" height="30" alt="Apple Pay" loading="lazy">
+            </span>
+            <span class="lp-footer__pay-logo" title="USDT">
+              <img src="https://storage.perfectcdn.com/aedutt/aictjk1anxygocm6.svg" width="30" height="30" alt="Tether USDT" loading="lazy">
+            </span>
+            <span class="lp-footer__pay-logo" title="Bitcoin">
+              <img src="https://storage.perfectcdn.com/aedutt/o78muwmhkid54ioz.svg" width="30" height="30" alt="Bitcoin" loading="lazy">
+            </span>
+            <span class="lp-footer__pay-more">+25 More</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </footer>
+  {% endif %}{# not _is_auth_page #}
+{% endif %}
+
+<!-- Notifications wrapper (Perfect Panel core JS targets this id) -->
+<div id="notify-wrapper" class="alert alert-success hidden" style="display: none;"></div>
+
+{{ site['custom_footer'] }}
+
+{% for script in site['scripts'] %}
+  <script type="text/javascript" {% if script['src'] %}src="{{ script['src'] }}"{% endif %}>
+    {% if script['code'] %}
+{{ script['code'] }}
+    {% endif %}
+  </script>
+{% endfor %}
+
+
+
+<script>
+(function(){
+  // Delegate from document so the handler works even if PP rebuilds the topbar later.
+  function getEls() {
+    return {
+      btn: document.getElementById('pulse-sidebar-toggle'),
+      sidebar: document.querySelector('.sidebar'),
+      backdrop: document.getElementById('pulse-sidebar-backdrop')
+    };
+  }
+  function open(){
+    var els = getEls();
+    if (!els.sidebar || !els.backdrop) return;
+    els.sidebar.classList.add('open');
+    els.backdrop.classList.add('is-visible');
+    if (els.btn) {
+      els.btn.classList.add('is-open');
+      els.btn.setAttribute('aria-expanded', 'true');
+    }
+    document.body.style.overflow = 'hidden';
+  }
+  function close(){
+    var els = getEls();
+    if (!els.sidebar || !els.backdrop) return;
+    els.sidebar.classList.remove('open');
+    els.backdrop.classList.remove('is-visible');
+    if (els.btn) {
+      els.btn.classList.remove('is-open');
+      els.btn.setAttribute('aria-expanded', 'false');
+    }
+    document.body.style.overflow = '';
+  }
+  // Click delegation — works no matter when the button is in the DOM
+  document.addEventListener('click', function(e){
+    var trigger = e.target.closest('#pulse-sidebar-toggle');
+    if (trigger) {
+      e.preventDefault();
+      e.stopPropagation();
+      var els = getEls();
+      if (els.sidebar && els.sidebar.classList.contains('open')) close(); else open();
+      return;
+    }
+    if (e.target.closest('#pulse-sidebar-backdrop')) {
+      close();
+      return;
+    }
+    // Close drawer when a sidebar link is tapped on mobile
+    var sidebar = document.querySelector('.sidebar');
+    if (sidebar && sidebar.classList.contains('open') && e.target.closest('.sidebar a')) {
+      close();
+    }
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') {
+      var sidebar = document.querySelector('.sidebar');
+      if (sidebar && sidebar.classList.contains('open')) close();
+    }
+  });
+  window.addEventListener('resize', function(){
+    var sidebar = document.querySelector('.sidebar');
+    if (sidebar && window.innerWidth > 991 && sidebar.classList.contains('open')) close();
+  });
+})();
+
+/* Public navbar hamburger toggle */
+(function(){
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.public-menu-toggle');
+    if (!btn) return;
+    e.preventDefault();
+    var nav = document.getElementById('public-navbar');
+    if (!nav) return;
+    var open = nav.classList.toggle('public-nav-open');
+    btn.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  window.addEventListener('resize', function(){
+    if (window.innerWidth > 768) {
+      var nav = document.getElementById('public-navbar');
+      var btn = document.querySelector('.public-menu-toggle');
+      if (nav) nav.classList.remove('public-nav-open');
+      if (btn) { btn.classList.remove('is-open'); btn.setAttribute('aria-expanded','false'); }
+    }
+  });
+})();
+
+/* ── Navbar JS-sticky + scroll glassmorphism ── */
+(function(){
+  var nav = document.querySelector('.public-navbar');
+  if (!nav) return;
+  var shell = document.querySelector('.public-shell');
+  var placeholder = document.createElement('div');
+  placeholder.style.display = 'none';
+  nav.parentNode.insertBefore(placeholder, nav.nextSibling);
+
+  var stickyTop = nav.offsetTop;
+  var navH = nav.offsetHeight;
+  var isFixed = false;
+  var last = -1;
+
+  function onScroll(){
+    var y = window.pageYOffset || document.documentElement.scrollTop;
+    if (y === last) return;
+    last = y;
+
+    /* Glassmorphism effect */
+    nav.classList.toggle('is-scrolled', y > 8);
+
+    /* JS-based sticky: fix when scrolled past original position */
+    if (y >= stickyTop && !isFixed) {
+      isFixed = true;
+      nav.classList.add('is-fixed');
+      placeholder.style.display = 'block';
+      placeholder.style.height = navH + 'px';
+    } else if (y < stickyTop && isFixed) {
+      isFixed = false;
+      nav.classList.remove('is-fixed');
+      placeholder.style.display = 'none';
+    }
+  }
+
+  /* Recalculate sticky point on resize / announcement dismiss */
+  function recalc(){
+    if (isFixed) {
+      nav.classList.remove('is-fixed');
+      placeholder.style.display = 'none';
+      isFixed = false;
+    }
+    stickyTop = nav.offsetTop;
+    navH = nav.offsetHeight;
+    onScroll();
+  }
+
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', recalc);
+  new MutationObserver(recalc).observe(document.body, {childList:true, subtree:false});
+  onScroll();
+})();
+
+/* ── Services mega-dropdown ── */
+(function(){
+  var drop = document.getElementById('pn-services-drop');
+  var trigger = drop ? drop.querySelector('.pn-services-trigger') : null;
+  var mega = document.getElementById('pn-mega');
+  if (!drop || !trigger || !mega) return;
+
+  var hoverTimeout;
+  function open(){
+    drop.classList.add('is-open');
+    trigger.setAttribute('aria-expanded', 'true');
+    mega.setAttribute('aria-hidden', 'false');
+  }
+  function close(){
+    clearTimeout(hoverTimeout);
+    drop.classList.remove('is-open');
+    trigger.setAttribute('aria-expanded', 'false');
+    mega.setAttribute('aria-hidden', 'true');
+  }
+
+  /* Desktop: hover open/close with slight delay */
+  drop.addEventListener('mouseenter', function(){ clearTimeout(hoverTimeout); open(); });
+  drop.addEventListener('mouseleave', function(){ hoverTimeout = setTimeout(close, 180); });
+
+  /* Click toggle (touch / mobile fallback) */
+  trigger.addEventListener('click', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    drop.classList.contains('is-open') ? close() : open();
+  });
+
+  /* Close on outside click */
+  document.addEventListener('click', function(e){
+    if (!drop.classList.contains('is-open')) return;
+    if (e.target.closest('#pn-services-drop')) return;
+    close();
+  });
+
+  /* Close on Escape */
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && drop.classList.contains('is-open')) close();
+  });
+})();
+
+/* ── Mobile language dropdown ── */
+(function(){
+  var ready = false;
+  setTimeout(function(){ ready = true; }, 600);
+  var btn = document.getElementById('lang-mobile-btn');
+  var menu = document.getElementById('lang-mobile-menu');
+  function isOpen() { return menu && menu.style.getPropertyValue('display') === 'block'; }
+  function show() { menu.style.setProperty('display','block','important'); btn.setAttribute('aria-expanded','true'); }
+  function hide() { menu.style.setProperty('display','none','important'); btn.setAttribute('aria-expanded','false'); }
+  if (btn && menu) {
+    menu.style.setProperty('display','none','important');
+    btn.addEventListener('click', function(e){
+      if (!ready) return;
+      e.preventDefault();
+      e.stopPropagation();
+      isOpen() ? hide() : show();
+    });
+  }
+  document.addEventListener('click', function(e){
+    if (!isOpen()) return;
+    if (e.target.closest('#lang-mobile-wrap')) return;
+    hide();
+  });
+})();
+
+/* ── Topbar language dropdown (authenticated header) ── */
+(function(){
+  var wrap = document.querySelector('.topbar-lang');
+  var btn  = document.getElementById('topbar-lang-btn');
+  if (!btn || !wrap) return;
+  btn.addEventListener('click', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    wrap.classList.toggle('open');
+    btn.setAttribute('aria-expanded', wrap.classList.contains('open') ? 'true' : 'false');
+  });
+  document.addEventListener('click', function(e){
+    if (!wrap.classList.contains('open')) return;
+    if (e.target.closest('.topbar-lang')) return;
+    wrap.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  });
+})();
+
+/* ── Balance / currency dropdown (authenticated topbar) ── */
+(function(){
+  var wrap = document.querySelector('.dropdown-currencies');
+  var btn  = wrap ? wrap.querySelector('.topbar-balance-btn') : null;
+  if (!btn || !wrap) return;
+  btn.addEventListener('click', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    wrap.classList.toggle('open');
+    btn.setAttribute('aria-expanded', wrap.classList.contains('open') ? 'true' : 'false');
+  });
+  document.addEventListener('click', function(e){
+    if (!wrap.classList.contains('open')) return;
+    if (e.target.closest('.dropdown-currencies')) return;
+    wrap.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  });
+})();
+
+/* ── Dark mode toggle ── */
+(function(){
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    try { localStorage.setItem('pulse-theme', t); } catch(e) {}
+  }
+  function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme');
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.classList.add('theme-transitioning');
+    applyTheme(next);
+    setTimeout(function(){ document.documentElement.classList.remove('theme-transitioning'); }, 300);
+  }
+  document.addEventListener('click', function(e){
+    if (e.target.closest('.theme-toggle')) toggleTheme();
+  });
+  try {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e){
+      if (!localStorage.getItem('pulse-theme')) {
+        applyTheme(e.matches ? 'dark' : 'light');
+      }
+    });
+  } catch(e) {}
+})();
+
+
+</script>
+</body>
+</html>

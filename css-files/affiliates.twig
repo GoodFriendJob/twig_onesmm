@@ -1,0 +1,159 @@
+{# affiliates.twig — Pulse styled
+   Variables: site.rtl, page.url, status, affiliates, referral_link, commission_rate,
+              minimum_payout, statistics{...}, payments, pagination, lang(...)
+#}
+<div class="affiliates-page subscriptions-page">
+
+  {# ── Headline KPIs ── #}
+  <div class="aff-kpi-grid">
+    <div class="aff-kpi">
+      <div class="aff-kpi-label">{{ lang('affiliates.total_earnings') }}</div>
+      <div class="aff-kpi-value tabular">{{ statistics['total_earnings'] }}</div>
+    </div>
+    <div class="aff-kpi aff-kpi-accent">
+      <div class="aff-kpi-label">{{ lang('affiliates.available_earnings') }}</div>
+      <div class="aff-kpi-value tabular">{{ statistics['unpaid_earnings'] }}</div>
+      {% if statistics['request_payout'] %}
+        <a href="{{ page['url'] }}/request-payout" class="btn btn-primary aff-payout-btn">
+          {{ lang('affiliates.request_payout') }}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      {% endif %}
+    </div>
+    <div class="aff-kpi">
+      <div class="aff-kpi-label">{{ lang('affiliates.conversion_rate') }}</div>
+      <div class="aff-kpi-value tabular">{{ statistics['conversion_rate'] }}</div>
+    </div>
+  </div>
+
+  {# ── Funnel: visits → registrations → paid referrals ── #}
+  <div class="aff-funnel">
+    <div class="aff-funnel-step">
+      <div class="aff-funnel-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <div class="aff-funnel-label">{{ lang('affiliates.visits') }}</div>
+      <div class="aff-funnel-value tabular">{{ statistics['total_visits'] }}</div>
+    </div>
+    <div class="aff-funnel-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+    <div class="aff-funnel-step">
+      <div class="aff-funnel-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6"/><path d="M22 11h-6"/></svg>
+      </div>
+      <div class="aff-funnel-label">{{ lang('affiliates.registrations') }}</div>
+      <div class="aff-funnel-value tabular">{{ statistics['referral_registrations'] }}</div>
+    </div>
+    <div class="aff-funnel-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+    <div class="aff-funnel-step">
+      <div class="aff-funnel-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div class="aff-funnel-label">{{ lang('affiliates.referrals') }}</div>
+      <div class="aff-funnel-value tabular">{{ statistics['paid_referrals'] }}</div>
+    </div>
+  </div>
+
+  {# ── Referral link card + program terms ── #}
+  <div class="aff-grid">
+
+    <div class="card aff-link-card">
+      <div class="card-body">
+        <div class="card-section-head">
+          <div class="h3">{{ lang('affiliates.referral_link') }}</div>
+          <span class="status-pill status-1">Active</span>
+        </div>
+        <p class="muted small" style="margin: 0 0 14px;">Share this link anywhere — Telegram, Discord, your site, your bio. Every signup is tagged to you forever.</p>
+
+        <div class="aff-link-row">
+          <input type="text" id="aff-referral-input" class="form-control" value="{{ referral_link }}" readonly>
+          <button type="button" class="btn btn-primary aff-copy-btn" onclick="
+            var el = document.getElementById('aff-referral-input');
+            el.select(); el.setSelectionRange(0, 99999);
+            try { document.execCommand('copy'); } catch(e) {}
+            if (navigator.clipboard) navigator.clipboard.writeText(el.value);
+            this.querySelector('.aff-copy-label').textContent = 'Copied';
+            setTimeout(function(){ document.querySelector('.aff-copy-label').textContent = 'Copy'; }, 1400);
+          ">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span class="aff-copy-label">Copy</span>
+          </button>
+        </div>
+
+        <div class="aff-program-grid">
+          <div class="aff-program-cell">
+            <div class="aff-program-label">{{ lang('affiliates.commission_rate') }}</div>
+            <div class="aff-program-value tabular">{{ commission_rate }}</div>
+          </div>
+          <div class="aff-program-cell">
+            <div class="aff-program-label">{{ lang('affiliates.minimum_payout') }}</div>
+            <div class="aff-program-value tabular">{{ minimum_payout }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if affiliates %}
+      <article class="card aff-content">
+        <div class="card-body {% if site['rtl'] %}rtl-content{% endif %}">
+          {{ affiliates }}
+        </div>
+      </article>
+    {% endif %}
+
+  </div>
+
+  {# ── Payout history ── #}
+  {% if payments|length %}
+    <div class="page-toolbar tickets-toolbar" style="margin-top: 28px;">
+      <div class="tickets-toolbar-title">
+        <h2 class="h3">Payout history</h2>
+      </div>
+    </div>
+
+    <div class="card data-card">
+      <div class="table-responsive">
+        <table class="table data-table {% if site['rtl'] %}rtl-table{% endif %}">
+          <thead>
+            <tr>
+              <th class="nowrap">{{ lang('affiliates.payout_date') }}</th>
+              <th class="nowrap">{{ lang('affiliates.payout_amount') }}</th>
+              <th>{{ lang('affiliates.payout_status') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for payment in payments %}
+              <tr>
+                <td class="muted nowrap tabular">{{ payment['date'] }}</td>
+                <td class="ink tabular nowrap">{{ payment['amount'] }}</td>
+                <td><span class="status-pill">{{ payment['status'] }}</span></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if pagination['count'] > 100 %}
+    <ul class="pagination {% if site['rtl'] %}rtl-pagination{% endif %}">
+      {% if pagination['current'] != 1 %}
+        <li><a href="{{ page['url'] }}/{{ status }}/{{ pagination['last'] }}" aria-label="Previous">&laquo;</a></li>
+      {% endif %}
+      {% set r, l = 3, 3 %}
+      {% if pagination['current'] == 1 %}{% set r = 6 %}{% endif %}
+      {% if pagination['current'] == 2 %}{% set r = 5 %}{% endif %}
+      {% if pagination['current'] >= pagination['pages'] %}{% set l = 5 %}{% endif %}
+      {% for i in 1..ceil(pagination['pages']) %}
+        {% if i >= (pagination['current']-l) and i <= (pagination['current']+r) %}
+          <li{% if i == pagination['current'] %} class="active"{% endif %}>
+            <a href="{{ page['url'] }}/{{ i }}">{{ i }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+      {% if pagination['current'] < pagination['pages'] %}
+        <li><a href="{{ page['url'] }}/{{ status }}/{{ pagination['next'] }}" aria-label="Next">&raquo;</a></li>
+      {% endif %}
+    </ul>
+  {% endif %}
+
+</div>

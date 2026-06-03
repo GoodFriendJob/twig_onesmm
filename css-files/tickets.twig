@@ -1,0 +1,167 @@
+{# tickets.twig — Pulse styled
+   Variables: site.rtl, page.url, additionalFieldsEnabled, additionalFields,
+              ticketList, search, pagination, ticketsText, csrftoken, lang(...)
+#}
+<div class="tickets-page subscriptions-page">
+
+  <div class="tickets-grid">
+
+    {# ── New ticket form ── #}
+    <div class="card">
+      <div class="card-body">
+        <div class="card-section-head">
+          <div class="h3">{{ lang('tickets.new')|default('New ticket') }}</div>
+          <div class="muted small">Avg. first reply · 30 min</div>
+        </div>
+
+        <form {% if site['rtl'] %}class="rtl-form"{% endif %} method="post" action="" id="ticketsend" class="ticket-form">
+          <div class="alert alert-dismissible alert-danger ticket-danger {% if site['rtl'] %}rtl-alert{% endif %}" style="display: none">
+            <button type="button" class="close">&times;</button>
+            <div></div>
+          </div>
+
+          {% if additionalFieldsEnabled %}
+            <div class="form-group">
+              <label for="ticket-category-field" class="control-label">{{ lang('tickets.category') }}</label>
+              <select id="ticket-category-field" name="TicketForm[category]" class="form-control">
+                {% for categoryField in additionalFields %}
+                  <option value="{{ categoryField.id }}">{{ categoryField.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div id="ticket-fields" data-ticket-fields="true"></div>
+          {% else %}
+            <div class="form-group">
+              <label for="subject" class="control-label">{{ lang('tickets.subject') }}</label>
+              <input type="text" class="form-control" id="subject" name="TicketForm[subject]">
+            </div>
+          {% endif %}
+
+          <div class="form-group">
+            <label for="message" class="control-label">{{ lang('tickets.message') }}</label>
+            <textarea class="form-control" rows="7" id="message" name="TicketForm[message]" placeholder="Describe your issue. Include order IDs, links, screenshots if relevant."></textarea>
+          </div>
+
+          <div class="form-group">
+            <div
+              class="tickets-uploader"
+              data-rtl="{% if site['rtl'] %}true{% else %}false{% endif %}"
+              data-lang-button-attach="{{ lang('tickets.button.attach') }}"
+              data-lang-file-format-incorrect="{{ lang('tickets.error.file_format.incorrect') }}"
+              data-lang-file-size-incorrect="{{ lang('tickets.error.file_size.incorrect') }}"
+            ></div>
+          </div>
+
+          <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+
+          <button type="submit" class="btn btn-primary auth-submit">
+            {{ lang('tickets.button') }}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    {# ── Tips card ── #}
+    <aside class="card tickets-tips">
+      <div class="card-body">
+        <div class="h3">Faster replies</div>
+        <ul class="tickets-tips-list">
+          <li><strong>Include the order ID</strong> — saves us 5 minutes of looking it up.</li>
+          <li><strong>Paste the link</strong> you ordered for, exactly as you submitted it.</li>
+          <li><strong>Attach a screenshot</strong> if there's a delivery or count issue.</li>
+          <li><strong>Don't double-post</strong> — new tickets push your queue position back.</li>
+        </ul>
+        <div class="tickets-sla">
+          <div class="sla-row"><span class="muted">Avg. first reply</span><span class="ink tabular">~30 min</span></div>
+          <div class="sla-row"><span class="muted">Hours</span><span class="ink">24 / 7</span></div>
+          <div class="sla-row"><span class="muted">Languages</span><span class="ink">EN · ES · PT · AR</span></div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  {# ── Search ── #}
+  {% if ticketList or search %}
+    <div class="page-toolbar tickets-toolbar">
+      <div class="tickets-toolbar-title">
+        <h2 class="h3">Your tickets</h2>
+      </div>
+      <form action="{{ page['url'] }}" method="get" id="history-search" class="page-search">
+        <div class="input-with-icon">
+          <span class="input-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          </span>
+          <input type="text" class="form-control" value="{{ search }}" name="search" placeholder="{{ lang('general.search.placeholder') }}">
+        </div>
+      </form>
+    </div>
+  {% endif %}
+
+  {# ── Tickets table ── #}
+  {% if ticketList %}
+    <div class="card data-card">
+      <div class="table-responsive">
+        <table class="table data-table {% if site['rtl'] %}rtl-table{% endif %}">
+          <thead>
+            <tr>
+              <th class="col-id">{{ lang('tickets.id') }}</th>
+              <th>{{ lang('tickets.subject') }}</th>
+              <th>{{ lang('tickets.status') }}</th>
+              <th class="nowrap">{{ lang('tickets.updated') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ticket in ticketList %}
+              <tr>
+                <td class="tabular ink">{{ ticket['id'] }}</td>
+                <td>
+                  {% if ticket['new'] == 1 %}
+                    <a href="{{ page_url('viewticket') }}/{{ ticket['id'] }}" class="ink"><strong>{{ ticket['theme'] }}</strong></a>
+                    <span class="status-pill status-1" style="margin-left:8px">New reply</span>
+                  {% else %}
+                    <a href="{{ page_url('viewticket') }}/{{ ticket['id'] }}" class="ink">{{ ticket['theme'] }}</a>
+                  {% endif %}
+                </td>
+                <td><span class="status-pill">{{ ticket['status'] }}</span></td>
+                <td class="muted nowrap tabular">{{ ticket['time'] }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if pagination['count'] > 50 %}
+    <ul class="pagination {% if site['rtl'] %}rtl-pagination{% endif %}">
+      {% if pagination['current'] != 1 %}
+        <li><a href="{{ page['url'] }}/{{ pagination['last'] }}" aria-label="Previous">&laquo;</a></li>
+      {% endif %}
+      {% set r, l = 3, 3 %}
+      {% if pagination['current'] == 1 %}{% set r = 6 %}{% endif %}
+      {% if pagination['current'] == 2 %}{% set r = 5 %}{% endif %}
+      {% if pagination['current'] >= pagination['pages'] %}{% set l = 5 %}{% endif %}
+      {% for i in 1..ceil(pagination['pages']) %}
+        {% if i >= (pagination['current']-l) and i <= (pagination['current']+r) %}
+          <li{% if i == pagination['current'] %} class="active"{% endif %}>
+            <a href="{{ page['url'] }}/{{ i }}">{{ i }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+      {% if pagination['current'] < pagination['pages'] %}
+        <li><a href="{{ page['url'] }}/{{ pagination['next'] }}" aria-label="Next">&raquo;</a></li>
+      {% endif %}
+    </ul>
+  {% endif %}
+
+  {% if ticketsText %}
+    <div class="card neworder-text" style="margin-top: 20px;">
+      <div class="card-body {% if site['rtl'] %}rtl-content{% endif %}">
+        {{ ticketsText }}
+      </div>
+    </div>
+  {% endif %}
+
+</div>

@@ -1,0 +1,89 @@
+{# childpanels.twig — Pulse styled
+   Variables: site.rtl, panelsList, error/errorMessage, success/successMessage,
+              renew, renewUrl, renewMessage, restore, restoreUrl, lang(...)
+#}
+<div class="childpanels-page subscriptions-page">
+
+  {% if error %}
+    <div class="alert alert-dismissible alert-danger {% if site['rtl'] %}rtl-alert{% endif %}">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      {{ errorMessage }}
+    </div>
+  {% endif %}
+  {% if success %}
+    <div class="alert alert-dismissible alert-success {% if site['rtl'] %}rtl-alert{% endif %}">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      {{ successMessage }}
+    </div>
+  {% endif %}
+
+  {% if renew %}
+    <div class="alert alert-danger panel-action-alert">
+      <div class="panel-action-text">{{ renewMessage }}</div>
+      <a href="{{ renewUrl }}" class="btn btn-default panel-action-btn" id="child-panels-renew">
+        {{ lang('child_panel.button.renew') }}
+      </a>
+    </div>
+  {% endif %}
+
+  {% if restore %}
+    <div class="alert alert-danger panel-action-alert">
+      <div class="panel-action-text">{{ lang('child_panel.restore.message')|default('This panel was canceled — you can restore it.') }}</div>
+      <a href="{{ restoreUrl }}" class="btn btn-default panel-action-btn" id="child-panels-restore">
+        {{ lang('child_panel.button.restore') }}
+      </a>
+    </div>
+  {% endif %}
+
+  {% if panelsList %}
+    <div class="card data-card">
+      <div class="table-responsive">
+        <table class="table data-table">
+          <thead>
+            <tr>
+              <th>{{ lang('child_panel.domain') }}</th>
+              <th>{{ lang('child_panel.status') }}</th>
+              <th class="nowrap">{{ lang('child_panel.created') }}</th>
+              <th class="nowrap">{{ lang('child_panel.expiry') }}</th>
+              <th class="actions"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for panel in panelsList %}
+              <tr>
+                <td class="ink">
+                  <a href="https://{{ panel['domain'] }}" target="_blank" rel="noopener" class="ink panel-domain">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    {{ panel['domain'] }}
+                  </a>
+                </td>
+                <td><span class="status-pill">{{ panel['status'] }}</span></td>
+                <td class="muted nowrap tabular">{{ panel['created'] }}</td>
+                <td class="muted nowrap tabular">{{ panel['expiry'] }}</td>
+                <td class="actions nowrap">
+                  {% if panel['admin'] %}
+                    <a href="{{ panel['admin_url'] }}" class="btn btn-default account-secondary-btn" target="_blank" rel="noopener">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                      {{ lang('child_panel.button.admin') }}
+                    </a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% else %}
+    <div class="card empty-state-card">
+      <div class="card-body">
+        <div class="empty-state-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="empty-state-title">No child panels yet</div>
+        <p class="muted small" style="margin: 0 0 16px;">Launch your own branded SMM panel — your customers, your prices, your domain.</p>
+      </div>
+    </div>
+  {% endif %}
+
+</div>

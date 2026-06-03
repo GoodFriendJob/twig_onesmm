@@ -1,0 +1,92 @@
+{# drip_feed.twig — Pulse styled
+   Variables: site.rtl, page.url, status, search, dripFeedList, pagination, lang(...)
+#}
+<div class="dripfeed-page subscriptions-page">
+
+  {# ── Toolbar: status pills + search ── #}
+  <div class="page-toolbar">
+    <ul class="status-pills nav nav-pills {% if site['rtl'] %}rtl-nav{% endif %}">
+      <li {% if 'all' == status %}class="active"{% endif %}><a href="{{ page['url'] }}">{{ lang('dripfeed.status.all') }}</a></li>
+      <li {% if 'active' == status %}class="active"{% endif %}><a href="{{ page['url'] }}/active">{{ lang('dripfeed.status.active') }}</a></li>
+      <li {% if 'completed' == status %}class="active"{% endif %}><a href="{{ page['url'] }}/completed">{{ lang('dripfeed.status.completed') }}</a></li>
+      <li {% if 'canceled' == status %}class="active"{% endif %}><a href="{{ page['url'] }}/canceled">{{ lang('dripfeed.status.canceled') }}</a></li>
+    </ul>
+
+    <form action="{{ page['url'] }}" method="get" id="history-search" class="page-search">
+      <div class="input-with-icon">
+        <span class="input-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </span>
+        <input type="text" name="search" class="form-control" placeholder="{{ lang('general.search.placeholder') }}" value="{{ search }}">
+      </div>
+    </form>
+  </div>
+
+  {# ── Table ── #}
+  <div class="card data-card">
+    <div class="table-responsive">
+      <table class="table data-table {% if site['rtl'] %}rtl-table{% endif %}">
+        <thead>
+          <tr>
+            <th class="col-id">{{ lang('dripfeed.id') }}</th>
+            <th class="nowrap">{{ lang('dripfeed.date') }}</th>
+            <th>{{ lang('dripfeed.link') }}</th>
+            <th class="nowrap">{{ lang('dripfeed.total_charge') }}</th>
+            <th class="nowrap">{{ lang('dripfeed.quantity') }}</th>
+            <th>{{ lang('dripfeed.service') }}</th>
+            <th class="nowrap">{{ lang('dripfeed.runs') }}</th>
+            <th class="nowrap">{{ lang('dripfeed.interval') }}</th>
+            <th class="nowrap">{{ lang('dripfeed.total_quantity') }}</th>
+            <th>{{ lang('dripfeed.status') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for dripFeed in dripFeedList %}
+            <tr>
+              <td class="tabular ink">{{ dripFeed['id'] }}</td>
+              <td class="muted nowrap tabular">{{ dripFeed['date'] }}</td>
+              <td class="link"><span class="break-all">{{ dripFeed['link'] }}</span></td>
+              <td class="tabular nowrap ink">{{ dripFeed['total_charges'] }}</td>
+              <td class="tabular">{{ dripFeed['quantity'] }}</td>
+              <td>{{ dripFeed['service'] }}</td>
+              <td class="nowrap tabular">
+                {% if dripFeed['runs_current'] %}
+                  <a href="{{ page_url('orders') }}?drip-feed={{ dripFeed['id'] }}">{{ dripFeed['runs_current'] }}</a>
+                {% else %}{{ dripFeed['runs_current'] }}{% endif %}
+                / {{ dripFeed['runs_all'] }}
+              </td>
+              <td class="tabular">{{ dripFeed['interval'] }}</td>
+              <td class="tabular">{{ dripFeed['total_quantity'] }}</td>
+              <td><span class="status-pill">{{ dripFeed['status_name'] }}</span></td>
+            </tr>
+          {% else %}
+            <tr><td colspan="10" class="empty-cell">No drip-feed orders to show.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% if pagination['count'] > 100 %}
+    <ul class="pagination {% if site['rtl'] %}rtl-pagination{% endif %}">
+      {% if pagination['current'] != 1 %}
+        <li><a href="{{ page['url'] }}/{{ status }}/{{ pagination['last'] }}{% if search %}?search={{ search }}{% endif %}" aria-label="Previous">&laquo;</a></li>
+      {% endif %}
+      {% set r, l = 3, 3 %}
+      {% if pagination['current'] == 1 %}{% set r = 6 %}{% endif %}
+      {% if pagination['current'] == 2 %}{% set r = 5 %}{% endif %}
+      {% if pagination['current'] >= pagination['pages'] %}{% set l = 5 %}{% endif %}
+      {% for i in 1..ceil(pagination['pages']) %}
+        {% if i >= (pagination['current']-l) and i <= (pagination['current']+r) %}
+          <li{% if i == pagination['current'] %} class="active"{% endif %}>
+            <a href="{{ page['url'] }}/{{ status }}/{{ i }}{% if search %}?search={{ search }}{% endif %}">{{ i }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+      {% if pagination['current'] < pagination['pages'] %}
+        <li><a href="{{ page['url'] }}/{{ status }}/{{ pagination['next'] }}{% if search %}?search={{ search }}{% endif %}" aria-label="Next">&raquo;</a></li>
+      {% endif %}
+    </ul>
+  {% endif %}
+
+</div>

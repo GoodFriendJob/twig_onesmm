@@ -1,0 +1,1130 @@
+{# neworder.twig — Pulse stepped flow
+   Perfect Panel JS hooks preserved:
+     #order-form, #orderform-category, #orderform-service, #charge, #fields,
+     #service_description, #new-order-search, #template-input,
+     data-select, data-select-search, data-select-search-placeholder, data-select-dir
+#}
+<div class="neworder-page">
+
+  <form id="order-form" {% if site['rtl'] %}class="rtl-form"{% endif %} action="{{ page['url'] }}" method="post">
+    <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+
+    <div class="neworder-grid">
+
+      {# ─── LEFT: order form ─── #}
+      <div class="neworder-form">
+
+        {% if error %}
+          <div class="alert alert-dismissible alert-danger {% if site['rtl'] %}rtl-alert{% endif %}">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ errorMessage }}
+          </div>
+        {% endif %}
+
+        {% if 1 == success %}
+          <script>try{localStorage.setItem('onesmm_has_orders','1')}catch(e){}</script>
+          <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4>{{ lang('neworder.message.success') }}</h4>
+            <div class="success-grid">
+              <span>{{ lang('neworder.id') }}</span><span class="tabular">{{ order['id'] }}</span>
+              <span>{{ lang('neworder.service') }}</span><span>{{ order['service'] }}</span>
+              <span>{{ lang('neworder.link') }}</span><span class="break-all">{{ order['link'] }}</span>
+              <span>{{ lang('neworder.quantity') }}</span><span class="tabular">{{ order['quantity'] }}</span>
+              <span>{{ lang('neworder.charge') }}</span>
+              <span class="tabular">{% if order.converted %}<span data-toggle="tooltip" data-placement="top" title="{{ order.original_charge }}">{{ order['charge'] }}</span>{% else %}{{ order['charge'] }}{% endif %}</span>
+              <span>{{ lang('neworder.balance') }}</span>
+              <span class="tabular">{% if order.converted %}<span data-toggle="tooltip" data-placement="top" title="{{ order.original_balance }}">{{ order['balance'] }}</span>{% else %}{{ order['balance'] }}{% endif %}</span>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if 2 == success %}
+          <script>try{localStorage.setItem('onesmm_has_orders','1')}catch(e){}</script>
+          <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4>{{ lang('neworder.message.success') }}</h4>
+            <div class="success-grid">
+              <span>{{ lang('neworder.subscription_id') }}</span><span class="tabular">{{ order['id'] }}</span>
+              <span>{{ lang('neworder.service') }}</span><span>{{ order['service'] }}</span>
+              <span>{{ lang('neworder.username') }}</span><span class="break-all">{{ order['link'] }}</span>
+              <span>{{ lang('neworder.quantity') }}</span>
+              <span class="tabular">{% if order['quantity_min'] == order['quantity_max'] %}{{ order['quantity_max'] }}{% else %}{{ order['quantity_min'] }}–{{ order['quantity_max'] }}{% endif %}</span>
+              <span>{{ lang('neworder.new_posts') }}</span><span class="tabular">{{ order['posts'] }}</span>
+              <span>{{ lang('neworder.old_posts') }}</span><span class="tabular">{{ order['old_posts'] }}</span>
+              <span>{{ lang('neworder.delay') }}</span><span class="tabular">{{ order['delay'] }}</span>
+            </div>
+          </div>
+        {% endif %}
+
+        {# ── Platform chips card ── #}
+        <div class="card platform-card">
+          <div class="card-body">
+            <div class="platform-head">
+              <div class="platform-step-num">1</div>
+              <div class="h3">Choose a platform</div>
+            </div>
+            <div class="platform-grid" id="platform-grid">
+              <button type="button" class="pulse-platform-chip" data-pulse-platform="telegram" data-platform-id="6" data-keywords="telegram tg">
+                <span class="platform-icon platform-tg"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M21.95 4.27 18.7 19.6c-.24 1.08-.88 1.35-1.78.84l-4.92-3.63-2.37 2.28c-.26.26-.48.48-.99.48l.36-5.05 9.18-8.3c.4-.36-.09-.55-.62-.2L6.21 13.16 1.32 11.62c-1.06-.33-1.08-1.06.22-1.57l19.12-7.37c.88-.33 1.65.2 1.29 1.59z"/></svg></span>
+                <span class="platform-name">Telegram</span>
+              </button>
+              <button type="button" class="pulse-platform-chip is-coming-soon" data-pulse-platform="instagram" data-platform-id="1" data-coming-soon="true" data-keywords="instagram insta ig">
+                <span class="platform-icon platform-ig"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></span>
+                <span class="platform-name">Instagram</span>
+              </button>
+              <button type="button" class="pulse-platform-chip is-coming-soon" data-pulse-platform="tiktok" data-platform-id="3" data-coming-soon="true" data-keywords="tiktok tik tok">
+                <span class="platform-icon platform-tiktok"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.45a8.16 8.16 0 0 0 4.77 1.52V6.5a4.85 4.85 0 0 1-1.84.19z"/></svg></span>
+                <span class="platform-name">TikTok</span>
+              </button>
+              <button type="button" class="pulse-platform-chip is-coming-soon" data-pulse-platform="youtube" data-platform-id="4" data-coming-soon="true" data-keywords="youtube yt">
+                <span class="platform-icon platform-yt"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6z"/></svg></span>
+                <span class="platform-name">YouTube</span>
+              </button>
+              <button type="button" class="pulse-platform-chip is-coming-soon" data-pulse-platform="twitter" data-platform-id="5" data-coming-soon="true" data-keywords="twitter">
+                <span class="platform-icon platform-x"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span>
+                <span class="platform-name">X / Twitter</span>
+              </button>
+              <button type="button" class="pulse-platform-chip is-coming-soon" data-pulse-platform="facebook" data-platform-id="2" data-coming-soon="true" data-keywords="facebook fb">
+                <span class="platform-icon platform-fb"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12a12 12 0 1 0-13.875 11.85V15.47H7.078V12h3.047V9.356c0-3.007 1.792-4.668 4.533-4.668 1.312 0 2.686.234 2.686.234v2.953h-1.514c-1.49 0-1.955.925-1.955 1.875V12h3.328l-.532 3.47h-2.796v8.38A12 12 0 0 0 24 12z"/></svg></span>
+                <span class="platform-name">Facebook</span>
+              </button>
+              <button type="button" class="pulse-platform-chip is-coming-soon" data-pulse-platform="website" data-platform-id="24" data-coming-soon="true" data-keywords="traffic website">
+                <span class="platform-icon platform-website"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+                <span class="platform-name">Website</span>
+              </button>
+              <button type="button" class="pulse-platform-chip is-coming-soon" data-pulse-platform="linkedin" data-platform-id="12" data-coming-soon="true" data-keywords="linkedin">
+                <span class="platform-icon platform-li"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.41v1.56h.05a3.74 3.74 0 0 1 3.36-1.85c3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.8 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></span>
+                <span class="platform-name">LinkedIn</span>
+              </button>
+              <button type="button" class="pulse-platform-chip is-coming-soon" data-pulse-platform="discord" data-platform-id="20" data-coming-soon="true" data-keywords="discord">
+                <span class="platform-icon platform-discord"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.32 4.37A19.79 19.79 0 0 0 15.42 3l-.24.27a13.46 13.46 0 0 1 4.4 2.13 16.04 16.04 0 0 0-13.6 0A13.4 13.4 0 0 1 10.4 3.27L10.16 3a19.79 19.79 0 0 0-4.9 1.37A20.34 20.34 0 0 0 1.7 17.66 19.83 19.83 0 0 0 7.7 20.7l.5-.7a13.07 13.07 0 0 1-2.04-1l.4-.3a14.13 14.13 0 0 0 12.6 0l.4.3c-.64.4-1.32.74-2.04 1l.5.7a19.83 19.83 0 0 0 6-3.04 20.36 20.36 0 0 0-3.7-13.3zM8.7 15.6a2.32 2.32 0 0 1-2.16-2.43A2.31 2.31 0 0 1 8.7 10.74a2.3 2.3 0 0 1 2.17 2.43A2.31 2.31 0 0 1 8.7 15.6zm6.6 0a2.32 2.32 0 0 1-2.17-2.43 2.31 2.31 0 0 1 2.17-2.43 2.3 2.3 0 0 1 2.17 2.43 2.31 2.31 0 0 1-2.17 2.43z"/></svg></span>
+                <span class="platform-name">Discord</span>
+              </button>
+              <button type="button" class="pulse-platform-chip is-coming-soon" data-pulse-platform="twitch" data-platform-id="15" data-coming-soon="true" data-keywords="twitch">
+                <span class="platform-icon platform-twitch"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2.149 0L0 4.298V21.46h6.149V24h3.435l2.539-2.541h5.011L23 16.137V0H2.149zm19.137 14.989l-3.435 3.435h-5.55l-2.539 2.539v-2.539H4.595V1.609h16.69v13.38zM18.99 5.476h-1.93v5.55h1.93v-5.55zm-5.011 0h-1.93v5.55h1.93v-5.55z"/></svg></span>
+                <span class="platform-name">Twitch</span>
+              </button>
+              <button type="button" class="pulse-platform-chip is-coming-soon" data-pulse-platform="google" data-platform-id="19" data-coming-soon="true" data-keywords="google">
+                <span class="platform-icon platform-google"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18a11 11 0 0 0 0 9.86z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15A11 11 0 0 0 12 1 11 11 0 0 0 2.18 7.07l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z" fill="#EA4335"/></svg></span>
+                <span class="platform-name">Google</span>
+              </button>
+              <button type="button" class="pulse-platform-chip" data-pulse-platform="snapchat" data-keywords="snapchat snap">
+                <span class="platform-icon platform-snap"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12.922-.214.12-.042.195-.065.285-.065a.56.56 0 0 1 .401.15c.18.165.21.42.12.614-.12.24-.375.42-.555.494a2.93 2.93 0 0 1-.72.24c-.12.03-.24.06-.36.12-.165.09-.225.27-.18.405.33.855.75 1.485 1.29 1.92.324.27.705.494 1.14.614.105.03.165.06.195.09.15.12.24.375.12.6-.135.24-.405.42-.66.494-.39.12-.84.165-1.395.165-.3 0-.6-.015-.885-.03-.15-.015-.3-.015-.435-.015-.255 0-.345.06-.525.225-.375.33-.72.72-1.23 1.08-.69.494-1.68.734-2.94.734h-.105c-1.26 0-2.25-.24-2.94-.735-.51-.36-.855-.75-1.23-1.08-.18-.165-.27-.225-.525-.225-.135 0-.285 0-.435.015-.285.015-.585.03-.885.03-.555 0-1.005-.045-1.395-.165a.896.896 0 0 1-.66-.494c-.12-.225-.03-.48.12-.6.03-.03.09-.06.195-.09.435-.12.816-.344 1.14-.614.54-.435.96-1.065 1.29-1.92.045-.135-.015-.315-.18-.405a2.257 2.257 0 0 0-.36-.12 2.93 2.93 0 0 1-.72-.24c-.18-.075-.435-.255-.555-.494-.09-.195-.06-.45.12-.614a.56.56 0 0 1 .4-.15c.09 0 .165.023.286.065.263.094.622.214.922.214.198 0 .326-.045.4-.09a6.32 6.32 0 0 1-.032-.51l-.003-.06c-.104-1.628-.23-3.654.3-4.847C5.653 1.069 9.009.793 9.999.793h.105z"/></svg></span>
+                <span class="platform-name">Snapchat</span>
+              </button>
+              <button type="button" class="pulse-platform-chip is-coming-soon" data-pulse-platform="other" data-coming-soon="true">
+                <span class="platform-icon platform-other"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg></span>
+                <span class="platform-name">Other</span>
+              </button>
+              <button type="button" class="pulse-platform-chip is-active" data-pulse-platform="all" data-keywords="all">
+                <span class="platform-icon platform-all"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
+                <span class="platform-name">All</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {# ── Service select card ── #}
+        <div class="card service-card">
+          <div class="card-body">
+            <div class="service-head">
+              <div class="platform-step-num">2</div>
+              <div class="h3">Pick a service</div>
+            </div>
+
+            {% if categories %}
+              <div class="form-group">
+                <div class="search-dropdown">
+                  <div class="input-wrapper">
+                    <span class="search-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                    </span>
+                    <input type="text" class="form-control with-icon" id="pulse-service-search" autocomplete="off" value="" placeholder="Search services...">
+                  </div>
+                  <div class="pulse-search-results" id="pulse-search-results" style="display:none"></div>
+                </div>
+                <div class="search-pills" id="search-pills">
+                  <button type="button" class="search-pill pill-fav" id="pill-favorites" data-filter="favorites" aria-pressed="false">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    Favorites
+                  </button>
+                  <button type="button" class="search-pill pill-sub" id="pill-subscription" data-filter="subscription" aria-pressed="false">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.1l4 4-4 4"/><path d="M3 12.2v-2a4 4 0 0 1 4-4h12.8"/><path d="M7 21.9l-4-4 4-4"/><path d="M21 11.8v2a4 4 0 0 1-4 4H4.2"/></svg>
+                    Subscription
+                  </button>
+                  <button type="button" class="search-pill pill-geo" id="pill-country" data-filter="country" aria-pressed="false">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>
+                    Country
+                  </button>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if categories %}
+              <div class="form-group">
+                <label for="orderform-category" class="control-label">{{ lang('neworder.category') }}</label>
+                <select class="form-control" id="orderform-category" name="OrderForm[category]"
+                  data-select="true" data-select-search="true"
+                  data-select-search-placeholder="{{ lang('general.search.placeholder') }}"
+                  {% if site['rtl'] %}data-select-dir="rtl"{% endif %}>
+                  {% for category in extended_categories %}
+                    <option value="{{ category.id }}"
+                      {% if category.icon %}data-icon="{% if category.icon['icon_type'] == 'icon' %}<span class='{{ category.icon['icon'] }}'></span>{% elseif category.icon['icon_type'] == 'emoji' %}<span>{{ category.icon['icon'] }}</span>{% elseif category.icon['icon_type'] == 'image' %}<img src='{{ category.icon['url'] }}' alt='{{ category.name }}' class='img-responsive btn-group-vertical'>{% endif %}"{% endif %}
+                      {% if category.id == data['category'] %}selected{% endif %}>{{ category.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            {% endif %}
+
+            <div class="form-group">
+              <label for="orderform-service" class="control-label">{{ lang('neworder.service') }}</label>
+              <select class="form-control" id="orderform-service" name="OrderForm[service]"
+                data-select="true" data-select-search="true"
+                data-select-search-placeholder="{{ lang('general.search.placeholder') }}"
+                {% if site['rtl'] %}data-select-dir="rtl"{% endif %}></select>
+            </div>
+
+            {# PP-managed description — force hidden, shown in service detail card instead #}
+            <div class="form-group hidden fields" id="service_description">
+              <div class="service-desc-box">{{ service['description'] }}</div>
+            </div>
+
+            {# Description toggle removed — description now lives in the service detail card #}
+          </div>
+        </div>
+
+        {# ── Details card (Perfect Panel injects fields here) ── #}
+        <div class="card details-card">
+          <div class="card-body">
+            <div class="service-head">
+              <div class="platform-step-num">3</div>
+              <div class="h3">Order details</div>
+            </div>
+
+            <div id="fields"></div>
+
+            <div class="form-group">
+              <label for="charge" class="control-label">{{ lang('neworder.charge') }}</label>
+              <input type="text" class="form-control tabular" id="charge" value="{{ order['charge'] }}" readonly>
+            </div>
+
+            {% if check_agreement %}
+              <div class="form-group">
+                <label class="control-label terms terms-row">
+                  <input type="checkbox" name="OrderForm[termsofservice]" class="terms-accept-checkbox" value="1" id="terms" {{ data['termsofservice'] ? 'checked' : '' }}>
+                  <span>{{ lang('signup.accept_terms_text') }} <a href="{{ page_url('terms') }}" target="_blank">{{ lang('terms.signup_checkbox') }}</a></span>
+                </label>
+              </div>
+            {% endif %}
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block details-submit">
+              {{ lang('neworder.button') }}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      {# ─── RIGHT: service info + order summary ─── #}
+      <aside class="neworder-summary">
+
+        {# Service detail card — hidden until a service is selected; populated by JS #}
+        <div class="card svc-info-card" id="svc-info-card" style="display:none">
+          <div class="svc-info-body">
+            <p class="svc-info-label">Service details</p>
+            {# Quality badges row (injected by JS) #}
+            <div class="svc-badges" id="svc-badges" style="display:none"></div>
+            {# Stats grid #}
+            <dl class="svc-stats" id="svc-stats"></dl>
+            {# Full service description #}
+            <div class="svc-desc-excerpt" id="svc-desc-excerpt" style="display:none">
+              <div class="svc-desc-text" id="svc-desc-text"></div>
+            </div>
+            {# Trust signals — only present when svc.refill / svc.cancel are truthy #}
+            <ul class="summary-trust svc-trust" id="svc-trust" style="display:none"></ul>
+          </div>
+        </div>
+
+        {# Order summary card removed — submit button now lives under Charge in Step 3 #}
+
+      </aside>
+
+    </div>
+  </form>
+
+  {% if newOrderText %}
+    <div class="card neworder-text">
+      <div class="card-body {% if site['rtl'] %}rtl-content{% endif %}">{{ newOrderText }}</div>
+    </div>
+  {% endif %}
+
+</div>
+
+<script>
+// Categories data — server-rendered before Select2 mutates the DOM
+window.__pulseCategories = [
+  {% if extended_categories %}
+    {% for category in extended_categories %}
+      { id: "{{ category.id }}", text: {{ category.name|json_encode|raw }} }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  {% endif %}
+];
+</script>
+
+<script>
+(function(){
+  // Platform chip filter — narrows the category dropdown by keywords matching category name
+  var grid = document.getElementById('platform-grid');
+  var catSel = document.getElementById('orderform-category');
+  if (!grid || !catSel) return;
+
+  // Strip any leftover ?platform= query param from earlier (URL-based) attempts so the page always
+  // starts in a clean unfiltered state. We filter client-side now.
+  if (window.location.search.indexOf('platform=') !== -1) {
+    var cleanUrl = window.location.pathname + window.location.hash;
+    window.history.replaceState({}, '', cleanUrl);
+  }
+
+  // Use server-rendered category data (never depends on Select2 internal state)
+  var allOptions = (window.__pulseCategories || []).map(function(c){
+    return { value: String(c.id), text: (c.text || '').toLowerCase() };
+  });
+  // Fallback to native options if data injection didn't work
+  if (allOptions.length === 0) {
+    allOptions = Array.prototype.slice.call(catSel.options).map(function(o){
+      return { value: o.value, text: (o.text || '').toLowerCase() };
+    });
+  }
+  // ── Auto-detect available platforms ─────────────────────────────────────────
+  // For each chip (except "all"), check whether any category name contains one
+  // of the chip's keywords. If yes → enable; if no → mark as coming-soon.
+  grid.querySelectorAll('.pulse-platform-chip:not([data-pulse-platform="all"])').forEach(function(btn){
+    var kws = (btn.getAttribute('data-keywords') || '').split(/\s+/).filter(Boolean);
+    var hasMatch = kws.length > 0 && allOptions.some(function(o){
+      return kws.some(function(k){ return o.text.indexOf(k) !== -1; });
+    });
+    if (hasMatch) {
+      btn.classList.remove('is-coming-soon');
+      btn.removeAttribute('data-coming-soon');
+    } else {
+      btn.classList.add('is-coming-soon');
+      btn.setAttribute('data-coming-soon', 'true');
+    }
+  });
+
+  // Snapshot ALL original <option>s once so we can restore them (PP/Select2 may shuffle them later)
+  var originalOptions = Array.prototype.slice.call(catSel.options).map(function(o){
+    return { value: o.value, text: o.text, html: o.outerHTML, dataIcon: o.getAttribute('data-icon') };
+  });
+
+  // ── Coming-soon toast ───────────────────────────────────────────────────
+  var toastEl = null, toastTimer = null;
+  function showComingSoonToast(msg) {
+    if (!toastEl) {
+      toastEl = document.createElement('div');
+      toastEl.className = 'pulse-coming-soon-toast';
+      toastEl.setAttribute('role', 'status');
+      toastEl.setAttribute('aria-live', 'polite');
+      document.body.appendChild(toastEl);
+    }
+    toastEl.textContent = msg;
+    // force reflow before adding class so the transition runs every time
+    void toastEl.offsetWidth;
+    toastEl.classList.add('is-visible');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){
+      toastEl.classList.remove('is-visible');
+    }, 2400);
+  }
+
+  function applyPlatformFilter(btn) {
+    var showAll = !btn || (btn.getAttribute('data-pulse-platform') === 'all');
+    var pid = btn && btn.getAttribute('data-platform-id');
+    var kws = btn ? (btn.getAttribute('data-keywords') || '').split(/\s+/).filter(Boolean) : [];
+    var catMap = window.__pulseCatPlatformMap || {};
+    var noPlatCats = window.__pulseCatsNoPlatform || {};
+    var hasPlatformData = Object.keys(catMap).length > 0;
+
+    // Collect all platform_ids claimed by visible chips (for "other" logic)
+    var claimedPids = {};
+    if (hasPlatformData) {
+      grid.querySelectorAll('.pulse-platform-chip[data-platform-id]').forEach(function(c){
+        claimedPids[c.getAttribute('data-platform-id')] = true;
+      });
+    }
+
+    var matching;
+    if (showAll) {
+      matching = originalOptions.slice();
+    } else if (btn && btn.getAttribute('data-pulse-platform') === 'other' && hasPlatformData) {
+      // "Other" chip: show categories NOT claimed by any specific chip
+      matching = originalOptions.filter(function(o){
+        var p = catMap[o.value];
+        return !p || !claimedPids[p];
+      });
+    } else if (pid && hasPlatformData) {
+      // Primary: filter by platform_id from siteOrder service data
+      matching = originalOptions.filter(function(o){
+        if (catMap[o.value] === pid) return true;
+        // Include null-platform categories that match keywords
+        if (noPlatCats[o.value] && kws.length > 0) {
+          var t = o.text.toLowerCase();
+          return kws.some(function(k){ return t.indexOf(k) !== -1; });
+        }
+        return false;
+      });
+    } else {
+      // Fallback: keyword matching (no platform_id on chip)
+      matching = kws.length > 0
+        ? originalOptions.filter(function(o){
+            var t = o.text.toLowerCase();
+            return kws.some(function(k){ return t.indexOf(k) !== -1; });
+          })
+        : originalOptions.slice();
+    }
+
+    var $cat = window.jQuery ? window.jQuery(catSel) : null;
+
+    // Replace the native select's options with the filtered set.
+    // Select2 v4 listens to mutations on the underlying <select>, but to be safe we
+    // also fire change.select2 after to force the UI to redraw.
+    catSel.innerHTML = '';
+    matching.forEach(function(o){
+      var opt = document.createElement('option');
+      opt.value = o.value;
+      opt.text = o.text;
+      if (o.dataIcon) opt.setAttribute('data-icon', o.dataIcon);
+      catSel.appendChild(opt);
+    });
+
+    if (matching.length > 0) {
+      // Select the first matching category WITHOUT triggering 'change' on the cat select —
+      // PP has a document-level change handler that wipes our options. Set the value silently,
+      // then directly call our service loader.
+      catSel.value = matching[0].value;
+      // Use change.select2 (UI-only) so Select2 displays the new selection
+      if (window.jQuery) window.jQuery(catSel).trigger('change.select2');
+      // Manually load services (bypasses PP's change listener)
+      if (typeof loadServicesForCategory === 'function') {
+        loadServicesForCategory(matching[0].value);
+      }
+    } else {
+      // No match — clear service dropdown too
+      var svcSel = document.getElementById('orderform-service');
+      if (svcSel) {
+        svcSel.innerHTML = '';
+        if (window.jQuery) window.jQuery(svcSel).trigger('change');
+      }
+      if ($cat) $cat.trigger('change.select2');
+    }
+  }
+
+  grid.addEventListener('click', function(e){
+    var btn = e.target.closest('.pulse-platform-chip');
+    if (!btn) return;
+    // Stop PP's document-level platform-filter handler from also firing on our chips.
+    // PP listens for clicks on its own .platform-chip elements; renaming our class to
+    // .pulse-platform-chip + stopping propagation here keeps PP's wiper out of our way.
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+
+    // Coming-soon chips don't activate — show a toast and bail.
+    if (btn.getAttribute('data-coming-soon') === 'true') {
+      var name = (btn.querySelector('.platform-name') || {}).textContent || 'This platform';
+      showComingSoonToast(name.trim() + ' is coming soon — Telegram is live now.');
+      return;
+    }
+
+    grid.querySelectorAll('.pulse-platform-chip').forEach(function(b){ b.classList.remove('is-active'); });
+    btn.classList.add('is-active');
+    applyPlatformFilter(btn);
+  }, true); // capture phase — fire before any delegated handlers
+
+  // ── Pill filter state ─────────────────────────────────────────────────────
+  var activePills = { favorites: false, subscription: false, country: false };
+  var countryRx = /\b(USA|UK|India|Brazil|Turkey|Russia|Iran|Arab|Europe|Asia|Latin|Global|Worldwide|Mixed|China|Japan|Korea|German|French|Spanish|Italian|Dutch|Polish|Portuguese|Indonesian|Thai|Vietnam|Filipino|Nigerian|Egyptian|Saudi|UAE|Pakistan|Bangladesh)\b/i;
+
+  // Update pill count badges from siteOrder data
+  function updatePillCounts(){
+    var data = window.modules && window.modules.siteOrder;
+    if (!data || !data.services) return;
+    var allSvcs = Object.values(data.services);
+    var favCount = allSvcs.filter(function(s){ return !!s.favorite; }).length;
+    // Subscription = type 100 (loose equality handles string vs number)
+    var subCount = allSvcs.filter(function(s){ return s.type == 100; }).length;
+    var favPill = document.getElementById('pill-favorites');
+    var subPill = document.getElementById('pill-subscription');
+    if (favPill) {
+      var badge = favPill.querySelector('.pill-count');
+      if (favCount > 0) {
+        if (!badge) { badge = document.createElement('span'); badge.className = 'pill-count'; favPill.appendChild(badge); }
+        badge.textContent = favCount;
+      } else if (badge) {
+        badge.remove();
+      }
+      // Always keep pill visible — no hiding
+    }
+    if (subPill) {
+      var badge2 = subPill.querySelector('.pill-count');
+      if (subCount > 0) {
+        if (!badge2) { badge2 = document.createElement('span'); badge2.className = 'pill-count'; subPill.appendChild(badge2); }
+        badge2.textContent = subCount;
+      } else if (badge2) {
+        badge2.remove();
+      }
+    }
+    // Country pill — services that mention a country/geo in their name
+    var countryRx = /\b(USA|UK|India|Brazil|Turkey|Russia|Iran|Arab|Europe|Asia|Latin|Global|Worldwide|Mixed|China|Japan|Korea|German|French|Spanish|Italian|Dutch|Polish|Portuguese|Indonesian|Thai|Vietnam|Filipino|Nigerian|Egyptian|Saudi|UAE|Pakistan|Bangladesh)\b/i;
+    var geoCount = allSvcs.filter(function(s){
+      var nm = (s.origin_name || '') + ' ' + (s.name || '');
+      return countryRx.test(nm);
+    }).length;
+    var geoPill = document.getElementById('pill-country');
+    if (geoPill) {
+      var badge3 = geoPill.querySelector('.pill-count');
+      if (geoCount > 0) {
+        if (!badge3) { badge3 = document.createElement('span'); badge3.className = 'pill-count'; geoPill.appendChild(badge3); }
+        badge3.textContent = geoCount;
+      } else if (badge3) {
+        badge3.remove();
+      }
+    }
+    // Debug — check console to verify data shape
+    console.log('[Pulse pills]', { favCount: favCount, subCount: subCount, geoCount: geoCount, total: allSvcs.length, sampleKeys: allSvcs.length > 0 ? Object.keys(allSvcs[0]) : [] });
+  }
+
+  (function(){
+    var pillContainer = document.getElementById('search-pills');
+    if (!pillContainer) return;
+    pillContainer.addEventListener('click', function(e){
+      var pill = e.target.closest('.search-pill');
+      if (!pill) return;
+      e.preventDefault();
+      var filterKey = pill.getAttribute('data-filter');
+      activePills[filterKey] = !activePills[filterKey];
+      pill.setAttribute('aria-pressed', activePills[filterKey] ? 'true' : 'false');
+      // Re-load current category with pill filters applied
+      var currentCat = catSel.value;
+      if (currentCat) {
+        loadServicesForCategory(currentCat);
+      }
+    });
+  })();
+
+  // ── Service loader ──────────────────────────────────────────────────────────
+  // Populate #orderform-service from window.modules.siteOrder.services whenever the category changes.
+  // PP exposes the full services map but doesn't always wire the change → load chain when we
+  // mutate the category options. So we do it ourselves.
+  function loadServicesForCategory(catId){
+    var svcSel = document.getElementById('orderform-service');
+    if (!svcSel || !catId) return;
+    var data = window.modules && window.modules.siteOrder;
+    if (!data || !data.services) return;
+
+    var allServices = Object.values(data.services);
+    var pillFav = activePills.favorites;
+    var pillSub = activePills.subscription;
+    var pillGeo = activePills.country;
+
+    // When any pill is active, search across ALL categories (ignore catId).
+    // When no pill is active, filter by category as usual.
+    var matched;
+    if (pillFav || pillSub || pillGeo) {
+      matched = allServices.filter(function(s){
+        if (pillFav && !s.favorite) return false;
+        if (pillSub && s.type != 100) return false;
+        if (pillGeo) {
+          var nm = (s.origin_name || '') + ' ' + (s.name || '');
+          if (!countryRx.test(nm)) return false;
+        }
+        return true;
+      });
+    } else {
+      // Normal category-based filter
+      var nCat = parseInt(catId, 10);
+      var isFavCat = !isNaN(nCat) && nCat < 0;
+      matched = allServices.filter(function(s){
+        if (isFavCat) return !!s.favorite;
+        return String(s.cid) === String(catId);
+      });
+    }
+
+    matched.sort(function(a, b){
+      var pa = parseInt(a.position, 10) || 0;
+      var pb = parseInt(b.position, 10) || 0;
+      return pa - pb;
+    });
+
+    // Format price helper — falls back to raw price if format helpers not present
+    function fmtPrice(p){
+      var fmt = data.format || {};
+      var cur = data.currency || {};
+      var sym = cur.sign || cur.symbol || '$';
+      var num = parseFloat(p).toFixed(2);
+      return sym + num;
+    }
+
+    // Build option list. Mirror PP's typical "{id} - {name} - {price} per 1000" pattern.
+    svcSel.innerHTML = '';
+    matched.forEach(function(s){
+      // Use the precomputed `name` from siteOrder if present (already formatted by PP)
+      var label = s.name || (s.id + ' - ' + (s.origin_name || ('Service ' + s.id)) + ' - ' + fmtPrice(s.price) + ' per 1000');
+      var opt = document.createElement('option');
+      opt.value = s.id;
+      opt.text = label;
+      opt.setAttribute('data-cid', s.cid);
+      opt.setAttribute('data-type', s.type || '0');
+      svcSel.appendChild(opt);
+    });
+
+    if (window.jQuery) {
+      var $svc = window.jQuery(svcSel);
+      // Pick the first service so the user has a selection by default
+      if (matched.length > 0) {
+        $svc.val(matched[0].id).trigger('change');
+      } else {
+        $svc.val(null).trigger('change');
+      }
+    }
+    // ALWAYS load fields for the auto-selected service. Don't rely on the change
+    // event — Select2 rebuilds asynchronously and the change handler may fire
+    // before our fresh options are recognized, leading to a missed field load.
+    if (matched.length > 0) {
+      showFieldsForService(matched[0].id);
+    } else {
+      updateServicePanel(null);
+      // No services in this category — hide all fields
+      document.querySelectorAll('#fields .form-group.fields').forEach(function(g){
+        g.classList.add('hidden');
+      });
+    }
+  }
+
+  // ── Service detail panel ────────────────────────────────────────────────────
+  // Populates the right-rail service info card when a service is selected.
+  // Each signal is only shown when the service actually supports it — never hardcoded.
+  function updateServicePanel(svc) {
+    var card      = document.getElementById('svc-info-card');
+    var statsEl   = document.getElementById('svc-stats');
+    var trustEl   = document.getElementById('svc-trust');
+    var badgesEl  = document.getElementById('svc-badges');
+    var descWrap  = document.getElementById('svc-desc-excerpt');
+    var descText  = document.getElementById('svc-desc-text');
+    if (!card) return;
+
+    if (!svc) {
+      card.style.display = 'none';
+      return;
+    }
+
+    // ── Quality badges — parsed from service name ──
+    var badges = [];
+    var nameStr = ((svc.origin_name || '') + ' ' + (svc.name || '')).toLowerCase();
+    var badgeMap = [
+      [/\bhq\b|high.?quality/i, 'HQ'],
+      [/\bpremium\b/i, 'Premium'],
+      [/\breal\b/i, 'Real'],
+      [/\binstant\b/i, 'Instant'],
+      [/\bgradual\b|\bslow\b/i, 'Gradual'],
+      [/\bauto.?refill\b/i, 'Auto Refill']
+    ];
+    badgeMap.forEach(function(pair) {
+      if (pair[0].test(nameStr)) badges.push(pair[1]);
+    });
+    if (badgesEl) {
+      if (badges.length) {
+        badgesEl.innerHTML = badges.map(function(b) {
+          return '<span class="svc-badge">' + b + '</span>';
+        }).join('');
+        badgesEl.style.display = '';
+      } else {
+        badgesEl.style.display = 'none';
+        badgesEl.innerHTML = '';
+      }
+    }
+
+    // ── Build stat rows — only include rows where PP actually has data ──
+    var rows = [];
+    if (svc.average_time)  rows.push(['Avg. time',    svc.average_time]);
+    if (svc.start_time)    rows.push(['Start time',   svc.start_time]);
+    if (svc.speed)         rows.push(['Speed',        svc.speed]);
+    if (svc.min && svc.max) {
+      rows.push(['Order range',
+        Number(svc.min).toLocaleString() + '–' + Number(svc.max).toLocaleString()
+      ]);
+    }
+
+    // ── Full description ──
+    if (descWrap && descText) {
+      if (svc.description) {
+        descText.innerHTML = svc.description;
+        descWrap.style.display = '';
+      } else {
+        descWrap.style.display = 'none';
+        descText.innerHTML = '';
+      }
+    }
+
+    // ── Trust signals — conditional on real service flags ──
+    var signals = [];
+    if (svc.refill) {
+      signals.push(
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V5z"/></svg>' +
+        ' Refill warranty'
+      );
+    }
+    if (svc.cancel) {
+      signals.push(
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>' +
+        ' Cancel available'
+      );
+    }
+    // Drip-feed signal — check if service has drip-feed support
+    if (svc.dripfeed) {
+      signals.push(
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6l3-3"/><path d="M12 8 9 5"/><circle cx="12" cy="17" r="5"/></svg>' +
+        ' Drip-feed'
+      );
+    }
+
+    // Hide the whole card if there is nothing to show
+    if (rows.length === 0 && signals.length === 0 && badges.length === 0 && !svc.description) {
+      card.style.display = 'none';
+      return;
+    }
+
+    card.style.display = '';
+    if (statsEl) {
+      statsEl.innerHTML = rows.map(function(r) {
+        return '<dt>' + r[0] + '</dt><dd>' + r[1] + '</dd>';
+      }).join('');
+      statsEl.style.display = rows.length ? '' : 'none';
+    }
+    if (trustEl) {
+      trustEl.innerHTML = signals.map(function(s) { return '<li>' + s + '</li>'; }).join('');
+      trustEl.style.display = signals.length ? '' : 'none';
+    }
+  }
+
+  // ── Fields toggler ──────────────────────────────────────────────────────────
+  // PP renders every possible order detail field (link, quantity, comments, etc.) as hidden
+  // <div class="form-group hidden fields" id="order_*">. We toggle the right ones based on the
+  // selected service's type, using window.modules.siteOrder.fields as the mapping.
+  function showFieldsForService(serviceId){
+    var data = window.modules && window.modules.siteOrder;
+    if (!data || !data.services || !data.fields) return;
+    var svc = data.services[serviceId];
+    if (!svc) return;
+    updateServicePanel(svc);
+    var typeKey = String(svc.type);
+    var fieldList = data.fields[typeKey];
+    if (!fieldList) return;
+
+    // Hide every field group first
+    document.querySelectorAll('#fields .form-group.fields').forEach(function(g){
+      g.classList.add('hidden');
+    });
+
+    // Keep PP's native description hidden — we show it in the service detail card
+    var ppDesc = document.getElementById('service_description');
+    if (ppDesc) ppDesc.style.display = 'none';
+
+    // Show the field groups required by this service type
+    var shown = [];
+    fieldList.forEach(function(f){
+      // PP's field config uses `name` for the field identifier (e.g. "link", "quantity")
+      // and `field` for the *input type* (e.g. "text", "select"). The DOM groups are
+      // <div id="order_{name}">, so always go via `name`.
+      if (!f.name) return;
+      var groupId = 'order_' + f.name;
+      var group = document.getElementById(groupId);
+      if (group) {
+        group.classList.remove('hidden');
+        shown.push(groupId);
+      }
+    });
+
+    // Update min/max placeholders and labels with service constraints
+    var minMaxLabel = document.querySelector('#order_quantity .min-max-label, .min-max');
+    if (minMaxLabel && svc.min_max_label) {
+      minMaxLabel.textContent = svc.min_max_label;
+    }
+
+    // Reset drip-feed on service change — collapse options, uncheck box
+    var dripCheck = document.getElementById('field-orderform-fields-check');
+    var dripOpts  = document.getElementById('dripfeed-options');
+    if (dripCheck) dripCheck.checked = false;
+    if (dripOpts)  dripOpts.classList.add('hidden');
+
+  }
+
+  // ── Drip-feed checkbox toggle ─────────────────────────────────────────────
+  // PP uses data-depend but may not wire the handler in custom templates.
+  // We handle it ourselves to ensure runs/interval toggle on checkbox change.
+  (function(){
+    var cb = document.getElementById('field-orderform-fields-check');
+    var opts = document.getElementById('dripfeed-options');
+    if (!cb || !opts) return;
+    function toggleDrip(){
+      if (cb.checked) {
+        opts.classList.remove('hidden');
+      } else {
+        opts.classList.add('hidden');
+      }
+    }
+    cb.addEventListener('change', toggleDrip);
+    // Also handle click on the parent label/row
+    var row = cb.closest('.form-group__checkbox');
+    if (row) {
+      row.addEventListener('click', function(e){
+        if (e.target !== cb && e.target.tagName !== 'LABEL') {
+          cb.checked = !cb.checked;
+          toggleDrip();
+        }
+      });
+    }
+    // Calculate total quantity when runs or quantity change
+    var runsInput = document.getElementById('field-orderform-fields-runs');
+    var intervalInput = document.getElementById('field-orderform-fields-interval');
+    var totalInput = document.getElementById('field-orderform-fields-total-quantity');
+    var qtyInput = document.querySelector('#order_quantity input[name*="quantity"]');
+    function updateTotalQty(){
+      if (!totalInput || !runsInput || !qtyInput) return;
+      var qty = parseInt(qtyInput.value, 10) || 0;
+      var runs = parseInt(runsInput.value, 10) || 0;
+      totalInput.value = (qty * runs) || '';
+    }
+    if (runsInput) runsInput.addEventListener('input', updateTotalQty);
+    if (qtyInput) qtyInput.addEventListener('input', updateTotalQty);
+  })();
+
+
+  // Wait for window.modules.siteOrder to be defined (inline script may load after us)
+  function whenSiteOrderReady(cb){
+    if (window.modules && window.modules.siteOrder && window.modules.siteOrder.services) {
+      cb();
+      return;
+    }
+    var tries = 0;
+    var iv = setInterval(function(){
+      tries++;
+      if (window.modules && window.modules.siteOrder && window.modules.siteOrder.services) {
+        clearInterval(iv);
+        cb();
+      } else if (tries > 50) {
+        clearInterval(iv);
+      }
+    }, 100);
+  }
+
+  whenSiteOrderReady(function(){
+    // Build category → platform map from siteOrder service data
+    var _so = window.modules.siteOrder;
+    var _catPlatMap = {};
+    var _catNoPlatform = {};
+    Object.values(_so.services).forEach(function(s){
+      var cid = String(s.cid);
+      if (s.platform_id != null) {
+        _catPlatMap[cid] = String(s.platform_id);
+      } else {
+        _catNoPlatform[cid] = true;
+      }
+    });
+    window.__pulseCatPlatformMap = _catPlatMap;
+    window.__pulseCatsNoPlatform = _catNoPlatform;
+
+    // Re-run auto-detect with reliable platform_id data
+    if (grid) {
+      // Collect platform_ids claimed by chips with explicit IDs
+      var _claimedPids = {};
+      grid.querySelectorAll('.pulse-platform-chip[data-platform-id]').forEach(function(c){
+        _claimedPids[c.getAttribute('data-platform-id')] = true;
+      });
+
+      grid.querySelectorAll('.pulse-platform-chip:not([data-pulse-platform="all"])').forEach(function(btn){
+        var plat = btn.getAttribute('data-pulse-platform');
+        var pid = btn.getAttribute('data-platform-id');
+        var hasMatch = false;
+
+        if (plat === 'other') {
+          // "Other" chip: enabled if any category has an unclaimed or null platform
+          hasMatch = allOptions.some(function(o){
+            var p = _catPlatMap[o.value];
+            return !p || !_claimedPids[p];
+          });
+        } else if (pid) {
+          hasMatch = allOptions.some(function(o){
+            if (_catPlatMap[o.value] === pid) return true;
+            var bkws = (btn.getAttribute('data-keywords') || '').split(/\s+/).filter(Boolean);
+            if (_catNoPlatform[o.value] && bkws.length > 0) {
+              return bkws.some(function(k){ return o.text.indexOf(k) !== -1; });
+            }
+            return false;
+          });
+        } else {
+          return; // No platform_id and not "other" — skip
+        }
+
+        if (hasMatch) {
+          btn.classList.remove('is-coming-soon');
+          btn.removeAttribute('data-coming-soon');
+        } else {
+          btn.classList.add('is-coming-soon');
+          btn.setAttribute('data-coming-soon', 'true');
+        }
+      });
+    }
+
+    // Listen on the category select so any change (chip click or manual pick) reloads services
+    if (window.jQuery) {
+      window.jQuery(catSel).on('change.pulse', function(){
+        loadServicesForCategory(catSel.value);
+      });
+      // Listen on the service select so picking a different service shows the right fields
+      var svcEl = document.getElementById('orderform-service');
+      if (svcEl) {
+        window.jQuery(svcEl).on('change.pulse', function(){
+          if (svcEl.value) showFieldsForService(svcEl.value);
+        });
+      }
+    } else {
+      catSel.addEventListener('change', function(){ loadServicesForCategory(catSel.value); });
+    }
+
+    // Initial load — if a category is already selected on page load, populate services
+    if (catSel.value) {
+      loadServicesForCategory(catSel.value);
+    }
+    // Show pill counts once service data is available
+    updatePillCounts();
+  });
+
+  // Stepper progress — flip steps based on form state
+  function updateStepper(){
+    var stepper = document.getElementById('neworder-stepper');
+    if (!stepper) return;
+    var steps = stepper.querySelectorAll('.step');
+
+    var hasCategory = !!(catSel.value && catSel.value !== '');
+    var svcEl = document.getElementById('orderform-service');
+    var hasService = !!(svcEl && svcEl.value && svcEl.value !== '');
+
+    // Look at the *visible* link/username field — must be non-empty
+    var linkInput = document.querySelector(
+      '#fields .form-group.fields:not(.hidden) input[name="link"], ' +
+      '#fields .form-group.fields:not(.hidden) input[name="username"], ' +
+      '#fields .form-group.fields:not(.hidden) textarea[name="usernames"]'
+    );
+    var hasLink = !!(linkInput && linkInput.value && linkInput.value.trim());
+
+    var qtyInput = document.querySelector('#order_quantity input[name="quantity"]');
+    var qtyVal = qtyInput && parseInt(qtyInput.value, 10);
+    var hasQty = !!(qtyVal && qtyVal > 0);
+
+    // Total computed → ready to confirm
+    var chargeEl = document.getElementById('charge');
+    var hasCharge = !!(chargeEl && chargeEl.value && chargeEl.value !== '0' && chargeEl.value !== '—');
+
+    steps.forEach(function(s){ s.classList.remove('is-active','is-done'); });
+
+    // Step 1 — Platform (category)
+    if (hasCategory) {
+      steps[0].classList.add('is-done');
+    } else {
+      steps[0].classList.add('is-active');
+      return;
+    }
+
+    // Step 2 — Service
+    if (hasService) {
+      steps[1].classList.add('is-done');
+    } else {
+      steps[1].classList.add('is-active');
+      return;
+    }
+
+    // Step 3 — Details (link/username + quantity)
+    if (hasLink && hasQty) {
+      steps[2].classList.add('is-done');
+    } else {
+      steps[2].classList.add('is-active');
+      return;
+    }
+
+    // Step 4 — Confirm (charge calculated, ready to submit)
+    steps[3].classList.add(hasCharge ? 'is-done' : 'is-active');
+  }
+  catSel.addEventListener('change', updateStepper);
+  document.addEventListener('change', function(e){
+    if (e.target.closest && e.target.closest('#fields, #order-form')) updateStepper();
+  });
+  document.addEventListener('input', function(e){
+    if (e.target.closest && e.target.closest('#fields')) updateStepper();
+  });
+  updateStepper();
+
+
+  // ── Auto-select service from URL param (?service=123) ─────────────────────
+  var urlParams = new URLSearchParams(window.location.search);
+  var preselectedService = urlParams.get('service');
+  if (preselectedService) {
+    whenSiteOrderReady(function(){
+      var data = window.modules && window.modules.siteOrder;
+      if (!data || !data.services) return;
+      var svc = data.services[preselectedService];
+      if (!svc) return;
+      // Find and select the category that contains this service
+      var catId = String(svc.cid);
+      catSel.value = catId;
+      if (window.jQuery) window.jQuery(catSel).trigger('change.select2');
+      loadServicesForCategory(catId);
+      // After a tick, select the specific service
+      setTimeout(function(){
+        var svcSel = document.getElementById('orderform-service');
+        if (svcSel) {
+          svcSel.value = preselectedService;
+          if (window.jQuery) window.jQuery(svcSel).val(preselectedService).trigger('change');
+          showFieldsForService(preselectedService);
+        }
+        updateStepper();
+        updateSummary();
+      }, 200);
+    });
+  }
+})();
+
+// ── Fix: prevent Select2 from blocking page scroll when dropdown is open ──
+// Select2 / Perfect Panel sets height:100% and overflow:hidden on html/body
+// when a dropdown opens, locking the page to viewport height. Revert these
+// so the page stays scrollable behind the dropdown.
+(function(){
+  function resetScrollLock(el) {
+    if (el.style.overflow === 'hidden') el.style.overflow = '';
+    if (el.style.height === '100%' || (el.style.height && el.style.height.match(/^\d+px$/))) {
+      el.style.height = '';
+    }
+  }
+  var mo = new MutationObserver(function(){
+    resetScrollLock(document.body);
+    resetScrollLock(document.documentElement);
+  });
+  mo.observe(document.body, { attributes: true, attributeFilter: ['style','class'] });
+  mo.observe(document.documentElement, { attributes: true, attributeFilter: ['style','class'] });
+})();
+</script>
+
+<script>
+// ── Pulse service search — fully independent of the platform-chip IIFE ──────
+(function(){
+  var searchEl = document.getElementById('pulse-service-search');
+  var resultsEl = document.getElementById('pulse-search-results');
+  if (!searchEl || !resultsEl) return;
+  var timer = null;
+
+  function waitForData(cb) {
+    if (window.modules && window.modules.siteOrder && window.modules.siteOrder.services) { cb(); return; }
+    var tries = 0;
+    var iv = setInterval(function(){
+      if (window.modules && window.modules.siteOrder && window.modules.siteOrder.services) { clearInterval(iv); cb(); }
+      else if (++tries > 60) clearInterval(iv);
+    }, 100);
+  }
+
+  function selectService(serviceId, categoryId) {
+    resultsEl.innerHTML = '';
+    resultsEl.style.display = 'none';
+    searchEl.value = '';
+
+    var catSel = document.getElementById('orderform-category');
+    var svcSel = document.getElementById('orderform-service');
+    if (!catSel || !svcSel) return;
+
+    // Set category → triggers PP's own service loader via change event
+    if (categoryId) {
+      catSel.value = categoryId;
+      if (window.jQuery) window.jQuery(catSel).val(categoryId).trigger('change');
+    }
+
+    // After PP has loaded services for that category, pick the specific service
+    setTimeout(function(){
+      svcSel.value = serviceId;
+      if (window.jQuery) window.jQuery(svcSel).val(serviceId).trigger('change');
+    }, 300);
+  }
+
+  searchEl.addEventListener('input', function(){
+    clearTimeout(timer);
+    var query = (searchEl.value || '').trim().toLowerCase();
+
+    if (!query) {
+      resultsEl.innerHTML = '';
+      resultsEl.style.display = 'none';
+      return;
+    }
+
+    timer = setTimeout(function(){
+      waitForData(function(){
+        var allServices = Object.values(window.modules.siteOrder.services);
+        var cur = (window.modules.siteOrder.currency || {});
+        var sym = cur.sign || cur.symbol || '$';
+
+        var matched = allServices.filter(function(s){
+          var label = ((s.name || '') + ' ' + (s.origin_name || '') + ' ' + String(s.id || '')).toLowerCase();
+          return label.indexOf(query) !== -1;
+        });
+
+        matched.sort(function(a, b){
+          return (parseInt(a.position,10)||0) - (parseInt(b.position,10)||0);
+        });
+        if (matched.length > 50) matched = matched.slice(0, 50);
+
+        if (matched.length === 0) {
+          resultsEl.innerHTML = '<div class="pulse-search-empty">No services found</div>';
+          resultsEl.style.display = 'block';
+          return;
+        }
+
+        var html = '';
+        matched.forEach(function(s){
+          var name = s.origin_name || s.name || ('Service ' + s.id);
+          var price = sym + parseFloat(s.price).toFixed(2);
+          html += '<div class="pulse-search-item" data-sid="' + s.id + '" data-cid="' + s.cid + '">'
+            + '<span class="pulse-search-id">' + s.id + '</span>'
+            + '<span class="pulse-search-name">' + name + '</span>'
+            + '<span class="pulse-search-price">' + price + '</span>'
+            + '</div>';
+        });
+
+        resultsEl.innerHTML = html;
+        resultsEl.style.display = 'block';
+
+      });
+    }, 150);
+  });
+
+  resultsEl.addEventListener('click', function(e){
+    var item = e.target.closest('.pulse-search-item');
+    if (!item) return;
+    selectService(item.getAttribute('data-sid'), item.getAttribute('data-cid'));
+  });
+
+  document.addEventListener('click', function(e){
+    if (!e.target.closest('.search-dropdown')) {
+      resultsEl.innerHTML = '';
+      resultsEl.style.display = 'none';
+    }
+  });
+
+  searchEl.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') {
+      searchEl.value = '';
+      resultsEl.innerHTML = '';
+      resultsEl.style.display = 'none';
+    }
+  });
+
+})();
+</script>
