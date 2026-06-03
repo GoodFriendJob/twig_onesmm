@@ -3185,6 +3185,94 @@
        height: 52px;
    }
 
+   /* ── Order Details fields (match design) ── */
+   #fields .control-label,
+   .details-card .control-label {
+       display: block;
+       font-size: 12px;
+       font-weight: 500;
+       color: var(--ink-3);
+       margin-bottom: 6px;
+   }
+   #fields .form-control {
+       height: 48px;
+       border-radius: 10px;
+       border: 1px solid var(--line);
+       background: var(--bg-1);
+       font-size: 14px;
+   }
+   #order_quantity .min-max {
+       font-size: 12px;
+       color: var(--ink-3);
+       margin-top: 8px;
+   }
+
+   /* Quantity slider (override Perfect Panel's #order_quantity input rules) */
+   .neworder-form #order_quantity .qty-control,
+   .qty-control {
+       display: flex !important;
+       align-items: center;
+       gap: 16px;
+       height: 54px;
+       padding: 0 16px;
+       border: 1px solid var(--line);
+       border-radius: 10px;
+       background: var(--bg-1);
+   }
+   .neworder-form #order_quantity .qty-control input[type="number"],
+   .qty-control input[type="number"] {
+       flex: 0 0 96px !important;
+       width: 96px !important;
+       max-width: 96px !important;
+       height: auto !important;
+       padding: 0 !important;
+       border: 0 !important;
+       background: transparent !important;
+       box-shadow: none !important;
+       font-size: 18px !important;
+       font-weight: 700;
+       color: var(--ink-1);
+       font-variant-numeric: tabular-nums;
+   }
+   .qty-control input[type="number"]:focus { outline: none; }
+   .qty-control input[type="number"]::-webkit-outer-spin-button,
+   .qty-control input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+   .qty-control input[type="number"] { -moz-appearance: textfield; }
+   .neworder-form #order_quantity input.qty-range,
+   .qty-range {
+       flex: 1 1 auto !important;
+       width: auto !important;
+       min-width: 0 !important;
+       height: 5px !important;
+       padding: 0 !important;
+       border: 0 !important;
+       border-radius: 3px;
+       background: var(--bg-3);
+       -webkit-appearance: none;
+       appearance: none;
+       cursor: pointer;
+   }
+   .qty-range::-webkit-slider-thumb {
+       -webkit-appearance: none; appearance: none;
+       width: 16px; height: 16px; border-radius: 50%;
+       background: var(--accent); border: 2px solid #fff;
+       box-shadow: 0 1px 4px rgba(255,98,85,.5);
+       cursor: pointer;
+   }
+   .qty-range::-moz-range-thumb {
+       width: 16px; height: 16px; border-radius: 50%;
+       background: var(--accent); border: 2px solid #fff; cursor: pointer;
+   }
+   .qty-ticks {
+       position: relative;
+       height: 14px;
+       margin: 7px 16px 0;
+       font-size: 11px;
+       color: var(--ink-3);
+       font-variant-numeric: tabular-nums;
+   }
+   .qty-ticks span { position: absolute; top: 0; white-space: nowrap; }
+
    /* Summary card */
    .neworder-summary { position: sticky; top: 84px; align-self: flex-start; }
    .summary-trust {

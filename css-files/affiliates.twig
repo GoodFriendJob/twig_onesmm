@@ -14,7 +14,7 @@
       <div class="aff-kpi-label">{{ lang('affiliates.available_earnings') }}</div>
       <div class="aff-kpi-value tabular">{{ statistics['unpaid_earnings'] }}</div>
       {% if statistics['request_payout'] %}
-        <a href="{{ page['url'] }}/request-payout" class="btn btn-primary aff-payout-btn">
+        <a href="{{ page['url'] }}/request-payout" class="btn btn-primary lp-cta--gradient aff-payout-btn">
           {{ lang('affiliates.request_payout') }}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </a>
@@ -66,7 +66,7 @@
 
         <div class="aff-link-row">
           <input type="text" id="aff-referral-input" class="form-control" value="{{ referral_link }}" readonly>
-          <button type="button" class="btn btn-primary aff-copy-btn" onclick="
+          <button type="button" class="btn btn-primary lp-cta--gradient aff-copy-btn" onclick="
             var el = document.getElementById('aff-referral-input');
             el.select(); el.setSelectionRange(0, 99999);
             try { document.execCommand('copy'); } catch(e) {}

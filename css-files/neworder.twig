@@ -6,7 +6,7 @@
 #}
 <div class="neworder-page">
 
-  <h1 class="one-page-title neworder-title"><span class="one-page-title__accent">New</span> Order</h1>
+  <h1 class="one-page-title"><span class="one-page-title__accent">New</span> Order</h1>
 
   <form id="order-form" {% if site['rtl'] %}class="rtl-form"{% endif %} action="{{ page['url'] }}" method="post">
     <input type="hidden" name="_csrf" value="{{ csrftoken }}">
@@ -201,7 +201,20 @@
               <div class="h3">Order <b>Details</b></div>
             </div>
 
-            <div id="fields"></div>
+            <div id="fields">
+              {% if demo_order_fields %}
+                {# Preview-only demo fields — Perfect Panel injects the real ones live #}
+                <div class="form-group fields" id="order_link">
+                  <label class="control-label">Link</label>
+                  <input type="text" class="form-control" placeholder="Input or Paste your target URL here">
+                </div>
+                <div class="form-group fields" id="order_quantity">
+                  <label class="control-label">Quantity</label>
+                  <input type="number" class="form-control" name="quantity" value="5000" min="500" max="40000" step="100">
+                  <div class="min-max">Min: 500 - Max: 40,000</div>
+                </div>
+              {% endif %}
+            </div>
 
             <div class="form-group">
               <label for="charge" class="control-label">{{ lang('neworder.charge') }}</label>
@@ -1180,5 +1193,103 @@ window.__pulseCategories = [
   apply();
   var rt;
   window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(apply, 150); });
+})();
+</script>
+
+<script>
+// ── Quantity slider — enhances Perfect Panel's quantity number input ──────────
+(function(){
+  function fmt(v){
+    v = Math.round(v);
+    if (v >= 1000) { var k = Math.round((v/1000)*10)/10; return k + 'K'; }
+    return String(v);
+  }
+  function niceStep(r){
+    if (r <= 0) return 1;
+    var p = Math.pow(10, Math.floor(Math.log10(r)));
+    var f = r / p;
+    var nf = f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10;
+    return nf * p;
+  }
+  function fire(el, type){ el.dispatchEvent(new Event(type, { bubbles: true })); }
+
+  function enhance(group){
+    if (!group) return;
+    var num = group.querySelector('input[type="number"], input[name="quantity"], input[name*="quantity"]');
+    if (!num) return;
+    if (group.querySelector('.qty-range')) return; // already enhanced
+
+    var control = document.createElement('div');
+    control.className = 'qty-control';
+    num.parentNode.insertBefore(control, num);
+    control.appendChild(num);
+
+    var range = document.createElement('input');
+    range.type = 'range';
+    range.className = 'qty-range';
+    control.appendChild(range);
+
+    var ticks = document.createElement('div');
+    ticks.className = 'qty-ticks';
+    control.parentNode.insertBefore(ticks, control.nextSibling);
+
+    function bounds(){
+      var min = parseInt(num.getAttribute('min'), 10);
+      var max = parseInt(num.getAttribute('max'), 10);
+      if (isNaN(min)) min = 0;
+      if (isNaN(max) || max <= min) max = (parseInt(num.value, 10) || 1000) * 10;
+      var step = parseInt(num.getAttribute('step'), 10) || Math.max(1, Math.round((max - min) / 500));
+      return { min: min, max: max, step: step };
+    }
+    function paint(b){
+      var val = Math.min(Math.max(parseInt(range.value, 10) || b.min, b.min), b.max);
+      var pct = b.max > b.min ? (val - b.min) / (b.max - b.min) * 100 : 0;
+      range.style.background = 'linear-gradient(90deg, var(--accent) 0%, var(--accent) ' + pct + '%, var(--bg-3) ' + pct + '%, var(--bg-3) 100%)';
+    }
+    function buildTicks(b){
+      ticks.innerHTML = '';
+      var vals = [b.min];
+      var st = niceStep((b.max - b.min) / 5);
+      for (var v = Math.ceil(b.min / st) * st; v < b.max; v += st) { if (v > b.min) vals.push(v); }
+      vals.push(b.max);
+      vals.forEach(function(v){
+        var pct = b.max > b.min ? (v - b.min) / (b.max - b.min) * 100 : 0;
+        var s = document.createElement('span');
+        s.textContent = fmt(v);
+        s.style.left = pct + '%';
+        s.style.transform = 'translateX(-' + pct + '%)';
+        ticks.appendChild(s);
+      });
+    }
+    function sync(){
+      var b = bounds();
+      range.min = b.min; range.max = b.max; range.step = b.step;
+      range.value = Math.min(Math.max(parseInt(num.value, 10) || b.min, b.min), b.max);
+      buildTicks(b); paint(b);
+    }
+
+    range.addEventListener('input', function(){
+      num.value = range.value;
+      paint(bounds());
+      fire(num, 'input'); fire(num, 'change');
+    });
+    num.addEventListener('input', function(){
+      var b = bounds();
+      var v = parseInt(num.value, 10);
+      if (!isNaN(v)) range.value = Math.min(Math.max(v, b.min), b.max);
+      paint(b);
+    });
+    // Re-sync if Perfect Panel updates min/max per selected service
+    new MutationObserver(sync).observe(num, { attributes: true, attributeFilter: ['min', 'max', 'step'] });
+
+    sync();
+  }
+
+  function scan(){
+    document.querySelectorAll('#order_quantity').forEach(enhance);
+  }
+  scan();
+  var fields = document.getElementById('fields');
+  if (fields) new MutationObserver(scan).observe(fields, { childList: true, subtree: true });
 })();
 </script>

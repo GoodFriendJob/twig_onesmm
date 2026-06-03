@@ -618,10 +618,12 @@ if ($slug === 'neworder') {
     $context['error'] = false;
     $context['errorMessage'] = '';
     $context['success'] = false;
-    $context['order'] = [];
+    $context['order'] = ['charge' => '$0.70'];
     // neworder.twig uses JS-driven category/service selects, so no server-side list needed
     // The platform chips + category dropdowns are hardcoded in the template
     $context['serviceCategoryList'] = $context['serviceCategoryList'] ?? [];
+    // Preview-only: render demo Link + Quantity fields (Perfect Panel injects these live).
+    $context['demo_order_fields'] = true;
 }
 
 // ── Mock data: Orders (order history) ──

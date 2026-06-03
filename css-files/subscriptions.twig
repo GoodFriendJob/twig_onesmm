@@ -83,10 +83,10 @@
                   <a href="{{ page['url'] }}/stop/{{ order['id'] }}" class="btn btn-default btn-xs">{{ lang('subscriptions.button.cancel') }}</a>
                 {% endif %}
                 {% if order['status'] == 2 %}
-                  <a href="{{ page['url'] }}/resume/{{ order['id'] }}" class="btn btn-primary btn-xs">{{ lang('subscriptions.button.unpause') }}</a>
+                  <a href="{{ page['url'] }}/resume/{{ order['id'] }}" class="btn btn-primary lp-cta--gradient btn-xs">{{ lang('subscriptions.button.unpause') }}</a>
                 {% endif %}
                 {% if order['status'] == 3 or order['status'] == 4 or order['status'] == 5 %}
-                  <a href="{{ page['url'] }}/reorder/{{ order['id'] }}" class="btn btn-primary btn-xs">{{ lang('subscriptions.button.reorder') }}</a>
+                  <a href="{{ page['url'] }}/reorder/{{ order['id'] }}" class="btn btn-primary lp-cta--gradient btn-xs">{{ lang('subscriptions.button.reorder') }}</a>
                 {% endif %}
               </td>
             </tr>
