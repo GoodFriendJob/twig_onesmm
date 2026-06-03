@@ -11,3 +11,4 @@ build/
 *.log
 *.bak
 composer.lock
+.claude/settings.local.json
