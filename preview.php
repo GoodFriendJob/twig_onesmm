@@ -108,14 +108,31 @@ $twig->addFunction(new \Twig\TwigFunction('page_url', function ($route) {
         'child_panel'   => '/child_panel',
         'subscriptions' => '/subscriptions',
         'forgot'        => '/forgot',
+        'notifications' => '/account#notifications',
+        'refunds'       => '/refunds',
+        'updates'       => '/updates',
+        'child_panel_order' => '/child_panel_order',
     ];
     return $routes[$route] ?? '/' . $route;
 }));
 
+// ── Mock `sliceUrl()` function (used in viewtickets.twig for file name display) ──
+$twig->addFunction(new \Twig\TwigFunction('sliceUrl', function ($url) {
+    $name = basename($url);
+    return strlen($name) > 30 ? substr($name, 0, 27) . '...' : $name;
+}));
+
+// ── Dashboard pages (auto-authenticate) ──
+$dashboardPages = [
+    'neworder', 'account', 'addfunds', 'orders', 'tickets', 'viewtickets',
+    'services', 'api', 'massorder', 'drip_feed', 'refill', 'refunds',
+    'subscriptions', 'affiliates', 'child_panel', 'child_panel_order', 'updates',
+];
+
 // ── Determine which template to render ──
 $slug = trim($requestUri, '/');
 if ($slug === '' || $slug === 'index') {
-    $slug = 'singin';
+    $slug = 'neworder'; // Dashboard is the default landing page
 }
 
 // Handle blog post sub-URLs: /blog/some-slug → blogpost.twig
@@ -141,7 +158,10 @@ if (!file_exists(__DIR__ . '/css-files/' . $templateFile)) {
 }
 
 // ── Mock Perfect Panel global variables ──
-$isAuth = isset($_GET['auth']) && $_GET['auth'] === '1';
+// Dashboard pages are always authenticated; use ?auth=0 to force public view
+$isAuth = in_array($slug, $dashboardPages)
+    ? !(isset($_GET['auth']) && $_GET['auth'] === '0')
+    : (isset($_GET['auth']) && $_GET['auth'] === '1');
 
 $context = [
     'site' => [
@@ -159,13 +179,21 @@ $context = [
         ],
         'scripts'        => [],
         'menu'           => [
-            ['name' => 'New Order',     'link' => '/neworder',  'icon' => 'fa-plus',           'active' => false, 'external' => false],
-            ['name' => 'Services',      'link' => '/services',  'icon' => 'fa-list',           'active' => false, 'external' => false],
-            ['name' => 'Orders',        'link' => '/orders',    'icon' => 'fa-shopping-cart',  'active' => false, 'external' => false],
-            ['name' => 'Add Funds',     'link' => '/addfunds',  'icon' => 'fa-credit-card',    'active' => false, 'external' => false],
-            ['name' => 'API',           'link' => '/api',       'icon' => 'fa-code',           'active' => false, 'external' => false],
-            ['name' => 'Support',       'link' => '/tickets',   'icon' => 'fa-life-ring',      'active' => false, 'external' => false],
-            ['name' => 'Blog',          'link' => '/blog',      'icon' => 'fa-newspaper-o',    'active' => false, 'external' => false],
+            ['name' => 'New Order',     'link' => '/neworder',      'icon' => 'fa-plus',           'active' => ($slug === 'neworder'), 'external' => false],
+            ['name' => 'Mass Order',    'link' => '/massorder',     'icon' => 'fa-list',           'active' => ($slug === 'massorder'), 'external' => false],
+            ['name' => 'Services',      'link' => '/services',      'icon' => 'fa-list',           'active' => ($slug === 'services'), 'external' => false],
+            ['name' => 'Orders',        'link' => '/orders',        'icon' => 'fa-shopping-cart',  'active' => ($slug === 'orders'), 'external' => false],
+            ['name' => 'Add Funds',     'link' => '/addfunds',      'icon' => 'fa-credit-card',    'active' => ($slug === 'addfunds'), 'external' => false],
+            ['name' => 'Subscriptions', 'link' => '/subscriptions', 'icon' => 'fa-repeat',         'active' => ($slug === 'subscriptions'), 'external' => false],
+            ['name' => 'Drip Feed',     'link' => '/drip_feed',     'icon' => 'fa-tint',           'active' => ($slug === 'drip_feed'), 'external' => false],
+            ['name' => 'Refill',        'link' => '/refill',        'icon' => 'fa-refresh',        'active' => ($slug === 'refill'), 'external' => false],
+            ['name' => 'Refunds',       'link' => '/refunds',       'icon' => 'fa-undo',           'active' => ($slug === 'refunds'), 'external' => false],
+            ['name' => 'API',           'link' => '/api',           'icon' => 'fa-code',           'active' => ($slug === 'api'), 'external' => false],
+            ['name' => 'Affiliates',    'link' => '/affiliates',    'icon' => 'fa-users',          'active' => ($slug === 'affiliates'), 'external' => false],
+            ['name' => 'Child Panel',   'link' => '/child_panel',   'icon' => 'fa-cubes',          'active' => ($slug === 'child_panel'), 'external' => false],
+            ['name' => 'Support',       'link' => '/tickets',       'icon' => 'fa-life-ring',      'active' => ($slug === 'tickets' || $slug === 'viewtickets'), 'external' => false],
+            ['name' => 'Updates',       'link' => '/updates',       'icon' => 'fa-bell',           'active' => ($slug === 'updates'), 'external' => false],
+            ['name' => 'Blog',          'link' => '/blog',          'icon' => 'fa-newspaper-o',    'active' => ($slug === 'blog'), 'external' => false],
         ],
         'account_menu'   => [
             ['name' => 'Account',  'link' => '/account'],
@@ -186,6 +214,14 @@ $context = [
     'user' => [
         'auth'              => $isAuth,
         'balance_formatted' => '$100.00',
+        'username'          => 'demo_user',
+        'email'             => 'demo@onesmm.com',
+        'lang'              => 'en',
+        'timezone'          => 'UTC',
+        'is_generated_apikey' => false,
+        'apikey'            => 'abcdef1234567890abcdef1234567890',
+        'apikey_created'    => '2026-01-15',
+        'favorite_services' => false,
     ],
     'page' => [
         'title' => ucwords(str_replace('-', ' ', $slug)),
@@ -566,6 +602,243 @@ if ($slug === 'api') {
             ], JSON_PRETTY_PRINT),
         ],
     ];
+}
+
+// ── Mock data: New Order ──
+if ($slug === 'neworder') {
+    $context['error'] = false;
+    $context['errorMessage'] = '';
+    $context['success'] = false;
+    $context['order'] = [];
+    // neworder.twig uses JS-driven category/service selects, so no server-side list needed
+    // The platform chips + category dropdowns are hardcoded in the template
+    $context['serviceCategoryList'] = $context['serviceCategoryList'] ?? [];
+}
+
+// ── Mock data: Orders (order history) ──
+if ($slug === 'orders') {
+    $context['status'] = $_GET['status'] ?? 'all';
+    $context['search'] = $_GET['search'] ?? '';
+    $context['task'] = true; // show actions column
+    $context['orderList'] = [
+        ['id' => 10847, 'service_id' => 101, 'service' => 'Instagram Followers - Real & Active', 'link' => 'https://instagram.com/onesmm', 'quantity' => 5000, 'start_count' => 1200, 'remains' => 0, 'charge' => '$12.50', 'original_charge' => '$12.50', 'converted' => false, 'status' => 'Completed', 'date' => '2026-06-01 14:32', 'refill' => true, 'refilling' => false, 'refillAvailableTime' => '', 'cancel' => false, 'hasCancelTask' => false, 'cancelReason' => '', 'orderDetails' => []],
+        ['id' => 10843, 'service_id' => 401, 'service' => 'Telegram Channel Members - Real & Active', 'link' => 'https://t.me/onesmm_channel', 'quantity' => 2000, 'start_count' => 500, 'remains' => 350, 'charge' => '$6.00', 'original_charge' => '$6.00', 'converted' => false, 'status' => 'In progress', 'date' => '2026-06-01 10:15', 'refill' => false, 'refilling' => false, 'refillAvailableTime' => '', 'cancel' => true, 'hasCancelTask' => false, 'cancelReason' => '', 'orderDetails' => []],
+        ['id' => 10839, 'service_id' => 601, 'service' => 'YouTube Subscribers - Real', 'link' => 'https://youtube.com/@onesmm', 'quantity' => 1000, 'start_count' => 240, 'remains' => 0, 'charge' => '$8.00', 'original_charge' => '$8.00', 'converted' => false, 'status' => 'Completed', 'date' => '2026-05-30 09:00', 'refill' => false, 'refilling' => false, 'refillAvailableTime' => '', 'cancel' => false, 'hasCancelTask' => false, 'cancelReason' => '', 'orderDetails' => []],
+        ['id' => 10835, 'service_id' => 802, 'service' => 'Twitter/X Likes', 'link' => 'https://x.com/onesmm/status/123456', 'quantity' => 500, 'start_count' => 12, 'remains' => 0, 'charge' => '$0.50', 'original_charge' => '$0.50', 'converted' => false, 'status' => 'Completed', 'date' => '2026-05-29 16:45', 'refill' => false, 'refilling' => false, 'refillAvailableTime' => '', 'cancel' => false, 'hasCancelTask' => false, 'cancelReason' => '', 'orderDetails' => []],
+        ['id' => 10830, 'service_id' => 301, 'service' => 'Instagram Reel Views - Fast', 'link' => 'https://instagram.com/reel/abc123', 'quantity' => 10000, 'start_count' => 200, 'remains' => 2000, 'charge' => '$3.00', 'original_charge' => '$3.00', 'converted' => false, 'status' => 'Partial', 'date' => '2026-05-28 11:20', 'refill' => false, 'refilling' => false, 'refillAvailableTime' => '', 'cancel' => false, 'hasCancelTask' => false, 'cancelReason' => '', 'orderDetails' => []],
+        ['id' => 10825, 'service_id' => 902, 'service' => 'TikTok Likes', 'link' => 'https://tiktok.com/@onesmm/video/789', 'quantity' => 3000, 'start_count' => 0, 'remains' => 3000, 'charge' => '$1.50', 'original_charge' => '$1.50', 'converted' => false, 'status' => 'Pending', 'date' => '2026-05-27 08:30', 'refill' => false, 'refilling' => false, 'refillAvailableTime' => '', 'cancel' => true, 'hasCancelTask' => false, 'cancelReason' => '', 'orderDetails' => []],
+    ];
+    $context['searchList'] = [];
+    $context['pagination'] = ['count' => 6, 'current' => 1, 'pages' => 1, 'next' => null, 'last' => null];
+}
+
+// ── Mock data: Account ──
+if ($slug === 'account') {
+    $context['success'] = false;
+    $context['successText'] = '';
+    $context['error'] = false;
+    $context['errorText'] = '';
+    $context['successChangeEmail'] = false;
+    $context['successChangeEmailMessage'] = '';
+    $context['errorChangeEmail'] = false;
+    $context['errorChangeEmailMessage'] = '';
+    $context['twofactorauth'] = [
+        'success' => false,
+        'error' => false,
+        'activated' => false,
+        'active_code' => '',
+        'url' => ['generate' => '/account/2fa/generate', 'approve' => '/account/2fa/approve'],
+    ];
+    $context['user_invoice_module'] = false;
+    $context['errorUserInvoice'] = false;
+    $context['invoice_details'] = [];
+    $context['timezones'] = ['UTC', 'US/Eastern', 'US/Central', 'US/Pacific', 'Europe/London', 'Europe/Berlin', 'Asia/Tokyo', 'Asia/Dubai', 'Asia/Tehran'];
+    $context['apiKey'] = ['errorMessage' => ''];
+}
+
+// ── Mock data: Add Funds ──
+if ($slug === 'addfunds') {
+    $context['paymentsList'] = [
+        ['id' => 1, 'name' => 'CoinPayments', 'img' => ''],
+        ['id' => 2, 'name' => 'Perfect Money', 'img' => ''],
+        ['id' => 3, 'name' => 'Payeer', 'img' => ''],
+        ['id' => 4, 'name' => 'Stripe', 'img' => ''],
+        ['id' => 5, 'name' => 'PayPal', 'img' => ''],
+    ];
+    $context['currentPayment'] = 1;
+    $context['addfunds'] = '';
+    $context['paymentList'] = [
+        ['id' => 501, 'method' => 'CoinPayments', 'amount' => '$50.00', 'status' => 'Completed', 'date' => '2026-05-28 14:20'],
+        ['id' => 500, 'method' => 'Stripe', 'amount' => '$25.00', 'status' => 'Completed', 'date' => '2026-05-20 10:05'],
+        ['id' => 498, 'method' => 'Perfect Money', 'amount' => '$100.00', 'status' => 'Completed', 'date' => '2026-05-15 09:30'],
+    ];
+    $context['pagination'] = ['count' => 3, 'current' => 1, 'pages' => 1, 'next' => null, 'last' => null];
+    $context['success'] = false;
+    $context['successText'] = '';
+    $context['error'] = false;
+    $context['errorText'] = '';
+    $context['site']['cpf_field'] = false;
+}
+
+// ── Mock data: Mass Order ──
+if ($slug === 'massorder') {
+    $context['error'] = false;
+    $context['errorText'] = '';
+    $context['success'] = false;
+    $context['order'] = [];
+}
+
+// ── Mock data: Subscriptions ──
+if ($slug === 'subscriptions') {
+    $context['status'] = $_GET['status'] ?? 'all';
+    $context['search'] = $_GET['search'] ?? '';
+    $context['orderList'] = [
+        ['id' => 201, 'username' => '@onesmm_channel', 'quantity_min' => 100, 'quantity_max' => 500, 'posts' => 10, 'old_posts' => 0, 'delay' => '30 min', 'service' => 'Instagram Auto Likes - Per Post', 'status' => 'Active', 'date' => '2026-05-20', 'expiry' => '2026-06-20'],
+        ['id' => 200, 'username' => '@onesmm', 'quantity_min' => 200, 'quantity_max' => 200, 'posts' => 5, 'old_posts' => 2, 'delay' => '1 hour', 'service' => 'Instagram Auto Comments', 'status' => 'Paused', 'date' => '2026-05-10', 'expiry' => '2026-06-10'],
+    ];
+    $context['pagination'] = ['count' => 2, 'current' => 1, 'pages' => 1, 'next' => null, 'last' => null];
+}
+
+// ── Mock data: Drip Feed ──
+if ($slug === 'drip_feed') {
+    $context['status'] = $_GET['status'] ?? 'all';
+    $context['search'] = $_GET['search'] ?? '';
+    $context['dripFeedList'] = [
+        ['id' => 301, 'service' => 'Instagram Followers - Drip Feed', 'link' => 'https://instagram.com/onesmm', 'quantity' => 10000, 'runs' => 10, 'interval' => 60, 'status' => 'Active', 'date' => '2026-05-25'],
+        ['id' => 300, 'service' => 'Telegram Channel Members', 'link' => 'https://t.me/onesmm_channel', 'quantity' => 5000, 'runs' => 5, 'interval' => 120, 'status' => 'Completed', 'date' => '2026-05-15'],
+    ];
+    $context['pagination'] = ['count' => 2, 'current' => 1, 'pages' => 1, 'next' => null, 'last' => null];
+}
+
+// ── Mock data: Refill ──
+if ($slug === 'refill') {
+    $context['status'] = $_GET['status'] ?? 'all';
+    $context['search'] = $_GET['search'] ?? '';
+    $context['refillList'] = [
+        ['id' => 401, 'date' => '2026-06-01 09:30', 'order_id' => 10847, 'link' => 'https://instagram.com/onesmm', 'service' => 'Instagram Followers - Real & Active', 'status' => 'Completed'],
+        ['id' => 400, 'date' => '2026-05-28 14:00', 'order_id' => 10820, 'link' => 'https://instagram.com/onesmm', 'service' => 'Instagram Followers - Premium', 'status' => 'In progress'],
+        ['id' => 399, 'date' => '2026-05-25 11:00', 'order_id' => 10800, 'link' => 'https://t.me/onesmm_channel', 'service' => 'Telegram Channel Subscribers - Premium', 'status' => 'Rejected'],
+    ];
+    $context['searchList'] = [];
+    $context['pagination'] = ['count' => 3, 'current' => 1, 'pages' => 1, 'next' => null, 'last' => null];
+}
+
+// ── Mock data: Refunds ──
+if ($slug === 'refunds') {
+    $context['order_status'] = $_GET['order_status'] ?? 'all';
+    $context['search'] = $_GET['search'] ?? '';
+    $context['refundList'] = [
+        ['id' => 10830, 'service' => 'Instagram Reel Views - Fast', 'link' => 'https://instagram.com/reel/abc123', 'charge' => '$3.00', 'remains' => 2000, 'refund_amount' => '$0.60', 'status' => 'Partial', 'date' => '2026-05-28 11:20'],
+    ];
+    $context['searchList'] = [];
+    $context['pagination'] = ['count' => 1, 'current' => 1, 'pages' => 1, 'next' => null, 'last' => null];
+}
+
+// ── Mock data: Tickets ──
+if ($slug === 'tickets') {
+    $context['additionalFieldsEnabled'] = false;
+    $context['additionalFields'] = [];
+    $context['ticketList'] = [
+        ['id' => 55, 'subject' => 'Order #10830 partial delivery', 'status' => 'answered', 'date' => '2026-06-01 10:00', 'last_reply' => '2026-06-01 10:30'],
+        ['id' => 54, 'subject' => 'Payment confirmation delay', 'status' => 'closed', 'date' => '2026-05-25 14:00', 'last_reply' => '2026-05-25 15:00'],
+        ['id' => 53, 'subject' => 'API integration help', 'status' => 'closed', 'date' => '2026-05-20 09:00', 'last_reply' => '2026-05-20 11:30'],
+    ];
+    $context['search'] = $_GET['search'] ?? '';
+    $context['ticketsText'] = '';
+    $context['pagination'] = ['count' => 3, 'current' => 1, 'pages' => 1, 'next' => null, 'last' => null];
+}
+
+// ── Mock data: View Ticket ──
+if ($slug === 'viewtickets') {
+    $context['ticket'] = [
+        'id' => 55,
+        'thema' => 'Order #10830 partial delivery',
+        'status' => 'answered',
+        'date' => '2026-06-01 10:00',
+    ];
+    $context['messageList'] = [
+        ['support' => 0, 'author' => 'demo_user', 'time' => '2026-06-01 10:00', 'message' => '<p>Hi, my order #10830 for Instagram Reel Views only delivered 8,000 out of 10,000. Can I get a refill or partial refund?</p>', 'files' => []],
+        ['support' => 1, 'author' => 'Support', 'time' => '2026-06-01 10:30', 'message' => '<p>Hello! We\'ve checked your order and submitted a partial refund for the remaining 2,000 views. The refund of $0.60 has been credited to your balance. Is there anything else we can help with?</p>', 'files' => []],
+    ];
+    $context['canAddMessage'] = true;
+    $context['error'] = false;
+    $context['errorMessage'] = '';
+}
+
+// ── Mock data: Affiliates ──
+if ($slug === 'affiliates') {
+    $context['status'] = $_GET['status'] ?? 'all';
+    $context['referral_link'] = 'https://onesmm.com/?ref=demo_user';
+    $context['commission_rate'] = '5%';
+    $context['minimum_payout'] = '$10.00';
+    $context['statistics'] = [
+        'total_earnings' => '$45.20',
+        'unpaid_earnings' => '$12.50',
+        'conversion_rate' => '8.3%',
+        'total_visits' => 342,
+        'total_registrations' => 28,
+        'total_deposits' => 14,
+        'request_payout' => true,
+    ];
+    $context['affiliates'] = [
+        ['id' => 1, 'username' => 'user_abc', 'date' => '2026-05-15', 'deposits' => '$120.00', 'commission' => '$6.00', 'status' => 'Active'],
+        ['id' => 2, 'username' => 'user_def', 'date' => '2026-05-20', 'deposits' => '$80.00', 'commission' => '$4.00', 'status' => 'Active'],
+        ['id' => 3, 'username' => 'user_ghi', 'date' => '2026-05-28', 'deposits' => '$0.00', 'commission' => '$0.00', 'status' => 'Registered'],
+    ];
+    $context['payments'] = [
+        ['id' => 1, 'amount' => '$32.70', 'status' => 'Paid', 'date' => '2026-05-01'],
+    ];
+    $context['pagination'] = ['count' => 3, 'current' => 1, 'pages' => 1, 'next' => null, 'last' => null];
+}
+
+// ── Mock data: Child Panel ──
+if ($slug === 'child_panel') {
+    $context['panelsList'] = [
+        ['id' => 1, 'domain' => 'mypanel.example.com', 'status' => 'Active', 'created' => '2026-04-10', 'expires' => '2026-07-10', 'currency' => 'USD'],
+    ];
+    $context['error'] = false;
+    $context['errorMessage'] = '';
+    $context['success'] = false;
+    $context['successMessage'] = '';
+    $context['renew'] = false;
+    $context['renewUrl'] = '';
+    $context['renewMessage'] = '';
+    $context['restore'] = false;
+    $context['restoreUrl'] = '';
+}
+
+// ── Mock data: Child Panel Order ──
+if ($slug === 'child_panel_order') {
+    $context['childpanel'] = '<h3>Start Your Own SMM Panel</h3><p>Launch your own branded SMM reseller panel powered by OneSMM. White-label solution with your own domain, logo, and pricing.</p>';
+    $context['showForm'] = true;
+    $context['errorForm'] = false;
+    $context['errorFormMessage'] = '';
+    $context['form'] = ['domain' => '', 'currency' => 'USD', 'username' => ''];
+    $context['name_servers'] = ['ns1.perfectpanel.com', 'ns2.perfectpanel.com'];
+    $context['currenciesList'] = [
+        ['code' => 'USD', 'name' => 'US Dollar'],
+        ['code' => 'EUR', 'name' => 'Euro'],
+        ['code' => 'GBP', 'name' => 'British Pound'],
+    ];
+    $context['price'] = '$49.99/mo';
+}
+
+// ── Mock data: Updates ──
+if ($slug === 'updates') {
+    $context['types'] = [
+        ['key' => 'all', 'label' => 'All Updates'],
+        ['key' => 'new_services', 'label' => 'New Services'],
+        ['key' => 'improvements', 'label' => 'Improvements'],
+        ['key' => 'maintenance', 'label' => 'Maintenance'],
+    ];
+    $context['type'] = ['key' => 'all', 'label' => 'All Updates'];
+    $context['search'] = $_GET['search'] ?? '';
+    $context['updatesList'] = [
+        ['id' => 10, 'title' => 'New TikTok Services Added', 'type' => 'New Services', 'content' => '<p>We\'ve added 15 new TikTok services including followers, likes, views, and comments. Check them out in the New Order page!</p>', 'date' => '2026-06-01'],
+        ['id' => 9, 'title' => 'Payment Gateway Update', 'type' => 'Improvements', 'content' => '<p>CoinPayments now supports 100+ cryptocurrencies. We\'ve also reduced minimum deposit to $1.00.</p>', 'date' => '2026-05-25'],
+        ['id' => 8, 'title' => 'Scheduled Maintenance — May 20', 'type' => 'Maintenance', 'content' => '<p>Brief maintenance window 02:00-04:00 UTC on May 20. Order processing may be delayed during this period.</p>', 'date' => '2026-05-18'],
+    ];
+    $context['pagination'] = ['count' => 3, 'current' => 1, 'pages' => 1, 'next' => null, 'last' => null];
 }
 
 // ── Render page template ──

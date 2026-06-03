@@ -1,0 +1,212 @@
+{# orders.twig — Pulse theme
+   Drop-in replacement: same variable contract as the default.
+   Variables used:
+     site.rtl
+     page.url
+     status                       (active filter: all|pending|inprogress|completed|partial|processing|canceled)
+     search                       (search box value)
+     orderList[]                  (each: id, date, link, charge, start_count, quantity, service, status,
+                                   cancelReason, remains, refill, refilling, refillAvailableTime,
+                                   cancel, hasCancelTask, orderDetails[])
+     task                         (1 = show actions column)
+     pagination.count, current, pages, next, last
+     searchList[]                 (each: name, value — preserved across pagination)
+     lang('orders.*'), lang('general.search.placeholder')
+#}
+<div class="orders-page">
+
+  <div class="page-header">
+    <form action="{{ page['url'] }}" method="get" id="history-search" class="orders-search">
+      <div class="input-with-icon">
+        <svg class="input-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="text" name="search" class="form-control input-sm"
+               value="{{ search }}"
+               placeholder="{{ lang('general.search.placeholder') }}">
+      </div>
+    </form>
+  </div>
+
+  {# ─── Status filter pills ─── #}
+  {% set tabs = [
+    { key: 'all',        url: page['url'],                  label: lang('orders.all') },
+    { key: 'pending',    url: page['url'] ~ '/pending',     label: lang('orders.status.pending') },
+    { key: 'inprogress', url: page['url'] ~ '/inprogress',  label: lang('orders.status.inprogress') },
+    { key: 'completed',  url: page['url'] ~ '/completed',   label: lang('orders.status.completed') },
+    { key: 'partial',    url: page['url'] ~ '/partial',     label: lang('orders.status.partial') },
+    { key: 'processing', url: page['url'] ~ '/processing',  label: lang('orders.status.processing') },
+    { key: 'canceled',   url: page['url'] ~ '/canceled',    label: lang('orders.status.canceled') }
+  ] %}
+  <div class="filter-tabs {% if site['rtl'] %}rtl-nav{% endif %}">
+    <ul class="nav nav-pills filter-pills">
+      {% for tab in tabs %}
+        <li {% if tab.key == status %}class="active"{% endif %}>
+          <a href="{{ tab.url }}">{{ tab.label }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  {# ─── Orders table ─── #}
+  <div class="card orders-card">
+    <div class="table-responsive">
+      <table class="table orders-table {% if site['rtl'] %}rtl-table{% endif %}">
+        <thead>
+          <tr>
+            <th>{{ lang('orders.id') }}</th>
+            <th>{{ lang('orders.date') }}</th>
+            <th class="col-link">{{ lang('orders.link') }}</th>
+            <th>{{ lang('orders.charge') }}</th>
+            <th class="nowrap">{{ lang('orders.startcount') }}</th>
+            <th>{{ lang('orders.quantity') }}</th>
+            <th>{{ lang('orders.service') }}</th>
+            <th>{{ lang('orders.status') }}</th>
+            <th>{{ lang('orders.remains') }}</th>
+            {% if task == 1 %}<th class="col-actions">&nbsp;</th>{% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orderList %}
+            {# Map status text → semantic class. Perfect Panel ships the status pre-rendered, so
+               we sniff the rendered text to colour the pill. #}
+            {% set s = order['status']|lower %}
+            {% set status_class =
+              s matches '/complete/'   ? 'badge-green' :
+              s matches '/progress/'   ? 'badge-blue' :
+              s matches '/pending/'    ? 'badge-amber' :
+              s matches '/processing/' ? 'badge-blue' :
+              s matches '/partial/'    ? 'badge-amber' :
+              s matches '/cancel/'     ? 'badge-red' :
+              'badge-gray' %}
+            <tr>
+              <td class="tabular ink">{{ order['id'] }}</td>
+              <td class="tiny muted nowrap">{{ order['date'] }}</td>
+              <td class="col-link">
+                <span class="order-link" title="{{ order['link'] }}">{{ order['link'] }}</span>
+                {% if order['orderDetails'] %}
+                  {% for orderDetails in order['orderDetails'] %}
+                    <a href="#" class="order-details-link" data-toggle="modal" data-target="#order-details-{{ order['id'] }}-{{ loop.index }}" title="{{ orderDetails.label }}">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h4"/></svg>
+                    </a>
+                    <div class="modal fade {% if site.rtl %}modal-rtl{% endif %}" tabindex="-1" role="dialog" id="order-details-{{ order['id'] }}-{{ loop.index }}">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">{{ orderDetails.label }}</h4>
+                          </div>
+                          <div class="modal-body">
+                            {% for orderDetail in orderDetails['details'] %}
+                              <div class="form-group">
+                                <label for="details-{{ order['id'] }}-{{ loop.index }}" class="form-label">{{ orderDetail.label }}</label>
+                                {% if orderDetail.type == 'textarea' %}
+                                  <textarea id="details-{{ order['id'] }}-{{ loop.index }}" class="form-control" rows="7" disabled>{{ orderDetail.value }}</textarea>
+                                {% elseif orderDetail.type == 'input' %}
+                                  <input id="details-{{ order['id'] }}-{{ loop.index }}" class="form-control" value="{{ orderDetail.value }}" disabled/>
+                                {% endif %}
+                              </div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                {% endif %}
+              </td>
+              <td class="tabular ink">{{ order['charge'] }}</td>
+              <td class="tabular nowrap">{{ order['start_count'] }}</td>
+              <td class="tabular">{{ order['quantity'] }}</td>
+              <td class="col-service" title="{{ order['service'] }}">{% if order['service_id'] %}<span class="tabular muted">ID{{ order['service_id'] }}</span> {% endif %}{{ order['service'] }}</td>
+              <td class="nowrap">
+                <span class="badge {{ status_class }}">{{ order['status'] }}</span>
+                {% if order['cancelReason'] %}
+                  <span class="cancel-reason" data-toggle="tooltip" data-placement="top" title="{{ order['cancelReason'] }}">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--ink-4)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  </span>
+                {% endif %}
+              </td>
+              <td class="tabular">{{ order['remains'] }}</td>
+              {% if task == 1 %}
+                <td class="col-actions">
+                  <div class="order-actions">
+                    {% if order['refilling'] == 1 %}
+                      <span class="badge badge-blue">{{ lang('orders.refilling') }}</span>
+                    {% else %}
+                      {% if order['refill'] == 1 %}
+                        <a href="{{ page['url'] }}/{{ order['id'] }}/refill" class="btn btn-sm btn-primary">{{ lang('orders.button.refill') }}</a>
+                      {% endif %}
+                      {% if order['refillAvailableTime'] %}
+                        <button class="btn btn-sm btn-default disabled" data-toggle="tooltip" data-placement="top" title="{{ order['refillAvailableTime'] }}">{{ lang('orders.button.refill') }}</button>
+                      {% endif %}
+                      {% if order['cancel'] == 1 %}
+                        <a href="{{ page['url'] }}/{{ order['id'] }}/cancel" class="btn btn-sm btn-default">{{ lang('orders.button.cancel') }}</a>
+                      {% endif %}
+                      {% if order['hasCancelTask'] == 1 %}
+                        <span class="badge badge-amber">{{ lang('orders.cancel_requested') }}</span>
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                </td>
+              {% endif %}
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="{{ task == 1 ? 10 : 9 }}">
+                <div class="empty-state">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--ink-5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 1 1-8 0"/></svg>
+                  <div>{{ lang('orders.empty')|default('No orders match this filter.') }}</div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {# ─── Pagination ─── #}
+  {% if pagination['count'] > 100 %}
+    {% if searchList %}
+      {% set params = {} %}
+      {% for search in searchList %}
+        {% set params = params | merge([search['name'] ~ '=' ~ search['value']]) %}
+      {% endfor %}
+      {% set params = '?' ~ params|join('&') %}
+    {% endif %}
+
+    <ul class="pagination orders-pagination {% if site['rtl'] %}rtl-pagination{% endif %}">
+      {% if pagination['current'] != 1 %}
+        <li>
+          <a href="{{ page['url'] }}/{{ status }}/{{ pagination['last'] }}{{ params }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+      {% endif %}
+
+      {% set r, l = 3, 3 %}
+      {% if pagination['current'] == 1 %}{% set r = 6 %}{% endif %}
+      {% if pagination['current'] == 2 %}{% set r = 5 %}{% endif %}
+      {% if pagination['current'] >= pagination['pages'] %}{% set l = 5 %}{% endif %}
+
+      {% for i in 1..ceil(pagination['pages']) %}
+        {% if i >= (pagination['current'] - l) and i <= (pagination['current'] + r) %}
+          <li {% if i == pagination['current'] %}class="active"{% endif %}>
+            <a href="{{ page['url'] }}/{{ status }}/{{ i }}{{ params }}">{{ i }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% if pagination['current'] < pagination['pages'] %}
+        <li>
+          <a href="{{ page['url'] }}/{{ status }}/{{ pagination['next'] }}{{ params }}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  {% endif %}
+
+</div>
+
+{% if orderList|length > 0 %}
+<script>try{localStorage.setItem('onesmm_has_orders','1')}catch(e){}</script>
+{% endif %}

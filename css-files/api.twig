@@ -1,0 +1,143 @@
+{# api.twig — Pulse styled
+   Drop-in replacement: same variable contract.
+   Variables: site.protocol, site.domain, user.auth, methods (each: title, types[], parameters[], examples)
+#}
+<div class="api-page">
+  <div class="lp-container">
+
+    <nav class="one-breadcrumb" aria-label="Breadcrumb">
+      <a href="{{ page_url('index') }}" class="one-breadcrumb__link">Home</a>
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+      <span class="one-breadcrumb__current">API</span>
+    </nav>
+
+    <div class="one-page-hero">
+      <h1 class="one-page-title"><span class="one-page-title__accent">ONE</span> API</h1>
+    </div>
+
+    <div class="api-page-toolbar">
+      <a href="/example.txt" class="btn btn-secondary api-example-link" target="_blank">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Example PHP code
+      </a>
+    </div>
+
+  {# ─── Connection card ─── #}
+  <div class="card api-connection">
+    <div class="card-body">
+      <div class="h3" style="margin: 0 0 14px;">Connection</div>
+      <dl class="api-conn-list">
+        <dt>HTTP method</dt>
+        <dd><code>POST</code></dd>
+
+        <dt>API URL</dt>
+        <dd><code>{{ site['protocol'] }}://{{ site['domain'] }}/api/v2</code></dd>
+
+        {% if user['auth'] %}
+          <dt>API key</dt>
+          <dd>Get an API key on the <a href="{{ site['protocol'] }}://{{ site['domain'] }}/account">Account</a> page</dd>
+        {% endif %}
+
+        <dt>Response format</dt>
+        <dd><code>JSON</code></dd>
+      </dl>
+    </div>
+  </div>
+
+  {# ─── Methods ─── #}
+  <div class="api-methods">
+    {% for method, methodDetails in methods %}
+      <section class="card api-method" id="api-{{ method }}">
+        <div class="card-body">
+          <div class="api-method-head">
+            <span class="api-method-pill">{{ method }}</span>
+            <h2 class="api-method-title">{{ methodDetails['title'] }}</h2>
+          </div>
+
+          {% if 'add' == method %}
+            {% if methodDetails['types']|length > 1 %}
+              <div class="form-group" style="max-width: 320px;">
+                <label class="control-label">Service type</label>
+                <select class="form-control" id="service_type">
+                  {% for type, label in methodDetails['types'] %}
+                    <option value="{{ type }}">{{ label }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            {% endif %}
+
+            {% for type, parameters in methodDetails['parameters'] %}
+              <div id="type_{{ type }}" style="display:none;">
+                <table class="table api-params-table">
+                  <thead>
+                    <tr>
+                      <th class="col-param">Parameter</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for parameter, label in parameters %}
+                      <tr>
+                        <td><code>{{ parameter }}</code></td>
+                        <td>{{ label }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% endfor %}
+          {% else %}
+            <table class="table api-params-table">
+              <thead>
+                <tr>
+                  <th class="col-param">Parameter</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for parameter, label in methodDetails['parameters'] %}
+                  <tr>
+                    <td><code>{{ parameter }}</code></td>
+                    <td>{{ label }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
+
+          <div class="api-example-block">
+            <div class="api-example-head">Example Response</div>
+            <pre class="api-example-pre">{{ methodDetails['examples'] }}</pre>
+          </div>
+        </div>
+      </section>
+    {% endfor %}
+  </div>
+
+  </div>{# /lp-container #}
+</div>
+
+<script>
+(function() {
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function highlight(json) {
+    return escHtml(json).replace(
+      /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+      function(match) {
+        if (/^"/.test(match)) {
+          if (/:$/.test(match)) return '<span class="api-json-key">' + match + '</span>';
+          return '<span class="api-json-str">' + match + '</span>';
+        }
+        if (/true|false/.test(match)) return '<span class="api-json-bool">' + match + '</span>';
+        if (/null/.test(match))       return '<span class="api-json-null">' + match + '</span>';
+        return '<span class="api-json-num">' + match + '</span>';
+      }
+    );
+  }
+  document.querySelectorAll('.api-example-pre').forEach(function(pre) {
+    pre.innerHTML = highlight(pre.textContent || '');
+  });
+})();
+</script>
