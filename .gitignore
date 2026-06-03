@@ -10,3 +10,4 @@ build/
 .env
 *.log
 *.bak
+composer.lock
