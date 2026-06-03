@@ -179,22 +179,27 @@ $context = [
             ['href' => '/style.css'],
         ],
         'scripts'        => [],
+        // Matches the new sidebar design (text + order). Real menu comes from
+        // Perfect Panel admin; the template auto-buckets it into the 3 groups.
         'menu'           => [
-            ['name' => 'New Order',     'link' => '/neworder',      'icon' => 'fa-plus',           'active' => ($slug === 'neworder'), 'external' => false],
-            ['name' => 'Mass Order',    'link' => '/massorder',     'icon' => 'fa-list',           'active' => ($slug === 'massorder'), 'external' => false],
-            ['name' => 'Services',      'link' => '/services',      'icon' => 'fa-list',           'active' => ($slug === 'services'), 'external' => false],
-            ['name' => 'Orders',        'link' => '/orders',        'icon' => 'fa-shopping-cart',  'active' => ($slug === 'orders'), 'external' => false],
-            ['name' => 'Add Funds',     'link' => '/addfunds',      'icon' => 'fa-credit-card',    'active' => ($slug === 'addfunds'), 'external' => false],
-            ['name' => 'Subscriptions', 'link' => '/subscriptions', 'icon' => 'fa-repeat',         'active' => ($slug === 'subscriptions'), 'external' => false],
-            ['name' => 'Drip Feed',     'link' => '/drip_feed',     'icon' => 'fa-tint',           'active' => ($slug === 'drip_feed'), 'external' => false],
-            ['name' => 'Refill',        'link' => '/refill',        'icon' => 'fa-refresh',        'active' => ($slug === 'refill'), 'external' => false],
-            ['name' => 'Refunds',       'link' => '/refunds',       'icon' => 'fa-undo',           'active' => ($slug === 'refunds'), 'external' => false],
-            ['name' => 'API',           'link' => '/api',           'icon' => 'fa-code',           'active' => ($slug === 'api'), 'external' => false],
-            ['name' => 'Affiliates',    'link' => '/affiliates',    'icon' => 'fa-users',          'active' => ($slug === 'affiliates'), 'external' => false],
-            ['name' => 'Child Panel',   'link' => '/child_panel',   'icon' => 'fa-cubes',          'active' => ($slug === 'child_panel'), 'external' => false],
-            ['name' => 'Support',       'link' => '/tickets',       'icon' => 'fa-life-ring',      'active' => ($slug === 'tickets' || $slug === 'viewtickets'), 'external' => false],
-            ['name' => 'Updates',       'link' => '/updates',       'icon' => 'fa-bell',           'active' => ($slug === 'updates'), 'external' => false],
-            ['name' => 'Blog',          'link' => '/blog',          'icon' => 'fa-newspaper-o',    'active' => ($slug === 'blog'), 'external' => false],
+            // Quick Links
+            ['name' => 'New Order',          'link' => '/neworder',      'active' => ($slug === 'neworder'),     'external' => false],
+            ['name' => 'Mass Order',         'link' => '/massorder',     'active' => ($slug === 'massorder'),    'external' => false],
+            ['name' => 'Services',           'link' => '/services',      'active' => ($slug === 'services'),     'external' => false],
+            ['name' => 'Free Services',      'link' => '/free-services', 'active' => ($slug === 'free-services'),'external' => false],
+            ['name' => 'Orders',             'link' => '/orders',        'active' => ($slug === 'orders'),       'external' => false],
+            ['name' => 'Subscriptions',      'link' => '/subscriptions', 'active' => ($slug === 'subscriptions'),'external' => false],
+            // Payments & Payouts
+            ['name' => 'Add Funds',          'link' => '/addfunds',      'active' => ($slug === 'addfunds'),     'external' => false],
+            ['name' => 'Refunds',            'link' => '/refunds',       'active' => ($slug === 'refunds'),      'external' => false],
+            ['name' => 'Affiliate',          'link' => '/affiliates',    'active' => ($slug === 'affiliates'),   'external' => false],
+            ['name' => 'Child Panel',        'link' => '/child_panel',   'active' => ($slug === 'child_panel'),  'external' => false],
+            ['name' => 'Levels & Rewards',   'link' => '/levels',        'active' => ($slug === 'levels'),       'external' => false],
+            ['name' => 'Giveaway',           'link' => '/giveaway',      'active' => ($slug === 'giveaway'),     'external' => false],
+            ['name' => 'API',                'link' => '/api',           'active' => ($slug === 'api'),          'external' => false],
+            // Support
+            ['name' => 'Support | Contact Us', 'link' => '/tickets',     'active' => ($slug === 'tickets' || $slug === 'viewtickets'), 'external' => false],
+            ['name' => 'How to use',         'link' => '/howto',         'active' => ($slug === 'howto'),        'external' => false],
         ],
         'account_menu'   => [
             ['name' => 'Account',  'link' => '/account'],
