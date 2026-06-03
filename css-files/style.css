@@ -1222,13 +1222,12 @@
    }
    .one-page-title {
        font-family: 'Poppins', 'Inter', sans-serif;
-       font-size: clamp(30px, 4.5vw, 44px);
-       font-weight: 700;
+       font-size: 36px;
+       font-weight: 600;
        letter-spacing: -0.025em;
        color: var(--ink-1);
        line-height: 1.12;
        margin-bottom: var(--space-section-sm);
-       text-align: center;
    }
    .one-page-title__accent { color: var(--accent); }
    .one-breadcrumb {
@@ -1967,6 +1966,9 @@
            overflow: visible !important;
            flex: 1;
            justify-content: flex-start;
+       }
+       .app-content {
+        padding: 24px 48px 48px;
        }
    }
    
@@ -2965,29 +2967,47 @@
        font-size: 12px; font-weight: 600;
        display: inline-flex; align-items: center; justify-content: center;
    }
-   .platform-head .h3, .service-head .h3 { font-size: 15px; font-weight: 600; margin: 0; color: var(--ink-1); }
-   
+   .platform-head .h3, .service-head .h3 { font-family: 'Poppins','Inter',sans-serif; font-size: 16px; font-weight: 500; margin: 0; color: var(--ink-2); }
+   .platform-head .h3 b, .service-head .h3 b { font-weight: 700; color: var(--ink-1); }
+
    .platform-grid {
        display: grid;
-       grid-template-columns: repeat(7, 1fr);
-       gap: 8px;
+       grid-template-columns: repeat(9, 1fr);
+       gap: 10px;
    }
    .pulse-platform-chip {
        display: flex; flex-direction: column; align-items: center; justify-content: center;
        gap: 8px; padding: 14px 8px;
-       background: var(--ctrl-bg, #fff); border: 1px solid var(--line); border-radius: 10px;
+       background: var(--ctrl-bg, #fff); border: 1px solid var(--line); border-radius: 8px;
        color: var(--ink-1); font-size: 12px; font-weight: 500;
        cursor: pointer; transition: all .15s;
        min-height: 80px;
    }
-   .pulse-platform-chip:hover { border-color: var(--brand); background: rgba(240,101,67,0.02); }
+   .pulse-platform-chip:hover { border-color: var(--brand); background: var(--bg-2); }
    .pulse-platform-chip.is-active {
-       border: 1px solid var(--brand);
-       background: rgba(240,101,67,0.06);
-       box-shadow: none;
+       border: 1px solid var(--brand-3);
+       background: linear-gradient(90deg, #7277FF 0%, #53B9FF 100%);
+       box-shadow: 0px 8px 10px 0px #609EFF33;
+       border-radius: 8px;
    }
-   .pulse-platform-chip.is-active .platform-name { color: var(--brand); }
-   [data-theme="dark"] .pulse-platform-chip.is-active .platform-name { color: #6b9bff; }
+   .pulse-platform-chip.is-active .platform-name,
+   .pulse-platform-chip.is-active .platform-icon { color: #fff; }
+   /* More/Less toggle chip + collapsed-row hidden state */
+   .pulse-platform-chip.is-row-hidden { display: none; }
+   .platform-more-chip {
+       display: flex; flex-direction: column; align-items: center; justify-content: center;
+       gap: 8px; padding: 14px 8px;
+       background: var(--ctrl-bg, #fff);
+       border: 1px dashed var(--ink-4);
+       border-radius: 8px;
+       color: var(--ink-2);
+       font-size: 12px; font-weight: 500;
+       font-family: inherit;
+       cursor: pointer; transition: all .15s;
+       min-height: 80px;
+   }
+   .platform-more-chip:hover { border-color: var(--brand); color: var(--brand); background: var(--bg-2); }
+   .platform-more-chip .platform-icon { width: 32px; height: 32px; color: inherit; display: inline-flex; align-items: center; justify-content: center; }
    
    /* Coming-soon platforms — desaturated, non-active, "Soon" ribbon top-right.
       Tap is still allowed; JS shows a toast and snaps focus back to the active chip. */
@@ -3044,25 +3064,14 @@
    .platform-icon {
        display: inline-flex; align-items: center; justify-content: center;
        width: 32px; height: 32px;
+       color: var(--ink-1);
    }
    .platform-name { line-height: 1.2; text-align: center; }
-   .platform-ig { color: #E1306C; }
-   .platform-tiktok { color: #000; }
-   .platform-yt { color: #FF0000; }
-   .platform-x { color: #000; }
-   .platform-fb { color: #1877F2; }
-   .platform-li { color: #0A66C2; }
-   .platform-tg { color: #229ED9; }
-   .platform-discord { color: #5865F2; }
-   .platform-twitch { color: #9146FF; }
-.platform-snap {
-    color: #FFFC00;
-    filter: drop-shadow(0 0 1px rgba(0,0,0,0.3));
-}
-   .platform-google { color: inherit; }
-   .platform-web { color: var(--ink-2); }
-   .platform-reviews { color: #F59E0B; }
-   .platform-all { color: var(--ink-2); }
+   /* Monochrome platform icons (match design) — color comes from .platform-icon */
+   .platform-ig, .platform-tiktok, .platform-yt, .platform-x, .platform-fb,
+   .platform-li, .platform-tg, .platform-discord, .platform-twitch, .platform-snap,
+   .platform-google, .platform-web, .platform-website, .platform-reviews,
+   .platform-all, .platform-other { color: inherit; filter: none; }
    
    @media (max-width: 1280px) { .platform-grid { grid-template-columns: repeat(6, 1fr); } }
    @media (max-width: 1100px) { .platform-grid { grid-template-columns: repeat(5, 1fr); } }
@@ -3168,10 +3177,16 @@
    }
    .neworder-form > .alert > .close:hover { opacity: 1; }
    .details-card .card-body { padding-top: 22px; }
-   
+   /* Charge — large green value (match design) */
+   .details-card #charge {
+       color: var(--shell-green);
+       font-weight: 700;
+       font-size: 20px;
+       height: 52px;
+   }
+
    /* Summary card */
    .neworder-summary { position: sticky; top: 84px; align-self: flex-start; }
-   .details-submit { margin-top: 16px; }
    .summary-trust {
        list-style: none; padding: 14px 0 0; margin: 14px 0 0;
        border-top: 1px solid var(--line);
