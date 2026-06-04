@@ -3,7 +3,7 @@
  * Local Twig Preview Server for Perfect Panel templates.
  *
  * Usage:
- *   php -S localhost:8000 preview.php
+ *   php -S 0.0.0.0:8000 preview.php
  *
  * Then visit:
  *   http://localhost:8000/                     → singin.twig (homepage)

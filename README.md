@@ -15,7 +15,7 @@ This package contains the local preview server and the template/CSS files for re
 ```bash
 cd handoff-package
 composer install          # installs Twig (only dependency)
-php -S localhost:8000 preview.php
+php -S 0.0.0.0:8000 preview.php
 ```
 
 Then open http://localhost:8000/ — you'll land on the **New Order** page inside the authenticated dashboard shell (sidebar + topbar).
@@ -168,7 +168,7 @@ handoff-package/
 
 ## Tips
 
-- Run `php -S localhost:8000 preview.php` and keep it running while you work — changes to `.twig` and `.css` files are picked up on refresh
+- Run `php -S 0.0.0.0:8000 preview.php` and keep it running while you work — changes to `.twig` and `.css` files are picked up on refresh
 - The pages use Bootstrap 3.3.7 (loaded via layout.twig). Build on top of it, don't fight it
 - Use the `lp-` prefix for landing-page components. Use no prefix or `pp-` for panel components
 - Test at 1440px viewport width minimum
