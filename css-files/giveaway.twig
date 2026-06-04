@@ -24,7 +24,7 @@
       {% for g in giveaways %}
         <div class="gv-card">
           <div class="gv-card-body">
-            <div class="gv-logo"><img src="/icons/gv-{{ g['logo_key']|default('reddit') }}.svg" alt="{{ g['title'] }}"></div>
+            <div class="gv-logo"><img src="/icons/gv-{{ g['logo_key']|default('reddit') }}.png" onerror="this.onerror=null;this.src='/icons/gv-{{ g['logo_key']|default('reddit') }}.svg'" alt="{{ g['title'] }}"></div>
             <div class="gv-task">{{ g['title'] }}</div>
             <div class="gv-earn-label">{{ g['earn_label']|default('And earn') }}</div>
             <div class="gv-reward">{{ g['reward'] }}</div>
@@ -44,7 +44,7 @@
           <button type="button" class="gv-modal-close" aria-label="Close">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
           </button>
-          <div class="gv-modal-logo"><img src="/icons/gv-{{ g['logo_key']|default('reddit') }}.svg" alt=""></div>
+          <div class="gv-modal-logo"><img src="/icons/gv-{{ g['logo_key']|default('reddit') }}.png" onerror="this.onerror=null;this.src='/icons/gv-{{ g['logo_key']|default('reddit') }}.svg'" alt=""></div>
           <h3 class="gv-modal-title">{{ g['modal_title']|default(g['gname'] ~ ' Giveaway') }}</h3>
           <hr class="gv-modal-rule">
           <div class="gv-modal-body">

@@ -1701,7 +1701,7 @@
    .badge {
        display: inline-flex; align-items: center;
        padding: 3px 8px;
-       background: var(--bg-3); color: var(--ink-2);
+       background: var(--bg-3); color: var(--ink-1);
        border-radius: 999px;
        font-size: 11.5px; font-weight: 600;
        line-height: 1.4;
@@ -3474,8 +3474,8 @@
 
    .api-sec-title {
        font-family: 'Poppins','Inter',sans-serif;
-       font-size: 19px; font-weight: 700; color: var(--ink-1);
-       margin: 0 0 22px; letter-spacing: -0.01em;
+       font-size: 24px; font-weight: 600; color: var(--ink-1);
+       margin: 0 0 22px;
    }
    .api-example-link {
        display: inline-flex; align-items: center; gap: 8px;
@@ -3493,45 +3493,48 @@
    .api-vars { display: flex; flex-direction: column; gap: 4px; }
    .api-var { display: grid; grid-template-columns: 200px 1fr; align-items: center; gap: 16px; padding: 6px 0; }
    .api-var-label {
-       font-size: 12px; font-weight: 600; color: var(--ink-3);
+       font-size: 12px; font-weight: 600; color: var(--ink-2);
        text-transform: uppercase; letter-spacing: 0.04em;
    }
    .api-pill {
        justify-self: start;
        display: inline-flex; align-items: center;
-       padding: 7px 14px; border-radius: 8px;
-       background: var(--bg-3); color: var(--ink-2);
-       font-size: 13px; font-weight: 500;
-       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       padding: 3px 10px; border-radius: 4px;
+       background: #E6E6E6; color: #555;
+       border: 1px solid rgba(0, 0, 0, 0.08);
+       font-size: 12px; font-weight: 500;
    }
 
    /* Parameter table */
    .api-ptable { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 4px; }
    .api-ptable thead th {
-       background: var(--bg-3); color: var(--ink-2);
-       font-size: 13px; font-weight: 500; text-align: left;
-       padding: 13px 16px;
+       background: var(--bg-3); color: var(--ink-1);
+       font-size: 14px; font-weight: 500; text-align: left;
+       padding: 12px 16px;
    }
    .api-ptable thead th:first-child { border-radius: 8px 0 0 10px; width: 42%; }
    .api-ptable thead th:last-child { border-radius: 0 10px 10px 0; }
    .api-ptable tbody td {
-       padding: 14px 16px; font-size: 14px; color: var(--ink-2);
-       border-bottom: 1px solid var(--line-2); vertical-align: middle;
+        padding: 8px 16px;
+        font-size: 14px;
+        color: var(--ink-2);
+        border-bottom: 1px solid var(--bg-3);
+        vertical-align: middle;
    }
    .api-ptable tbody tr:last-child td { border-bottom: 0; }
    .api-param-pill {
        display: inline-flex; align-items: center;
-       padding: 5px 12px; border-radius: 4px;
-       background: var(--bg-3); color: var(--ink-1);
-       font-size: 13px; font-weight: 500;
-       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       padding: 3px 10px; border-radius: 4px;
+       background: #E6E6E6; color: #555;
+       border: 1px solid rgba(0, 0, 0, 0.08);
+       font-size: 12px; font-weight: 500;
    }
 
    /* Blue Service Type dropdown */
    .api-dropdown { position: relative; max-width: 420px; margin-bottom: 20px; }
    .api-dropdown-btn {
        width: 100%; display: flex; align-items: center; gap: 12px;
-       height: 50px; padding: 0 16px; border: 0; cursor: pointer;
+       height: 45px; padding: 0 16px; border: 0; cursor: pointer;
        border-radius: 12px;
        background: linear-gradient(100deg, #4F86F7 0%, #5C7CF5 100%);
        color: #fff; font-size: 15px;
@@ -5154,7 +5157,7 @@
    .aff-table-wrap { padding: 0 14px 14px; }
    .aff-table { width: 100%; border-collapse: separate; border-spacing: 0; }
    .aff-table thead th {
-       background: var(--bg-3); color: var(--ink-2);
+       background: var(--bg-3); color: var(--ink-1);
        font-size: 13px; font-weight: 500; text-align: left;
        padding: 14px 16px; white-space: nowrap;
    }
@@ -6442,12 +6445,12 @@
    .tk-search-ic { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--ink-3); pointer-events: none; }
    .tk-search input { width: 100%; box-sizing: border-box; height: 46px; padding: 0 50px 0 44px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg-1); font-size: 14px; color: var(--ink-1); }
    .tk-search input:focus { outline: 0; border-color: var(--brand); }
-   .tk-search-go { position: absolute; right: 5px; top: 5px; width: 40px; height: 36px; border: 0; border-radius: 8px; background: var(--bg-3); color: var(--ink-2); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+   .tk-search-go { position: absolute; right: 5px; top: 5px; width: 40px; height: 36px; border: 0; border-radius: 8px; background: var(--bg-3); color: var(--ink-1); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
    .tk-search-go:hover { background: var(--brand-soft); color: var(--brand); }
 
    .tk-table-wrap { overflow-x: auto; padding: 8px 12px 12px; }
    .tk-table { width: 100%; min-width: 800px; border-collapse: separate; border-spacing: 0; }
-   .tk-table thead th { background: var(--bg-3); color: var(--ink-2); font-size: 13px; font-weight: 500; text-align: left; padding: 13px 16px; white-space: nowrap; }
+   .tk-table thead th { background: var(--bg-3); color: var(--ink-1); font-size: 13px; font-weight: 500; text-align: left; padding: 13px 16px; white-space: nowrap; }
    .tk-table thead th:first-child { border-radius: 8px 0 0 10px; }
    .tk-table thead th:last-child { border-radius: 0 10px 10px 0; }
    .tk-table tbody td { padding: 16px; font-size: 14px; color: var(--ink-1); border-bottom: 1px solid var(--line-2); vertical-align: middle; }
