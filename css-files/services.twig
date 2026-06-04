@@ -249,15 +249,24 @@
   var currentPlatform = 'all';
 
   var platformLabel = document.getElementById('svc-card-platform');
+  var cardHeadIc = document.querySelector('.svc-card-head-ic');
   var collapsedCats = {};
+
+  // Sync the table-card header (icon + "<Platform> Services") to the active chip
+  function updateCardHead(){
+    var active = document.querySelector('.pulse-platform-chip.is-active');
+    if (!active) return;
+    if (cardHeadIc){ var ci = active.querySelector('.platform-icon'); if (ci) cardHeadIc.innerHTML = ci.innerHTML; }
+    if (platformLabel){
+      var nm = active.querySelector('.platform-name');
+      platformLabel.textContent = (active.getAttribute('data-filter-platform') === 'all') ? 'All' : (nm ? nm.textContent : '');
+    }
+  }
 
   function applyPlatform(platform){
     currentPlatform = platform;
     chips.forEach(function(c){ c.classList.toggle('is-active', c.getAttribute('data-filter-platform')===platform); });
-    if (platformLabel) {
-      var active = document.querySelector('.pulse-platform-chip.is-active .platform-name');
-      platformLabel.textContent = (platform === 'all') ? 'All' : (active ? active.textContent : platform);
-    }
+    updateCardHead();
     catRowEls.forEach(function(catRow){
       var cid = catRow.getAttribute('data-filter-table-category-id');
       var plat = catToPlatform[cid] || '__other__';
@@ -271,6 +280,7 @@
   }
 
   chips.forEach(function(chip){ chip.addEventListener('click', function(){ applyPlatform(chip.getAttribute('data-filter-platform')); }); });
+  updateCardHead();
 
   // More / Less
   var moreToggle = document.getElementById('svc-more-toggle');
