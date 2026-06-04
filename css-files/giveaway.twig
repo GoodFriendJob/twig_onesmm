@@ -12,6 +12,7 @@
 
     {# ─── Intro banner ─── #}
     <div class="gv-banner">
+      <svg class="aff-wm-one aff-wm-one--reflink" viewBox="0 0 125 192" fill="#fff" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M75.5494 0H125L63.1868 62.1583H83.7912C85.2484 62.1583 86.646 62.7404 87.6764 63.7766C88.7068 64.8127 89.2857 66.2181 89.2857 67.6835V186.475C89.2857 187.94 88.7068 189.346 87.6764 190.382C86.646 191.418 85.2484 192 83.7912 192H45.3297C43.8724 192 42.4749 191.418 41.4445 190.382C40.414 189.346 39.8352 187.94 39.8352 186.475V75.9712H0L75.5494 0Z"/></svg>
       <span class="gv-banner-ic">
         <img src="/icons/gift.svg" alt="" width="40" height="40">
       </span>
@@ -23,18 +24,48 @@
       {% for g in giveaways %}
         <div class="gv-card">
           <div class="gv-card-body">
-            <div class="gv-logo">{{ g['icon'] }}</div>
+            <div class="gv-logo"><img src="/icons/gv-{{ g['logo_key']|default('reddit') }}.svg" alt="{{ g['title'] }}"></div>
             <div class="gv-task">{{ g['title'] }}</div>
             <div class="gv-earn-label">{{ g['earn_label']|default('And earn') }}</div>
             <div class="gv-reward">{{ g['reward'] }}</div>
           </div>
-          <a href="{{ g['url']|default('#') }}" class="gv-learn">
+          <button type="button" class="gv-learn" data-gv-open="{{ loop.index }}">
             {{ lang('giveaway.learn_more')|default('Learn More') }}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-          </a>
+          </button>
         </div>
       {% endfor %}
     </div>
+
+    {# ─── Per-card "Learn More" detail popups ─── #}
+    {% for g in giveaways %}
+      <div class="gv-modal" id="gv-modal-{{ loop.index }}" hidden>
+        <div class="gv-modal-dialog">
+          <button type="button" class="gv-modal-close" aria-label="Close">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          </button>
+          <div class="gv-modal-logo"><img src="/icons/gv-{{ g['logo_key']|default('reddit') }}.svg" alt=""></div>
+          <h3 class="gv-modal-title">{{ g['modal_title']|default(g['gname'] ~ ' Giveaway') }}</h3>
+          <hr class="gv-modal-rule">
+          <div class="gv-modal-body">
+            <h4 class="gv-modal-h">🔷 How It Works</h4>
+            <div class="gv-modal-sec">{{ g['detail']['how_it_works'] }}</div>
+            <h4 class="gv-modal-h">💰 Reward</h4>
+            <div class="gv-modal-sec">{{ g['detail']['reward'] }}</div>
+            <h4 class="gv-modal-h">⚙️ Conditions</h4>
+            <div class="gv-modal-sec">{{ g['detail']['conditions'] }}</div>
+            <div class="gv-modal-foot">
+              <p class="gv-modal-note"><strong>Please read the General Giveaway Rules before applying for this giveaway.</strong></p>
+              <p>Check the <a href="#">Google Drive link</a> for subreddit and related post for comments details.</p>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary lp-cta--gradient gv-modal-submit">
+            Submit proof
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    {% endfor %}
 
     {# ─── How to participate ─── #}
     <div class="subpage-card gv-how">
@@ -45,13 +76,13 @@
       <div class="gv-steps">
         {% for step in giveaway_steps %}
           <div class="gv-step">
-            <div class="gv-step-ic">{{ step['icon'] }}</div>
+            <div class="gv-step-ic"><img src="/icons/step-{{ step['icon_key']|default('check') }}.svg" alt=""></div>
             <div class="gv-step-num">{{ step['num'] }}</div>
             <div class="gv-step-title">{{ step['title'] }}</div>
             <div class="gv-step-desc">{{ step['desc'] }}</div>
           </div>
           {% if not loop.last %}
-            <div class="gv-step-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
+            <div class="gv-step-arrow"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
           {% endif %}
         {% endfor %}
       </div>
@@ -70,3 +101,23 @@
 
   </div>
 </div>
+
+<script>
+(function(){
+  function close(m){ m.hidden = true; if (!document.querySelector('.gv-modal:not([hidden])')) document.body.style.overflow = ''; }
+  document.querySelectorAll('[data-gv-open]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var m = document.getElementById('gv-modal-' + btn.getAttribute('data-gv-open'));
+      if (m){ m.hidden = false; document.body.style.overflow = 'hidden'; m.scrollTop = 0; }
+    });
+  });
+  document.querySelectorAll('.gv-modal').forEach(function(m){
+    m.addEventListener('click', function(e){
+      if (e.target === m || e.target.closest('.gv-modal-close')) close(m);
+    });
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') document.querySelectorAll('.gv-modal:not([hidden])').forEach(close);
+  });
+})();
+</script>

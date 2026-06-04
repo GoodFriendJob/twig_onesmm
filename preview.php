@@ -1018,19 +1018,19 @@ if ($slug === 'child_panel') {
 // ── Mock data: Giveaway & Rewards ──
 if ($slug === 'giveaway') {
     $context['giveaways'] = [
-        ['icon' => '👽', 'title' => 'Make a post on Reddit',     'reward' => '$1 Balance',      'url' => '#'],
-        ['icon' => '🎬', 'title' => 'Earn by Sharing Our Video', 'reward' => 'up to $5 Balance', 'earn_label' => 'And for every 1,000 views earn', 'url' => '#'],
-        ['icon' => '🔵', 'title' => 'Write a Google review',      'reward' => '$0.5 Balance',    'url' => '#'],
-        ['icon' => '🟥', 'title' => 'Make a post on Quora',       'reward' => '$0.5 Balance',    'url' => '#'],
-        ['icon' => '🌐', 'title' => 'Post on BlackHatWorld',      'reward' => '$1 Balance',      'url' => '#'],
-        ['icon' => '💼', 'title' => 'Make a post on Linkedin',    'reward' => '$1 Balance',      'url' => '#'],
-        ['icon' => '▶️', 'title' => 'Create a video on Youtube',  'reward' => 'up to $5 Balance', 'url' => '#'],
-        ['icon' => '⭐', 'title' => 'Write a Trustpilot review',  'reward' => '$1 Balance',      'url' => '#'],
+        ['logo_key' => 'reddit',        'gname' => 'Reddit',        'title' => 'Make a post on Reddit',     'reward' => '$1 Balance',      'url' => '#'],
+        ['logo_key' => 'video',         'gname' => 'Video Sharing', 'title' => 'Earn by Sharing Our Video', 'reward' => 'up to $5 Balance', 'earn_label' => 'And for every 1,000 views earn', 'url' => '#'],
+        ['logo_key' => 'google',        'gname' => 'Google',        'title' => 'Write a Google review',      'reward' => '$0.5 Balance',    'url' => '#'],
+        ['logo_key' => 'quora',         'gname' => 'Quora',         'title' => 'Make a post on Quora',       'reward' => '$0.5 Balance',    'url' => '#'],
+        ['logo_key' => 'blackhatworld', 'gname' => 'BlackHatWorld', 'title' => 'Post on BlackHatWorld',      'reward' => '$1 Balance',      'url' => '#'],
+        ['logo_key' => 'linkedin',      'gname' => 'LinkedIn',      'title' => 'Make a post on Linkedin',    'reward' => '$1 Balance',      'url' => '#'],
+        ['logo_key' => 'youtube',       'gname' => 'YouTube',       'title' => 'Create a video on Youtube',  'reward' => 'up to $5 Balance', 'url' => '#'],
+        ['logo_key' => 'trustpilot',    'gname' => 'Trustpilot',    'title' => 'Write a Trustpilot review',  'reward' => '$1 Balance',      'url' => '#'],
     ];
     $context['giveaway_steps'] = [
-        ['num' => '01', 'icon' => '✓', 'title' => 'Complete the Task',  'desc' => 'Read the description of each task'],
-        ['num' => '02', 'icon' => '⬆', 'title' => 'Submit Your Proof',  'desc' => 'Via Learn More button'],
-        ['num' => '03', 'icon' => '🎁', 'title' => 'Receive Your Rewards', 'desc' => 'After 5 to 72 hours'],
+        ['num' => '01', 'icon_key' => 'check',  'title' => 'Complete the Task',    'desc' => 'Read the description of each task'],
+        ['num' => '02', 'icon_key' => 'upload', 'title' => 'Submit Your Proof',    'desc' => 'Via Learn More button'],
+        ['num' => '03', 'icon_key' => 'gift',   'title' => 'Receive Your Rewards', 'desc' => 'After 5 to 72 hours'],
     ];
     $context['giveaway_rules'] = [
         'You must be a registered user of ' . $context['site']['name'] . '.',
@@ -1043,6 +1043,59 @@ if ($slug === 'giveaway') {
         'Any fake, duplicated, deleted, or private post will result in disqualification and reward rejection.',
         'We\'re botters too — and yes, we also hate fake engagement. If we detect botting, view farming, or manipulative tactics (like fake accounts or automated comments), we\'ll blacklist the submission, suspend the user, and permanently exclude them from future campaigns. Don\'t waste your time — fake engagement helps no one and can even harm your own account\'s reputation.',
     ];
+
+    // ── Per-card detail (shown in the "Learn More" popup) ──
+    $sheetUrl = 'https://docs.google.com/spreadsheets/d/1SL__T_H-nBmSMO8lFKcle-sh4AHN82m65vZLkEN5X-Y/edit?gid=0#gid=0';
+    $docUrl   = 'https://docs.google.com/document/d/1E_Dn8EFgcnQVtMJDPlgEa5UvBhREX6ZS7XJ02_Kaud4/edit?usp=sharing';
+    $reddit_detail = [
+        'how_it_works' => '<ul>'
+            . '<li>Log in to your Reddit account (it must be active and at least 30 days old).</li>'
+            . '<li>You can participate in 2 ways: Answer or comment on the Reddit post from the link below, or create your own post on a relevant subreddit or community related to Music Promotion.</li>'
+            . '<li>You can participate in two ways:'
+            . '<div class="gv-modal-sub"><div><strong>1.</strong> Answer a Reddit post listed in the Google Sheet we provide.</div><div><strong>2.</strong> Create your own post in one of the subreddits listed in the Google Sheet.</div></div></li>'
+            . '<li>Google Sheet 👉 <a href="' . $sheetUrl . '" target="_blank" rel="noopener">' . $sheetUrl . '</a><br>After manual verification, your reward will be added to your account balance.</li>'
+            . '</ul>',
+        'reward' => '<ul>'
+            . '<li>$1 per valid Reddit Post</li>'
+            . '<li>$1 per valid Reddit Comments</li>'
+            . '<li>Only 2 submission per user per month will be rewarded.</li>'
+            . '<li>Your Reddit post or comment must remain public and online for at least 1 year.</li>'
+            . '</ul>',
+        'conditions' => '<ul>'
+            . '<li>Your answer must be at least 75 words.</li>'
+            . '<li>Posts must be original, relevant, and add real value to the discussion. Your content should reflect real-life experience and be credible and authentic. Your post must follow the structure reddit template outlined in the document below. Please read the document carefully before creating your content 👉 <a href="' . $docUrl . '" target="_blank" rel="noopener">' . $docUrl . '</a> .</li>'
+            . '<li>Your post or comment must clearly mention morethanpanel.com.</li>'
+            . '<li>Verification time: 1–48 hours, depending on queue and subreddit moderation delays.</li>'
+            . '<li>Morethanpanel reserves the right to deny any submission that violates Reddit\'s community rules or appears low-quality.</li>'
+            . '</ul>',
+    ];
+    foreach ($context['giveaways'] as &$g) {
+        $n = $g['gname'];
+        $g['modal_title'] = $n . ' Giveaway';
+        if ($g['logo_key'] === 'reddit') {
+            $g['detail'] = $reddit_detail;
+        } else {
+            $g['detail'] = [
+                'how_it_works' => '<ul>'
+                    . '<li>Log in to your ' . $n . ' account (it must be active and in good standing).</li>'
+                    . '<li>Complete the task shown on the card, following our posting guidelines and the template in the document below.</li>'
+                    . '<li>Submit your proof using the button below. After manual verification, your reward will be added to your account balance.</li>'
+                    . '</ul>',
+                'reward' => '<ul>'
+                    . '<li>' . $g['reward'] . ' for each valid submission.</li>'
+                    . '<li>Only 2 submissions per user per month will be rewarded.</li>'
+                    . '<li>Your content must remain public and online for at least 1 year.</li>'
+                    . '</ul>',
+                'conditions' => '<ul>'
+                    . '<li>Content must be original, relevant, and authentic.</li>'
+                    . '<li>Your post must clearly mention morethanpanel.com.</li>'
+                    . '<li>Verification time: 1–48 hours, depending on queue and moderation delays.</li>'
+                    . '<li>Morethanpanel reserves the right to deny low-quality or rule-violating submissions.</li>'
+                    . '</ul>',
+            ];
+        }
+    }
+    unset($g);
 }
 
 // ── Mock data: Levels & Rewards ──
