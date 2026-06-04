@@ -1,0 +1,100 @@
+{# levels.twig — "Levels & Rewards" (matches new design)
+   Variables: level{name,avatar,current,stars,total_spent,next_level,next_reach,remaining,percent},
+              level_steps[{num,icon,title,desc}], levels_list[{level,req,discount,benefit}], lang(...)
+#}
+<div class="subpage levels-page">
+
+  <div class="subpage-head">
+    <h1 class="subpage-title"><span>Levels</span> &amp; Rewards</h1>
+  </div>
+
+  <div class="subpage-body">
+
+    {# ─── Hero: current level + progress ─── #}
+    <div class="subpage-card lv-hero">
+      <div class="lv-hero-user">
+        {% if level['avatar'] %}<img class="lv-avatar" src="{{ level['avatar'] }}" alt="">{% endif %}
+        <div>
+          <div class="lv-hero-name">{{ level['name'] }}</div>
+          <div class="lv-hero-meta">
+            <img class="lv-hero-badge" src="/icons/level-{{ level['current'] }}.svg" alt="">
+            <span class="lv-hero-level">Level {{ level['current'] }}</span>
+            <span class="lv-stars">{% for i in 1..5 %}{% if i <= level['stars'] %}★{% else %}<span class="lv-star-off">★</span>{% endif %}{% endfor %}</span>
+          </div>
+          <div class="lv-hero-spent">Total spent: <b>{{ level['total_spent'] }}</b></div>
+        </div>
+      </div>
+      <div class="lv-progress-wrap">
+        <div class="lv-progress-head">
+          <span class="lv-progress-next">Next Level: <b>Level {{ level['next_level'] }}</b></span>
+          <span class="lv-progress-pct">{{ level['percent'] }}%</span>
+        </div>
+        <div class="lv-progress-sub">Reach <span class="lv-reach">{{ level['next_reach'] }}</span> &nbsp; {{ level['remaining'] }}</div>
+        <div class="lv-bar"><div class="lv-bar-fill" style="width: {{ level['percent'] }}%"></div></div>
+      </div>
+    </div>
+
+    {# ─── How it works ─── #}
+    <div class="subpage-card">
+      <div class="lv-how-head">
+        <h2 class="box-title" style="text-align:center;">How <b>it works</b></h2>
+        <p class="lv-how-sub">a subheader for this section, or simply remove this part if not needed.</p>
+      </div>
+      <div class="lv-steps">
+        {% for step in level_steps %}
+          <div class="lv-step">
+            <div class="lv-step-ic"><img src="/icons/step-{{ step['icon_key']|default('cart') }}.svg" alt=""></div>
+            <div class="lv-step-num">{{ step['num'] }}</div>
+            <div class="lv-step-title">{{ step['title'] }}</div>
+            <div class="lv-step-desc">{{ step['desc'] }}</div>
+          </div>
+          {% if not loop.last %}
+            <div class="lv-step-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    {# ─── Levels table ─── #}
+    <div class="subpage-card">
+      <div class="box-head"><h2 class="box-title">Description <b>Title</b></h2></div>
+      <p class="lv-desc-sub">A description placeholder to explain the Leveling system for users</p>
+      <table class="lv-table">
+        <tbody>
+          {% for lvl in levels_list %}
+            <tr>
+              <td class="lv-table-ic"><img src="/icons/level-{{ lvl['level'] }}.svg" alt=""></td>
+              <td class="lv-lvl-name">Level <b>{{ lvl['level'] }}</b></td>
+              <td class="lv-lvl-req">{{ lvl['req'] }}</td>
+              <td class="lv-discount-cell">
+                {% if lvl['discount'] %}
+                  <span class="lv-discount-pill {% if loop.last %}is-top{% endif %}">{{ lvl['discount'] }}</span>
+                  <span class="lv-discount-word {% if loop.last %}is-top{% endif %}">discount</span>
+                {% else %}
+                  <span class="lv-discount-word">{{ lvl['benefit'] }}</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {# ─── Level cards ─── #}
+    <div class="subpage-card">
+      <div class="box-head"><h2 class="box-title">Description <b>Title</b></h2></div>
+      <p class="lv-desc-sub">A description placeholder to explain the Leveling system for users</p>
+      <div class="lv-cards">
+        {% for lvl in levels_list %}
+          <div class="lv-lc {% if lvl['level'] == level['current'] %}is-current{% endif %}">
+            <div class="lv-lc-ic"><img src="/icons/level-{{ lvl['level'] }}.svg" alt=""></div>
+            <div class="lv-lc-name">Level <b>{{ lvl['level'] }}</b></div>
+            <div class="lv-lc-entry">{{ lvl['level'] == 1 ? 'Entry level' : 'Entry level' }}</div>
+            <div class="lv-lc-benefit">{{ lvl['benefit'] }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,72 @@
+{# giveaway.twig — "Giveaway & Rewards" (matches new design)
+   Variables: site.name, giveaway_intro, giveaways[{icon,title,earn_label,reward,url}],
+              giveaway_steps[{num,title,desc}], giveaway_rules[], lang(...)
+#}
+<div class="subpage giveaway-page">
+
+  <div class="subpage-head">
+    <h1 class="subpage-title"><span>Giveaway</span> &amp; Rewards</h1>
+  </div>
+
+  <div class="subpage-body">
+
+    {# ─── Intro banner ─── #}
+    <div class="gv-banner">
+      <span class="gv-banner-ic">
+        <img src="/icons/gift.svg" alt="" width="40" height="40">
+      </span>
+      <p class="gv-banner-text">{% if giveaway_intro %}{{ giveaway_intro }}{% else %}Complete simple social media tasks we've listed below, share your experience with {{ site['name'] }}, and earn balance rewards after verification. Every action you take helps our community grow, and we make sure you get rewarded for it.{% endif %}</p>
+    </div>
+
+    {# ─── Reward cards ─── #}
+    <div class="gv-grid">
+      {% for g in giveaways %}
+        <div class="gv-card">
+          <div class="gv-card-body">
+            <div class="gv-logo">{{ g['icon'] }}</div>
+            <div class="gv-task">{{ g['title'] }}</div>
+            <div class="gv-earn-label">{{ g['earn_label']|default('And earn') }}</div>
+            <div class="gv-reward">{{ g['reward'] }}</div>
+          </div>
+          <a href="{{ g['url']|default('#') }}" class="gv-learn">
+            {{ lang('giveaway.learn_more')|default('Learn More') }}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+
+    {# ─── How to participate ─── #}
+    <div class="subpage-card gv-how">
+      <div class="gv-how-head">
+        <h2 class="box-title" style="text-align:center;">How <b>to Participate</b></h2>
+        <p class="gv-how-sub">It takes just a few simple steps</p>
+      </div>
+      <div class="gv-steps">
+        {% for step in giveaway_steps %}
+          <div class="gv-step">
+            <div class="gv-step-ic">{{ step['icon'] }}</div>
+            <div class="gv-step-num">{{ step['num'] }}</div>
+            <div class="gv-step-title">{{ step['title'] }}</div>
+            <div class="gv-step-desc">{{ step['desc'] }}</div>
+          </div>
+          {% if not loop.last %}
+            <div class="gv-step-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    {# ─── General rules ─── #}
+    <div class="gv-rules">
+      <h2 class="box-title">General <b>Rules</b></h2>
+      <p class="box-sub" style="margin-bottom:18px;">Please read and follow all rules carefully.</p>
+      <ul class="gv-rules-list">
+        {% for rule in giveaway_rules %}
+          <li>{{ rule }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+</div>

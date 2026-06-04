@@ -1,167 +1,176 @@
-{# tickets.twig — Pulse styled
+{# tickets.twig — "Support & Contact Us" (matches new design)
    Variables: site.rtl, page.url, additionalFieldsEnabled, additionalFields,
-              ticketList, search, pagination, ticketsText, csrftoken, lang(...)
+              ticketCategories[], ticketList[{id,subject,category,status,date,time,new}],
+              search, pagination, ticketsText, support{email,whatsapp,telegram,telegram2,socials},
+              csrftoken, lang(...)
 #}
-<div class="tickets-page subscriptions-page">
+<div class="subpage tickets-page">
 
-  <div class="tickets-grid">
-
-    {# ── New ticket form ── #}
-    <div class="card">
-      <div class="card-body">
-        <div class="card-section-head">
-          <div class="h3">{{ lang('tickets.new')|default('New ticket') }}</div>
-          <div class="muted small">Avg. first reply · 30 min</div>
-        </div>
-
-        <form {% if site['rtl'] %}class="rtl-form"{% endif %} method="post" action="" id="ticketsend" class="ticket-form">
-          <div class="alert alert-dismissible alert-danger ticket-danger {% if site['rtl'] %}rtl-alert{% endif %}" style="display: none">
-            <button type="button" class="close">&times;</button>
-            <div></div>
-          </div>
-
-          {% if additionalFieldsEnabled %}
-            <div class="form-group">
-              <label for="ticket-category-field" class="control-label">{{ lang('tickets.category') }}</label>
-              <select id="ticket-category-field" name="TicketForm[category]" class="form-control">
-                {% for categoryField in additionalFields %}
-                  <option value="{{ categoryField.id }}">{{ categoryField.name }}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <div id="ticket-fields" data-ticket-fields="true"></div>
-          {% else %}
-            <div class="form-group">
-              <label for="subject" class="control-label">{{ lang('tickets.subject') }}</label>
-              <input type="text" class="form-control" id="subject" name="TicketForm[subject]">
-            </div>
-          {% endif %}
-
-          <div class="form-group">
-            <label for="message" class="control-label">{{ lang('tickets.message') }}</label>
-            <textarea class="form-control" rows="7" id="message" name="TicketForm[message]" placeholder="Describe your issue. Include order IDs, links, screenshots if relevant."></textarea>
-          </div>
-
-          <div class="form-group">
-            <div
-              class="tickets-uploader"
-              data-rtl="{% if site['rtl'] %}true{% else %}false{% endif %}"
-              data-lang-button-attach="{{ lang('tickets.button.attach') }}"
-              data-lang-file-format-incorrect="{{ lang('tickets.error.file_format.incorrect') }}"
-              data-lang-file-size-incorrect="{{ lang('tickets.error.file_size.incorrect') }}"
-            ></div>
-          </div>
-
-          <input type="hidden" name="_csrf" value="{{ csrftoken }}">
-
-          <button type="submit" class="btn btn-primary lp-cta--gradient auth-submit">
-            {{ lang('tickets.button') }}
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </button>
-        </form>
-      </div>
-    </div>
-
-    {# ── Tips card ── #}
-    <aside class="card tickets-tips">
-      <div class="card-body">
-        <div class="h3">Faster replies</div>
-        <ul class="tickets-tips-list">
-          <li><strong>Include the order ID</strong> — saves us 5 minutes of looking it up.</li>
-          <li><strong>Paste the link</strong> you ordered for, exactly as you submitted it.</li>
-          <li><strong>Attach a screenshot</strong> if there's a delivery or count issue.</li>
-          <li><strong>Don't double-post</strong> — new tickets push your queue position back.</li>
-        </ul>
-        <div class="tickets-sla">
-          <div class="sla-row"><span class="muted">Avg. first reply</span><span class="ink tabular">~30 min</span></div>
-          <div class="sla-row"><span class="muted">Hours</span><span class="ink">24 / 7</span></div>
-          <div class="sla-row"><span class="muted">Languages</span><span class="ink">EN · ES · PT · AR</span></div>
-        </div>
-      </div>
-    </aside>
-
+  <div class="subpage-head">
+    <h1 class="subpage-title"><span>Support</span> &amp; Contact Us</h1>
   </div>
 
-  {# ── Search ── #}
-  {% if ticketList or search %}
-    <div class="page-toolbar tickets-toolbar">
-      <div class="tickets-toolbar-title">
-        <h2 class="h3">Your tickets</h2>
+  <div class="subpage-body">
+
+    {# ── Need support? ── #}
+    <div class="subpage-card">
+      <div class="box-head"><h2 class="box-title">Need <b>Support?</b></h2></div>
+      <div class="tk-actions">
+        <button type="button" class="tk-btn tk-btn--new" id="tk-new-toggle">New Ticket
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+        <a href="{{ support['telegram_url']|default('#') }}" class="tk-btn tk-btn--telegram">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21.95 4.27 18.7 19.6c-.24 1.08-.88 1.35-1.78.84l-4.92-3.63-2.37 2.28c-.26.26-.48.48-.99.48l.36-5.05 9.18-8.3c.4-.36-.09-.55-.62-.2L6.21 13.16 1.32 11.62c-1.06-.33-1.08-1.06.22-1.57l19.12-7.37c.88-.33 1.65.2 1.29 1.59z"/></svg>
+          Telegram Support
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+        <a href="{{ support['whatsapp_url']|default('#') }}" class="tk-btn tk-btn--whatsapp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.16c-.24.68-1.4 1.3-1.94 1.38-.5.07-1.13.1-1.82-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.79-4.17-4.94-4.37-.14-.2-1.18-1.57-1.18-2.99 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.24.59.82 2.03.89 2.18.07.14.12.31.02.5-.09.2-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.28.29-.12.57.16.27.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.21 1.37.27.14.43.12.59-.07.16-.2.68-.79.86-1.06.18-.27.36-.22.61-.13.25.09 1.59.75 1.86.89.27.14.45.2.51.31.07.11.07.66-.17 1.34z"/></svg>
+          WhatsApp Support
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
       </div>
-      <form action="{{ page['url'] }}" method="get" id="history-search" class="page-search">
-        <div class="input-with-icon">
-          <span class="input-icon">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          </span>
-          <input type="text" class="form-control" value="{{ search }}" name="search" placeholder="{{ lang('general.search.placeholder') }}">
+    </div>
+
+    {# ── New ticket form (toggled) ── #}
+    <div class="subpage-card tk-form-card" id="tk-form-card" hidden>
+      <div class="box-head"><h2 class="box-title">New <b>Ticket</b></h2></div>
+      <form method="post" action="" id="ticketsend" class="tk-form {% if site['rtl'] %}rtl-form{% endif %}">
+        <div class="alert alert-dismissible alert-danger ticket-danger {% if site['rtl'] %}rtl-alert{% endif %}" style="display:none">
+          <button type="button" class="close">&times;</button><div></div>
         </div>
+
+        <div class="tk-form-row">
+          <div class="tk-field">
+            <label class="tk-label" for="ticket-category-field">{{ lang('tickets.category')|default('Category') }}</label>
+            <select id="ticket-category-field" name="TicketForm[category]" class="tk-input tk-select">
+              <option value="">Select a Category</option>
+              {% if additionalFieldsEnabled %}
+                {% for categoryField in additionalFields %}<option value="{{ categoryField.id }}">{{ categoryField.name }}</option>{% endfor %}
+              {% else %}
+                {% for cat in ticketCategories %}<option value="{{ cat }}">{{ cat }}</option>{% endfor %}
+              {% endif %}
+            </select>
+          </div>
+          <div class="tk-field">
+            <label class="tk-label" for="subject">{{ lang('tickets.subject')|default('Subject') }}</label>
+            <input type="text" class="tk-input" id="subject" name="TicketForm[subject]" placeholder="Brief Description of your issue">
+          </div>
+        </div>
+
+        <div class="tk-field">
+          <label class="tk-label" for="message">{{ lang('tickets.message')|default('Message') }}</label>
+          <textarea class="tk-input tk-textarea" rows="6" id="message" name="TicketForm[message]" placeholder="Provide detailed information about your issue. The more details you provide, the faster we can help you"></textarea>
+        </div>
+
+        <div class="tk-field">
+          <label class="tk-label">Attachment <span class="tk-optional">(Optional)</span></label>
+          <label class="tk-dropzone" for="tk-file">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span>Click to upload or drag and drop (PNG, JPG, PDF up to 10MB)</span>
+            <input type="file" id="tk-file" name="TicketForm[file]" hidden>
+          </label>
+        </div>
+
+        <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+        <button type="submit" class="btn btn-primary lp-cta--gradient tk-submit">
+          {{ lang('tickets.button')|default('Submit Ticket') }}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
       </form>
     </div>
-  {% endif %}
 
-  {# ── Tickets table ── #}
-  {% if ticketList %}
-    <div class="card data-card">
-      <div class="table-responsive">
-        <table class="table data-table {% if site['rtl'] %}rtl-table{% endif %}">
+    {# ── Your tickets ── #}
+    <div class="subpage-card subpage-card--flush">
+      <div class="tk-list-head">
+        <h2 class="box-title">Your <b>Tickets</b></h2>
+        <form action="{{ page['url'] }}" method="get" class="tk-search">
+          <svg class="tk-search-ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="text" name="search" value="{{ search }}" placeholder="{{ lang('general.search.placeholder') }}">
+          <button type="submit" class="tk-search-go" aria-label="Search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+        </form>
+      </div>
+
+      <div class="tk-table-wrap">
+        <table class="tk-table {% if site['rtl'] %}rtl-table{% endif %}">
           <thead>
             <tr>
-              <th class="col-id">{{ lang('tickets.id') }}</th>
-              <th>{{ lang('tickets.subject') }}</th>
-              <th>{{ lang('tickets.status') }}</th>
-              <th class="nowrap">{{ lang('tickets.updated') }}</th>
+              <th>{{ lang('tickets.id')|default('Ticket ID') }}</th>
+              <th>{{ lang('tickets.subject')|default('Subject') }}</th>
+              <th>{{ lang('tickets.category')|default('Category') }}</th>
+              <th>{{ lang('tickets.status')|default('Status') }}</th>
+              <th>{{ lang('tickets.updated')|default('Last Update') }}</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {% for ticket in ticketList %}
+              {% set s = ticket['status']|lower %}
+              {% set st = s matches '/new/' ? 'blue' : s matches '/open/' ? 'amber' : s matches '/answer/' ? 'teal' : 'gray' %}
               <tr>
-                <td class="tabular ink">{{ ticket['id'] }}</td>
-                <td>
-                  {% if ticket['new'] == 1 %}
-                    <a href="{{ page_url('viewticket') }}/{{ ticket['id'] }}" class="ink"><strong>{{ ticket['theme'] }}</strong></a>
-                    <span class="status-pill status-1" style="margin-left:8px">New reply</span>
-                  {% else %}
-                    <a href="{{ page_url('viewticket') }}/{{ ticket['id'] }}" class="ink">{{ ticket['theme'] }}</a>
-                  {% endif %}
+                <td class="tabular tk-id">{{ ticket['id'] }}</td>
+                <td class="tk-subject">{{ ticket['subject'] }}</td>
+                <td class="muted">{{ ticket['category'] }}</td>
+                <td><span class="tk-status tk-status--{{ st }}">{{ ticket['status'] }}</span></td>
+                <td class="tk-update tabular"><span>{{ ticket['date'] }}</span>{% if ticket['time'] %}<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>{{ ticket['time'] }}</span>{% endif %}</td>
+                <td class="tk-view-cell">
+                  <a href="{{ page_url('viewticket') }}/{{ ticket['id'] }}" class="tk-view {% if st == 'gray' %}tk-view--ghost{% else %}tk-view--grad{% endif %}">View
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  </a>
                 </td>
-                <td><span class="status-pill">{{ ticket['status'] }}</span></td>
-                <td class="muted nowrap tabular">{{ ticket['time'] }}</td>
               </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
-  {% endif %}
 
-  {% if pagination['count'] > 50 %}
-    <ul class="pagination {% if site['rtl'] %}rtl-pagination{% endif %}">
-      {% if pagination['current'] != 1 %}
-        <li><a href="{{ page['url'] }}/{{ pagination['last'] }}" aria-label="Previous">&laquo;</a></li>
-      {% endif %}
-      {% set r, l = 3, 3 %}
-      {% if pagination['current'] == 1 %}{% set r = 6 %}{% endif %}
-      {% if pagination['current'] == 2 %}{% set r = 5 %}{% endif %}
-      {% if pagination['current'] >= pagination['pages'] %}{% set l = 5 %}{% endif %}
-      {% for i in 1..ceil(pagination['pages']) %}
-        {% if i >= (pagination['current']-l) and i <= (pagination['current']+r) %}
-          <li{% if i == pagination['current'] %} class="active"{% endif %}>
-            <a href="{{ page['url'] }}/{{ i }}">{{ i }}</a>
-          </li>
-        {% endif %}
-      {% endfor %}
-      {% if pagination['current'] < pagination['pages'] %}
-        <li><a href="{{ page['url'] }}/{{ pagination['next'] }}" aria-label="Next">&raquo;</a></li>
-      {% endif %}
-    </ul>
-  {% endif %}
+    {% if pagination['count'] > 50 %}
+      <ul class="pagination {% if site['rtl'] %}rtl-pagination{% endif %}">
+        {% if pagination['current'] != 1 %}<li><a href="{{ page['url'] }}/{{ pagination['last'] }}">&laquo;</a></li>{% endif %}
+        {% for i in 1..ceil(pagination['pages']) %}<li{% if i == pagination['current'] %} class="active"{% endif %}><a href="{{ page['url'] }}/{{ i }}">{{ i }}</a></li>{% endfor %}
+        {% if pagination['current'] < pagination['pages'] %}<li><a href="{{ page['url'] }}/{{ pagination['next'] }}">&raquo;</a></li>{% endif %}
+      </ul>
+    {% endif %}
 
-  {% if ticketsText %}
-    <div class="card neworder-text" style="margin-top: 20px;">
-      <div class="card-body {% if site['rtl'] %}rtl-content{% endif %}">
-        {{ ticketsText }}
+    {# ── Contact + Social footer ── #}
+    <div class="tk-footer">
+      <div class="tk-foot-card">
+        <h3 class="box-title">Contact <b>us</b></h3>
+        <ul class="tk-contact">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg><span class="tk-contact-k">Email:</span><span class="tk-contact-v">{{ support['email']|default('hello@onesmm.com') }}</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2z"/></svg><span class="tk-contact-k">Whatsapp</span><span class="tk-contact-v">{{ support['whatsapp']|default('+61 234 5678 90') }}</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21.95 4.27 18.7 19.6c-.24 1.08-.88 1.35-1.78.84l-4.92-3.63-2.37 2.28c-.26.26-.48.48-.99.48l.36-5.05 9.18-8.3c.4-.36-.09-.55-.62-.2L6.21 13.16 1.32 11.62c-1.06-.33-1.08-1.06.22-1.57l19.12-7.37c.88-.33 1.65.2 1.29 1.59z"/></svg><span class="tk-contact-k">Telegram</span><span class="tk-contact-v">{{ support['telegram']|default('@channel1 username') }}</span><span class="tk-contact-v">{{ support['telegram2']|default('@channel1 username') }}</span></li>
+        </ul>
+      </div>
+      <div class="tk-foot-card">
+        <h3 class="box-title">Social <b>Media</b></h3>
+        <p class="box-sub" style="margin-bottom:16px;">Stay in touch with us to receive the latest updates and giveaways faster</p>
+        <div class="tk-socials">
+          <a href="#" aria-label="X"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+          <a href="#" aria-label="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2z"/></svg></a>
+          <a href="#" aria-label="Telegram"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21.95 4.27 18.7 19.6c-.24 1.08-.88 1.35-1.78.84l-4.92-3.63-2.37 2.28c-.26.26-.48.48-.99.48l.36-5.05 9.18-8.3c.4-.36-.09-.55-.62-.2L6.21 13.16 1.32 11.62c-1.06-.33-1.08-1.06.22-1.57l19.12-7.37c.88-.33 1.65.2 1.29 1.59z"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07c0 6.02 4.39 11.01 10.13 11.93v-8.43H7.08v-3.5h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.69.24 2.69.24v2.97h-1.52c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.5h-2.8V24C19.61 23.08 24 18.09 24 12.07z"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.3 0 .59.04.88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.93a8.16 8.16 0 0 0 4.77 1.52V7a4.85 4.85 0 0 1-1.84-.31z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+        </div>
       </div>
     </div>
-  {% endif %}
 
+  </div>
 </div>
+
+<script>
+(function(){
+  var toggle = document.getElementById('tk-new-toggle');
+  var form = document.getElementById('tk-form-card');
+  if (!toggle || !form) return;
+  toggle.addEventListener('click', function(){
+    var open = !form.hidden;
+    form.hidden = open;
+    toggle.classList.toggle('is-disabled', !open);
+    if (!open) form.scrollIntoView({behavior:'smooth', block:'nearest'});
+  });
+})();
+</script>

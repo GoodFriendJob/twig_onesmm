@@ -1,143 +1,147 @@
-{# api.twig — Pulse styled
-   Drop-in replacement: same variable contract.
-   Variables: site.protocol, site.domain, user.auth, methods (each: title, types[], parameters[], examples)
+{# api.twig — "API & Description" (matches new design)
+   Variables: site.protocol, site.domain, user.auth,
+              methods (each: title, types[], parameters[], examples)
 #}
-<div class="api-page">
-  <div class="lp-container">
+<div class="subpage api-page">
 
-    <nav class="one-breadcrumb" aria-label="Breadcrumb">
-      <a href="{{ page_url('index') }}" class="one-breadcrumb__link">Home</a>
-      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
-      <span class="one-breadcrumb__current">API</span>
-    </nav>
-
-    <div class="one-page-hero">
-      <h1 class="one-page-title"><span class="one-page-title__accent">ONE</span> API</h1>
-    </div>
-
-    <div class="api-page-toolbar">
-      <a href="/example.txt" class="btn btn-secondary api-example-link" target="_blank">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        Example PHP code
-      </a>
-    </div>
-
-  {# ─── Connection card ─── #}
-  <div class="card api-connection">
-    <div class="card-body">
-      <div class="h3" style="margin: 0 0 14px;">Connection</div>
-      <dl class="api-conn-list">
-        <dt>HTTP method</dt>
-        <dd><code>POST</code></dd>
-
-        <dt>API URL</dt>
-        <dd><code>{{ site['protocol'] }}://{{ site['domain'] }}/api/v2</code></dd>
-
-        {% if user['auth'] %}
-          <dt>API key</dt>
-          <dd>Get an API key on the <a href="{{ site['protocol'] }}://{{ site['domain'] }}/account">Account</a> page</dd>
-        {% endif %}
-
-        <dt>Response format</dt>
-        <dd><code>JSON</code></dd>
-      </dl>
-    </div>
+  <div class="subpage-head">
+    <h1 class="subpage-title"><span>API</span> &amp; Description</h1>
+    <a href="/example.txt" class="api-example-link" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Example PHP code
+    </a>
   </div>
 
-  {# ─── Methods ─── #}
-  <div class="api-methods">
+  <div class="subpage-body">
+
+    {# ─── Variables and Values Section ─── #}
+    <div class="subpage-card">
+      <h2 class="api-sec-title">Variables and Values Section</h2>
+      <div class="api-vars">
+        <div class="api-var"><span class="api-var-label">HTTP METHOD</span><span class="api-pill">POST</span></div>
+        <div class="api-var"><span class="api-var-label">API URL</span><span class="api-pill">{{ site['protocol'] }}://{{ site['domain'] }}/api/v2</span></div>
+        <div class="api-var"><span class="api-var-label">RESPONSE FORMAT</span><span class="api-pill">JSON</span></div>
+        {% if user['auth'] %}
+          <div class="api-var"><span class="api-var-label">API KEY</span><span class="api-pill">Get it on the Account page</span></div>
+        {% endif %}
+      </div>
+    </div>
+
+    {# ─── Methods ─── #}
     {% for method, methodDetails in methods %}
-      <section class="card api-method" id="api-{{ method }}">
-        <div class="card-body">
-          <div class="api-method-head">
-            <span class="api-method-pill">{{ method }}</span>
-            <h2 class="api-method-title">{{ methodDetails['title'] }}</h2>
+      <section class="subpage-card" id="api-{{ method }}">
+        <h2 class="api-sec-title">{{ methodDetails['title'] }}</h2>
+
+        {% if 'add' == method and methodDetails['types']|length > 1 %}
+          {# Blue Service Type dropdown #}
+          <div class="api-dropdown" data-api-dropdown>
+            <button type="button" class="api-dropdown-btn" aria-expanded="false">
+              <span class="api-dropdown-lead">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+                Service Type
+              </span>
+              <span class="api-dropdown-val">{{ methodDetails['types']|first }}</span>
+              <svg class="api-dropdown-caret" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="api-dropdown-menu" hidden>
+              {% for type, label in methodDetails['types'] %}
+                <button type="button" class="api-dropdown-opt{% if loop.first %} is-selected{% endif %}" data-type="{{ type }}">
+                  <span>{{ label }}</span>
+                  <span class="api-dropdown-sel">Selected</span>
+                </button>
+              {% endfor %}
+            </div>
           </div>
 
-          {% if 'add' == method %}
-            {% if methodDetails['types']|length > 1 %}
-              <div class="form-group" style="max-width: 320px;">
-                <label class="control-label">Service type</label>
-                <select class="form-control" id="service_type">
-                  {% for type, label in methodDetails['types'] %}
-                    <option value="{{ type }}">{{ label }}</option>
+          {% for type, parameters in methodDetails['parameters'] %}
+            <div class="api-type-panel" data-type-panel="{{ type }}"{% if not loop.first %} hidden{% endif %}>
+              <table class="api-ptable">
+                <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+                <tbody>
+                  {% for parameter, label in parameters %}
+                    <tr><td><span class="api-param-pill">{{ parameter }}</span></td><td>{{ label }}</td></tr>
                   {% endfor %}
-                </select>
-              </div>
-            {% endif %}
+                </tbody>
+              </table>
+            </div>
+          {% endfor %}
+        {% else %}
+          <table class="api-ptable">
+            <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+            <tbody>
+              {% for parameter, label in methodDetails['parameters'] %}
+                <tr><td><span class="api-param-pill">{{ parameter }}</span></td><td>{{ label }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
 
-            {% for type, parameters in methodDetails['parameters'] %}
-              <div id="type_{{ type }}" style="display:none;">
-                <table class="table api-params-table">
-                  <thead>
-                    <tr>
-                      <th class="col-param">Parameter</th>
-                      <th>Description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for parameter, label in parameters %}
-                      <tr>
-                        <td><code>{{ parameter }}</code></td>
-                        <td>{{ label }}</td>
-                      </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            {% endfor %}
-          {% else %}
-            <table class="table api-params-table">
-              <thead>
-                <tr>
-                  <th class="col-param">Parameter</th>
-                  <th>Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for parameter, label in methodDetails['parameters'] %}
-                  <tr>
-                    <td><code>{{ parameter }}</code></td>
-                    <td>{{ label }}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          {% endif %}
-
-          <div class="api-example-block">
-            <div class="api-example-head">Example Response</div>
-            <pre class="api-example-pre">{{ methodDetails['examples'] }}</pre>
+        <div class="api-code">
+          <div class="api-code-head">
+            <span class="api-code-title"><span class="api-code-glyph">&lt;/&gt;</span> Example Response</span>
+            <button type="button" class="api-code-copy" title="Copy">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
           </div>
+          <pre class="api-code-pre">{{ methodDetails['examples'] }}</pre>
         </div>
       </section>
     {% endfor %}
-  </div>
 
-  </div>{# /lp-container #}
+  </div>
 </div>
 
 <script>
 (function() {
-  function escHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-  function highlight(json) {
+  // ── JSON syntax highlight ──
+  function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function highlight(json){
     return escHtml(json).replace(
       /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
-      function(match) {
-        if (/^"/.test(match)) {
-          if (/:$/.test(match)) return '<span class="api-json-key">' + match + '</span>';
-          return '<span class="api-json-str">' + match + '</span>';
-        }
-        if (/true|false/.test(match)) return '<span class="api-json-bool">' + match + '</span>';
-        if (/null/.test(match))       return '<span class="api-json-null">' + match + '</span>';
-        return '<span class="api-json-num">' + match + '</span>';
-      }
-    );
+      function(m){
+        if (/^"/.test(m)) return /:$/.test(m) ? '<span class="api-json-key">'+m+'</span>' : '<span class="api-json-str">'+m+'</span>';
+        if (/true|false/.test(m)) return '<span class="api-json-bool">'+m+'</span>';
+        if (/null/.test(m)) return '<span class="api-json-null">'+m+'</span>';
+        return '<span class="api-json-num">'+m+'</span>';
+      });
   }
-  document.querySelectorAll('.api-example-pre').forEach(function(pre) {
-    pre.innerHTML = highlight(pre.textContent || '');
+  document.querySelectorAll('.api-code-pre').forEach(function(pre){ pre.innerHTML = highlight(pre.textContent || ''); });
+
+  // ── Service Type dropdown ──
+  document.querySelectorAll('[data-api-dropdown]').forEach(function(dd){
+    var btn = dd.querySelector('.api-dropdown-btn');
+    var menu = dd.querySelector('.api-dropdown-menu');
+    var valEl = dd.querySelector('.api-dropdown-val');
+    var section = dd.closest('section');
+    function close(){ menu.hidden = true; btn.setAttribute('aria-expanded','false'); dd.classList.remove('is-open'); }
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var open = menu.hidden;
+      menu.hidden = !open; btn.setAttribute('aria-expanded', open ? 'true':'false');
+      dd.classList.toggle('is-open', open);
+    });
+    dd.querySelectorAll('.api-dropdown-opt').forEach(function(opt){
+      opt.addEventListener('click', function(){
+        dd.querySelectorAll('.api-dropdown-opt').forEach(function(o){ o.classList.remove('is-selected'); });
+        opt.classList.add('is-selected');
+        if (valEl) valEl.textContent = opt.querySelector('span').textContent;
+        var type = opt.getAttribute('data-type');
+        if (section) section.querySelectorAll('[data-type-panel]').forEach(function(p){
+          p.hidden = (p.getAttribute('data-type-panel') !== type);
+        });
+        close();
+      });
+    });
+    document.addEventListener('click', function(e){ if (!dd.contains(e.target)) close(); });
+  });
+
+  // ── Copy code ──
+  document.querySelectorAll('.api-code-copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var pre = btn.closest('.api-code').querySelector('.api-code-pre');
+      if (pre && navigator.clipboard) navigator.clipboard.writeText(pre.textContent || '');
+      btn.classList.add('is-copied'); setTimeout(function(){ btn.classList.remove('is-copied'); }, 1200);
+    });
   });
 })();
 </script>

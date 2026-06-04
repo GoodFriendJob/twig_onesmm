@@ -6,7 +6,7 @@
 #}
 <div class="neworder-page">
 
-  <h1 class="one-page-title"><span class="one-page-title__accent">New</span> Order</h1>
+  <h1 class="subpage-title"><span>New</span> Order</h1>
 
   <form id="order-form" {% if site['rtl'] %}class="rtl-form"{% endif %} action="{{ page['url'] }}" method="post">
     <input type="hidden" name="_csrf" value="{{ csrftoken }}">
