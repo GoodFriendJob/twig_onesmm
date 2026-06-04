@@ -1619,7 +1619,12 @@
        line-height: 1.12;
        margin-bottom: var(--space-section-sm);
    }
-   .subpage-title span { color: var(--accent); }
+   .subpage-title span { 
+        background: linear-gradient(90deg, #FF6255 0%, #FF8D64 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
    .subpage-sub { margin: 8px 0 0; color: var(--ink-3); font-size: 14px; }
    .subpage-body { display: flex; flex-direction: column; gap: 20px; }
 
