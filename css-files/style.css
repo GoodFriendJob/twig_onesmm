@@ -606,6 +606,7 @@
        transition: background .12s, color .12s;
        text-decoration: none;
        padding: 0;
+       position: relative;
    }
    .topbar-icon-btn svg {
        width: 18px; height: 18px;
@@ -1736,7 +1737,7 @@
        box-shadow: var(--shadow-3);
        padding: 6px;
        margin-top: 6px;
-       min-width: 180px;
+       min-width: 90px;
        background: var(--ctrl-bg);
    }
    .dropdown-menu li {
@@ -3159,7 +3160,7 @@
    .platform-google, .platform-web, .platform-website, .platform-reviews,
    .platform-all, .platform-other { color: inherit; filter: none; }
    
-   @media (max-width: 1280px) { .platform-grid { grid-template-columns: repeat(6, 1fr); } }
+   @media (max-width: 1580px) { .platform-grid { grid-template-columns: repeat(6, 1fr); } }
    @media (max-width: 1100px) { .platform-grid { grid-template-columns: repeat(5, 1fr); } }
    @media (max-width: 880px)  { .platform-grid { grid-template-columns: repeat(4, 1fr); } }
    @media (max-width: 600px)  { .platform-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -16253,12 +16254,20 @@ img.topbar-avatar { object-fit: cover; background: var(--bg-3); }
     .sidebar-collapse-btn { display: none; }
 }
 @media (max-width: 639px) {
+
     .topbar { gap: 6px; padding-left: 12px; padding-right: 12px; }
     .topbar-icons { gap: 2px; }
-    .topbar-wallet { gap: 4px; }
+    .topbar-wallet { gap: 2px; }
     .topbar-wallet-ic { display: none; }   /* balance still shown in the green pill */
+    .topbar-user-btn { padding: 4px 8px 4px 12px; }
     .topbar-user-name { max-width: 84px; }
+    .topbar-user-meta {display:none;}
     .topbar-user-caret { display: none; }
+    .topbar-balance-pill {padding: 0 5px;}
     .topbar-icons .topbar-icon-btn svg { width: 20px; height: 20px; }
     .topbar-currency-btn { padding: 0 6px 0 8px; }
+}
+@media (max-width: 360px) {
+    .topbar-user-btn { padding: 4px 8px 4px 0; }
+    .topbar-wallet {gap:0;}
 }
