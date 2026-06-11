@@ -15961,7 +15961,7 @@ html[dir="rtl"] .story-ch--flip p { margin-left: 0; margin-right: auto; }
     color: var(--shell-coral); letter-spacing: .3px;
 }
 .sidebar-brand .brand-logo-text .blue-part { color: var(--brand); }
-.sidebar-tagline { font-size: 10px; font-weight: 500; color: var(--shell-icon); }
+.sidebar-tagline { font-size: 10px; font-weight: 700; color: var(--shell-icon); }
 .sidebar-collapse-btn {
     position: absolute;
     top: 12px;
