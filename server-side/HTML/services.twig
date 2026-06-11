@@ -21,8 +21,6 @@
      #service-table, #currencies-list, #currencies-item
 #}
 <div class="services-page">
-  <div class="lp-container">
-
     {# ─── Page header (matches design: "Services List") ─── #}
     <div class="subpage-head">
       <h1 class="subpage-title"><span>Services</span> List</h1>
@@ -31,7 +29,7 @@
     {# ─── Filter section ─── #}
     <div class="svc-filter-section {% if site['rtl'] %}rtl-nav{% endif %}">
 
-      <div class="svc-filter-label"><strong>Platform</strong> Filter</div>
+      <div class="svc-filter-label">Choose a <strong>Platform</strong></div>
 
       {# Visual platform tabs — single grid wrapper so the main row and the
          "more" extras flow as ONE continuous, reflowing grid. #}
@@ -374,8 +372,6 @@
         </table>
       </div>
     </div>
-
-  </div>{# /.container #}
 </div>
 
 {% if servicesText %}

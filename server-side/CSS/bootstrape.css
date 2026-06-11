@@ -1695,9 +1695,12 @@
    .massorder-form { min-width: 0; }
    .massorder-form .card-body { padding: 24px; }
    .massorder-form .control-label {
-       font-size: 12px; font-weight: 500; color: var(--ink-2);
-       text-transform: uppercase; letter-spacing: 0.04em;
-       margin-bottom: 8px; display: block;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--ink-2);
+        letter-spacing: 0.04em;
+        margin-bottom: 4px;
+        display: block;
    }
    .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
    .massorder-textarea {

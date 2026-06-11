@@ -6,8 +6,8 @@
 /* ============================================================
    PART 1 — BOOTSTRAP 3.3.7 OVERRIDES
    ============================================================ */
-   *, :after, :before {
-    box-sizing: border-box;
+*, :after, :before {
+   box-sizing: border-box;
 }
 
 html { scroll-behavior: smooth; }
@@ -360,7 +360,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .tabular { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
-.muted { color: var(--ink-3); }
+.muted { color: var(--shell-icon); }
 
 a { color: var(--brand); text-decoration: none; }
 a:hover, a:focus { color: var(--brand-2); text-decoration: none; }
@@ -685,7 +685,7 @@ svg.mi {
    width: 100%;
 }
 @media (min-width: 1101px) { .app-content { padding: 24px 48px 48px; } }
-@media (min-width: 1600px) { .app-content { max-width: 1600px; padding: 30px 82px 48px; } }
+@media (min-width: 1600px) { .app-content { max-width: 1600px; padding: 30px 72px 50px 90px; } }
 @media (min-width: 1920px) { .app-content { max-width: 1800px; } }
 
 /* ─── Welcome strip ─── */
@@ -1632,17 +1632,17 @@ textarea.form-control { height: auto; padding: 10px 12px; }
 .subpage-head {
    display: flex; align-items: flex-end; justify-content: space-between;
    gap: 16px; flex-wrap: wrap;
-   margin: 0 0 24px;
 }
 .subpage-title {
    font-family: 'Poppins', 'Inter', sans-serif;
    font-size: 36px;
    font-weight: 600;
-   letter-spacing: -0.025em;
    color: var(--ink-1);
    line-height: 1.12;
    margin-bottom: var(--space-section-sm);
-   padding-left: 5px;
+}
+.subpage-head .subpage-title {
+   margin-bottom: 18px;
 }
 .subpage-title span { 
     background: linear-gradient(90deg, #FF6255 0%, #FF8D64 100%);
@@ -1681,7 +1681,7 @@ textarea.form-control { height: auto; padding: 10px 12px; }
 .card {
    background: var(--bg-1);
    border: 1px solid var(--line);
-   border-radius: var(--radius-lg);
+   border-radius: var(--radius);
    box-shadow: var(--shadow-1);
    overflow: hidden;
    transition: box-shadow var(--dur-normal) var(--ease-out-expo),
@@ -1701,7 +1701,7 @@ textarea.form-control { height: auto; padding: 10px 12px; }
    transform: translateY(-2px);
 }
 .card-header { padding: 16px 20px; border-bottom: 1px solid var(--line); }
-.card-body { padding: 20px; }
+.card-body { padding: 30px; }
 
 /* ─── Tables ─── */
 
@@ -1918,9 +1918,11 @@ list-style: none;
 .alert {
    padding: 12px 16px;
    border-radius: var(--radius);
-   font-size: 13.5px;
+   font-size: 12px;
    border: 1px solid transparent;
+   margin:10px 0;
 }
+.alert button.close { float:right; padding:0 3px; }
 .alert-success { background: var(--green-soft); color: var(--green); border-color: rgba(31,157,85,.2); }
 .alert-warning { background: var(--amber-soft); color: var(--amber); border-color: rgba(184,130,23,.2); }
 .alert-danger  { background: var(--red-soft);   color: var(--red);   border-color: rgba(196,50,47,.2); }
@@ -2485,7 +2487,7 @@ header .navbar-brand, header [class*="brand"] {
    align-items: start;
 }
 .neworder-form { min-width: 0; }
-.neworder-form .card-body { padding: 24px 24px 24px 36px; }
+.neworder-form .card-body { padding: 24px; }
 .neworder-form .form-group { margin-bottom: 20px; }
 .neworder-form .form-group:last-child { margin-bottom: 0; }
 .neworder-form .control-label {
@@ -3068,7 +3070,7 @@ ul.select2-results__options {
 }
 
 /* Platform chips */
-.platform-card .card-body { padding: 24px 24px 24px 36px; }
+.platform-card .card-body { padding: 24px; }
 .platform-head, .service-head {
    display: flex; align-items: center; gap: 10px;
    margin: 10px 0 20px 0;
@@ -3079,13 +3081,13 @@ ul.select2-results__options {
    font-size: 12px; font-weight: 600;
    display: inline-flex; align-items: center; justify-content: center;
 }
-.platform-head .h3, .service-head .h3 { font-family: 'Poppins','Inter',sans-serif; font-size: 16px; font-weight: 500; margin: 0; color: var(--shell-icon); }
+.platform-head .h3, .service-head .h3 { font-family: 'Poppins','Inter',sans-serif; font-size: 16px; font-weight: 600; margin: 0; color: var(--shell-icon); }
 .platform-head .h3 b, .service-head .h3 b { font-weight: 700; color: var(--ink-1); }
 
 .platform-grid {
    display: grid;
    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-   gap: 7px;
+   gap: 8px;
    padding:4px;
 }
 .pulse-platform-chip {
@@ -3468,8 +3470,8 @@ select.select2-hidden-accessible {
 /* Service detail card (right rail) */
 .svc-info-card { margin-bottom: 12px; }
 .svc-info-body { padding: 32px; }
-.svc-info-label {
-   font-size: 16px; font-weight: 700; letter-spacing: .07em;
+.svc-info-label, .h3 {
+   font-size: 16px; font-weight: 700;
    color: var(--ink-1); margin: 0 0 20px;
 }
 .svc-stats {
@@ -3510,16 +3512,19 @@ select.select2-hidden-accessible {
 
 .massorder-grid {
    display: grid;
-   grid-template-columns: 1fr 320px;
-   gap: 20px;
+   grid-template-columns: 1fr 360px;
+   gap: 10px;
    align-items: start;
 }
 .massorder-form { min-width: 0; }
-.massorder-form .card-body { padding: 24px 24px 24px 36px; }
+.massorder-form .card-body { padding: 24px; }
 .massorder-form .control-label {
-   font-size: 12px; font-weight: 500; color: var(--ink-2);
-   text-transform: uppercase; letter-spacing: 0.04em;
-   margin-bottom: 8px; display: block;
+   font-size: 12px;
+   font-weight: 500;
+   color: var(--ink-2);
+   letter-spacing: 0.04em;
+   margin-bottom: 4px;
+   display: block;
 }
 .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
 .massorder-textarea {
@@ -3549,7 +3554,7 @@ select.select2-hidden-accessible {
    border: 1px solid var(--line);
    border-radius: 6px;
    padding: 10px 12px;
-   margin: 0 0 4px;
+   margin: 30px 0 20px;
    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
    font-size: 12px;
    color: var(--ink-1);
@@ -3694,24 +3699,26 @@ select.select2-hidden-accessible {
 /* ─── Services page: platform tabs + search ─── */
 
 .svc-filter-section {
+   padding:30px;
    margin-bottom: var(--space-section-sm);
 }
 .svc-filter-label {
-   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-   font-size: 14px;
-   color: var(--ink-2);
-   margin-bottom: 14px;
+   font-family: 'Poppins', 'Inter', sans-serif;
+   font-size: 16px;
+   font-weight: 600;
+   margin: 5px 0 20px 0;
+   color: var(--shell-icon);
 }
-.svc-filter-label strong { color: var(--ink-1); }
+.svc-filter-label strong { 
+   font-weight: 700;
+   color: var(--ink-1);
+}
 
-/* Platform tabs — single container-aware grid so main tabs AND the "more"
-  extras share one grid track. When More is clicked the extras appear
-  inline at the end of the row and reflow with the rest on resize. */
 .svc-tabs-grid {
    display: grid;
-   grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+   grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
    gap: 10px;
-   margin-bottom: 20px;
+   margin-bottom: var(--space-section);
 }
 /* Flatten the inner wrappers so their children become direct grid items
   of .svc-tabs-grid. */
@@ -3738,10 +3745,13 @@ select.select2-hidden-accessible {
    transition: all .15s;
    -webkit-appearance: none;
 }
+.svc-platform-tab svg {
+   color:var(--shell-icon);
+}
 .svc-platform-tab:hover:not(.svc-platform-tab--active) {
    background: var(--bg-2);
-   border-color: var(--brand);
-   color: var(--ink-1);
+   border-color: var(--brand-3);
+   color: var(--brand-3);
 }
 .svc-platform-tab--active {
    background: var(--brand-3);
@@ -6068,7 +6078,7 @@ padding: 22px 22px 24px;
 }
 .cmspage-article .card-body { padding: 40px; }
 @media (max-width: 700px) {
-   .cmspage-article .card-body { padding: 24px 24px 24px 36px; }
+   .cmspage-article .card-body { padding: 24px; }
 }
 
 /* ─── Child panel order (layout + fields match New Order) ─── */
@@ -6103,7 +6113,7 @@ padding: 22px 22px 24px;
 
 .childpanel-form { min-width: 0; }
 .childpanel-form .card { margin-bottom: 0; overflow: visible; }
-.childpanel-form .card-body { padding: 24px 24px 24px 36px; }
+.childpanel-form .card-body { padding: 24px; }
 .childpanel-form .form-group {
    margin-bottom: 18px;
    width: 100%;
@@ -10738,7 +10748,7 @@ padding-top: env(safe-area-inset-top);
 /* Authenticated topbar — respect top + sides */
 .topbar {
    padding-top: env(safe-area-inset-top);
-   padding-left: max(50px, env(safe-area-inset-left));
+   padding-left: max(52px, env(safe-area-inset-left));
    padding-right: max(196px, env(safe-area-inset-right));
 }
 
