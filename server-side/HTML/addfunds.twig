@@ -56,23 +56,13 @@
                    data-icon="{{ payment['icon']|default('') }}"
                    data-instruction="{{ payment['instruction']|default('') }}">
               <input type="radio" class="pay-tile-radio" name="AddFoundsForm[type]" value="{{ payment['id'] }}"{% if isSel %} checked{% endif %}>
-              <span class="pay-tile-ic pay-ic--{{ payment['icon_key']|default('generic') }}">
-                {% if payment['icon_key'] == 'cryptomus' %}
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5"/><path d="M12 22V12"/></svg>
-                {% elseif payment['icon_key'] == 'heleket' %}
-                  <svg viewBox="0 0 24 24" fill="#E8313A"><path d="M12 23a7 7 0 0 0 7-7c0-2-1-4-2.5-5.5C15 9 14 7 14 4c-2 1.5-4 3.5-5 5.5C8 8 7.5 7 7.5 6 6 8 5 10.5 5 13a7 7 0 0 0 7 10z"/></svg>
-                {% elseif payment['icon_key'] == 'cryptogate' %}
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="1.5" stroke-linejoin="round"><path d="M6 3h12l3 5-9 13L3 8z"/><path d="M3 8h18M8.5 3 6 8l6 13 6-13-2.5-5"/></svg>
-                {% elseif payment['icon_key'] == '1xgate' %}
-                  <span class="pay-1xgate"><b>1X</b>GATE</span>
-                {% elseif payment['icon_key'] == 'paypal' %}
-                  <svg viewBox="0 0 24 24" fill="none"><path fill="#253B80" d="M8.3 21H5.6c-.3 0-.5-.3-.4-.6L7.7 4.9c.1-.5.5-.9 1-.9h5.1c2.6 0 4.4 1.4 4 4.2-.5 3-2.7 4.6-5.7 4.6h-2c-.4 0-.7.3-.8.7L8.3 21z"/><path fill="#179BD7" d="M18.6 8.8c.3 2.9-1.8 5-4.9 5h-1.9c-.4 0-.7.3-.8.7L9.8 21c0 .3.1.5.4.5h2.5c.4 0 .8-.3.9-.8l.9-5.4c.1-.4.4-.7.8-.7h.6c2.6 0 4.3-1.4 4.8-3.9.2-1.2-.2-2.3-1.1-3z"/></svg>
-                {% elseif payment['icon_key'] == 'wise' %}
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#37B24D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13"/><path d="m13 6 6 6-6 6"/></svg>
-                {% elseif payment['icon_key'] == 'usdt' %}
-                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#26A17B"/><rect x="6.5" y="7" width="11" height="2.4" rx="1.2" fill="#fff"/><rect x="10.8" y="7.6" width="2.4" height="9.6" rx="1.2" fill="#fff"/></svg>
-                {% elseif payment['icon_key'] == 'crypto_direct' %}
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#1FA2B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><path d="M14 4h6v6"/><path d="M20 4 10 14"/></svg>
+              <span class="pay-tile-ic">
+                {# Real Perfect Panel payment logo (icon_key doesn't exist server-side).
+                   Falls back to the first letter of the name if no icon / image fails to load. #}
+                {% if payment['icon'] %}
+                  <img src="{{ payment['icon'] }}" alt="{{ payment['name'] }}" class="pay-tile-img" loading="lazy"
+                       onerror="this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='';}">
+                  <span class="pay-ic-letter" style="display:none">{{ payment['name']|first|upper }}</span>
                 {% else %}
                   <span class="pay-ic-letter">{{ payment['name']|first|upper }}</span>
                 {% endif %}

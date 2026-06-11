@@ -3441,30 +3441,31 @@ margin-bottom: 16px;
    -webkit-appearance: none;
    appearance: none;
    width: 100% !important;
-   height: 10px !important;
+   height: 5px !important;
    padding: 0 !important;
    border: 0 !important;
-   border-radius: 5px;
-   background: var(--bg-3);
+   border-radius: 3px;
+   /* Fallback fill — JS repaints with the live red→orange gradient up to the thumb */
+   background: linear-gradient(90deg, #ff6255, #ff8d64);
    outline: none;
    cursor: pointer;
 }
 .qty-range::-webkit-slider-thumb {
    -webkit-appearance: none; appearance: none;
-   width: 24px; height: 24px;
+   width: 16px; height: 16px;
    background: var(--accent);
-   border: 4px solid #fff;
+   border: 2px solid #fff;
    border-radius: 50%;
    cursor: pointer;
-   box-shadow: 0 2px 4px rgba(0,0,0,.2);
+   box-shadow: 0 1px 4px rgba(255,98,85,.5);
 }
 .qty-range::-moz-range-thumb {
-   width: 24px; height: 24px;
+   width: 16px; height: 16px;
    background: var(--accent);
-   border: 4px solid #fff;
+   border: 2px solid #fff;
    border-radius: 50%;
    cursor: pointer;
-   box-shadow: 0 2px 4px rgba(0,0,0,.2);
+   box-shadow: 0 1px 4px rgba(255,98,85,.5);
 }
 .qty-ticks {
    position: relative;
@@ -4828,6 +4829,7 @@ flex-wrap: wrap;
    width: 30px; height: 30px; color: var(--ink-1);
 }
 .pay-tile-ic svg { width: 28px; height: 28px; display: block; }
+.pay-tile-img { width: 28px; height: 28px; object-fit: contain; display: block; }
 .pay-ic-letter { font-size: 18px; font-weight: 700; }
 /* 1xgate text logo */
 .pay-1xgate { font-family: 'Poppins','Inter',sans-serif; font-size: 12px; font-weight: 800; letter-spacing: -0.3px; color: var(--ink-1); white-space: nowrap; }
@@ -4848,6 +4850,7 @@ flex-wrap: wrap;
 .pay-selected-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
 .pay-selected-ic { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; color: var(--ink-1); }
 .pay-selected-ic svg { width: 30px; height: 30px; display: block; }
+.pay-selected-ic .pay-tile-img { width: 30px; height: 30px; object-fit: contain; display: block; }
 .pay-selected-name {
    font-family: 'Poppins','Inter',sans-serif;
    font-size: 22px; font-weight: 700; color: var(--ink-1); letter-spacing: -0.01em;

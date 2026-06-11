@@ -765,6 +765,21 @@ window.__pulseCategories = [
       minMaxLabel.textContent = svc.min_max_label;
     }
 
+    // Push the service's real min/max onto the quantity input as attributes so the
+    // slider reads the correct range. The slider's min/max MutationObserver picks
+    // these up and re-syncs its bounds (otherwise it falls back to value × 10).
+    var qtyForBounds = document.querySelector('#order_quantity input[name*="quantity"]');
+    if (qtyForBounds) {
+      var sMin = parseInt(svc.min, 10);
+      var sMax = parseInt(svc.max, 10);
+      if (!isNaN(sMin)) qtyForBounds.setAttribute('min', sMin);
+      if (!isNaN(sMax) && sMax > (isNaN(sMin) ? 0 : sMin)) qtyForBounds.setAttribute('max', sMax);
+      // Clamp the current value into the new range
+      var curQ = parseInt(qtyForBounds.value, 10);
+      if (!isNaN(sMin) && (isNaN(curQ) || curQ < sMin)) qtyForBounds.value = sMin;
+      if (!isNaN(sMax) && curQ > sMax) qtyForBounds.value = sMax;
+    }
+
     // Reset drip-feed on service change — collapse options, uncheck box
     var dripCheck = document.getElementById('field-orderform-fields-check');
     var dripOpts  = document.getElementById('dripfeed-options');
@@ -1310,11 +1325,11 @@ window.__pulseCategories = [
     function paint(b){
       var val = Math.min(Math.max(parseInt(range.value, 10) || b.min, b.min), b.max);
       var pct = b.max > b.min ? (val - b.min) / (b.max - b.min) * 100 : 0;
-      // Resolve theme colors at runtime so the gradient works even if CSS vars don't inherit
+      // Resolve track color at runtime so the gradient works even if CSS vars don't inherit.
+      // Filled portion uses the brand CTA gradient (#ff6255 → #ff8d64), matching the submit button.
       var cs = getComputedStyle(range);
-      var fill = (cs.getPropertyValue('--accent') || '').trim() || '#FF6255';
       var track = (cs.getPropertyValue('--bg-3') || '').trim() || '#E3E5E5';
-      range.style.background = 'linear-gradient(to right, ' + fill + ' 0%, ' + fill + ' ' + pct + '%, ' + track + ' ' + pct + '%, ' + track + ' 100%)';
+      range.style.background = 'linear-gradient(to right, #ff6255 0%, #ff8d64 ' + pct + '%, ' + track + ' ' + pct + '%, ' + track + ' 100%)';
     }
     function buildTicks(b){
       ticks.innerHTML = '';
@@ -1395,8 +1410,11 @@ window.__pulseCategories = [
     display.addEventListener('keydown', function(e){
       if (e.key === 'Enter') { e.preventDefault(); display.blur(); }
     });
-    // Re-sync if Perfect Panel updates min/max/value per selected service
-    new MutationObserver(sync).observe(num, { attributes: true, attributeFilter: ['min', 'max', 'step', 'value'] });
+    // Re-sync if Perfect Panel updates min/max per selected service.
+    // NOTE: do NOT watch 'value' — PP writes the value attribute back on its own
+    // change handler, which would re-fire sync() mid-drag and snap the thumb/fill
+    // back to PP's value (the slider would look frozen). The design omits it too.
+    new MutationObserver(sync).observe(num, { attributes: true, attributeFilter: ['min', 'max', 'step'] });
 
     sync();
   }
