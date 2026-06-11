@@ -57,12 +57,39 @@
                    data-instruction="{{ payment['instruction']|default('') }}">
               <input type="radio" class="pay-tile-radio" name="AddFoundsForm[type]" value="{{ payment['id'] }}"{% if isSel %} checked{% endif %}>
               <span class="pay-tile-ic">
-                {# Real Perfect Panel payment logo (icon_key doesn't exist server-side).
-                   Falls back to the first letter of the name if no icon / image fails to load. #}
+                {# Perfect Panel gives no icon/icon_key server-side — only the name.
+                   1) use payment['icon'] if an install ever provides it,
+                   2) else pick a logo by matching keywords in the name,
+                   3) else fall back to the first letter. #}
+                {% set _pn = payment['name']|lower %}
                 {% if payment['icon'] %}
                   <img src="{{ payment['icon'] }}" alt="{{ payment['name'] }}" class="pay-tile-img" loading="lazy"
                        onerror="this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='';}">
                   <span class="pay-ic-letter" style="display:none">{{ payment['name']|first|upper }}</span>
+                {% elseif 'cryptomus' in _pn %}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5"/><path d="M12 22V12"/></svg>
+                {% elseif 'heleket' in _pn %}
+                  <svg viewBox="0 0 24 24" fill="#E8313A"><path d="M12 23a7 7 0 0 0 7-7c0-2-1-4-2.5-5.5C15 9 14 7 14 4c-2 1.5-4 3.5-5 5.5C8 8 7.5 7 7.5 6 6 8 5 10.5 5 13a7 7 0 0 0 7 10z"/></svg>
+                {% elseif 'cryptogate' in _pn %}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="1.5" stroke-linejoin="round"><path d="M6 3h12l3 5-9 13L3 8z"/><path d="M3 8h18M8.5 3 6 8l6 13 6-13-2.5-5"/></svg>
+                {% elseif '1xgate' in _pn or '1xbet' in _pn %}
+                  <span class="pay-1xgate"><b>1X</b>GATE</span>
+                {% elseif 'paypal' in _pn %}
+                  <svg viewBox="0 0 24 24" fill="none"><path fill="#253B80" d="M8.3 21H5.6c-.3 0-.5-.3-.4-.6L7.7 4.9c.1-.5.5-.9 1-.9h5.1c2.6 0 4.4 1.4 4 4.2-.5 3-2.7 4.6-5.7 4.6h-2c-.4 0-.7.3-.8.7L8.3 21z"/><path fill="#179BD7" d="M18.6 8.8c.3 2.9-1.8 5-4.9 5h-1.9c-.4 0-.7.3-.8.7L9.8 21c0 .3.1.5.4.5h2.5c.4 0 .8-.3.9-.8l.9-5.4c.1-.4.4-.7.8-.7h.6c2.6 0 4.3-1.4 4.8-3.9.2-1.2-.2-2.3-1.1-3z"/></svg>
+                {% elseif 'wise' in _pn %}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#37B24D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13"/><path d="m13 6 6 6-6 6"/></svg>
+                {% elseif 'usdt' in _pn or 'tether' in _pn %}
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#26A17B"/><rect x="6.5" y="7" width="11" height="2.4" rx="1.2" fill="#fff"/><rect x="10.8" y="7.6" width="2.4" height="9.6" rx="1.2" fill="#fff"/></svg>
+                {% elseif 'perfect money' in _pn or 'perfectmoney' in _pn %}
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#C8102E"/><path d="M8 7h4.2a3 3 0 0 1 0 6H10v4H8V7zm2 2v2h2.2a1 1 0 0 0 0-2H10z" fill="#fff"/></svg>
+                {% elseif 'payeer' in _pn %}
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1C6BBA"/><path d="M7 7h4.5a3 3 0 0 1 0 6H9v4H7V7zm2 2v2h2.5a1 1 0 0 0 0-2H9z" fill="#fff"/></svg>
+                {% elseif 'stripe' in _pn or 'visa' in _pn or 'master' in _pn or 'credit' in _pn or 'debit' in _pn or 'card' in _pn %}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+                {% elseif 'bitcoin' in _pn or 'btc' in _pn %}
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#F7931A"/><path d="M15.3 10.7c.2-1.3-.8-2-2.1-2.4l.4-1.7-1-.3-.4 1.6-.8-.2.4-1.7-1-.2-.4 1.7-2-.5-.3 1.1s.8.2.7.2c.4.1.5.4.5.6l-1 4.2c-.1.1-.2.3-.5.2 0 0-.7-.2-.7-.2l-.5 1.2 1.9.5-.4 1.7 1 .3.4-1.7.8.2-.4 1.7 1 .3.4-1.7c1.8.3 3.1.2 3.7-1.4.5-1.3 0-2-.9-2.5.7-.2 1.2-.6 1.3-1.6zm-2.3 3.3c-.3 1.3-2.5.6-3.2.4l.6-2.3c.7.2 3 .5 2.6 1.9zm.3-3.3c-.3 1.2-2.1.6-2.7.4l.5-2.1c.6.2 2.5.4 2.2 1.7z" fill="#fff"/></svg>
+                {% elseif 'crypto' in _pn or 'coin' in _pn or 'usdc' in _pn or 'ethereum' in _pn or ' eth' in _pn or 'trx' in _pn or 'tron' in _pn or 'binance' in _pn or 'bnb' in _pn %}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5"/><path d="M12 22V12"/></svg>
                 {% else %}
                   <span class="pay-ic-letter">{{ payment['name']|first|upper }}</span>
                 {% endif %}
