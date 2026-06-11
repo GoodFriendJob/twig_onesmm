@@ -1775,7 +1775,7 @@ div.dropdown,
    box-shadow: var(--shadow-3);
    padding: 6px;
    margin-top: 6px;
-   min-width: 180px;
+   min-width: 90px;
    background: var(--ctrl-bg);
 }
 .dropdown-menu li {
@@ -16277,7 +16277,7 @@ font-weight: 500; font-size: 20px; line-height: 1;
 color: var(--shell-coral); letter-spacing: .3px;
 }
 .sidebar-brand .brand-logo-text .blue-part { color: var(--brand); }
-.sidebar-tagline { font-size: 10px; font-weight: 500; color: var(--shell-icon); }
+.sidebar-tagline { font-size: 10px; font-weight: 700; color: var(--shell-icon); }
 .sidebar-collapse-btn {
 position: absolute;
 top: 12px;
@@ -16341,7 +16341,7 @@ border-radius: 8px;
 .sidebar-group-items .sidebar-item svg.mi { width: 16px; height: 16px; opacity: .9; }
 .sidebar-group-items .sidebar-item:hover { background: rgba(255,255,255,.55); color: var(--shell-title); }
 [data-theme="dark"] .sidebar-group-items .sidebar-item:hover { background: rgba(255,255,255,.06); }
-.sidebar-group-items .sidebar-item.active { color: var(--accent);}
+.sidebar-group-items .sidebar-item.active { color: var(--accent); background:none;}
 .sidebar-group-items .sidebar-item.active svg.mi { opacity: 1; }
 
 /* ── Sidebar footer: language row + full-bleed Telegram CTA ── */
