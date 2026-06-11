@@ -1188,7 +1188,7 @@
    .neworder-form .form-group:last-child { margin-bottom: 0; }
    .neworder-form .control-label {
        font-size: 12px; font-weight: 500; color: var(--ink-2);
-       text-transform: uppercase; letter-spacing: 0.04em;
+       letter-spacing: 0.04em;
        margin-bottom: 8px; display: block;
    }
    .neworder-form .form-control {
