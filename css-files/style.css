@@ -6426,7 +6426,7 @@
 
 
    /* ─── Support & Contact Us page ─── */
-   .tk-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+   .tk-actions { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; }
    .tk-btn {
        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
        height: 50px; border-radius: 8px; border: 0; cursor: pointer;
@@ -6465,13 +6465,14 @@
    .tk-submit { width: 100%; height: 54px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 700; }
 
    /* Your tickets */
-   .tk-list-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 24px 26px 8px; }
-   .tk-search { position: relative; flex: 0 1 360px; min-width: 220px; display: flex; }
+   .tk-list-head { display: flex; flex-direction: column; align-items: stretch; gap: 14px; padding: 24px 26px 8px; }
+   .tk-search { width: 100%; max-width: 560px; display: flex; }
+   .tk-search-input {position:relative; width:100%;}
    .tk-search-ic { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--ink-3); pointer-events: none; }
    .tk-search input { width: 100%; box-sizing: border-box; height: 46px; padding: 0 50px 0 44px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg-1); font-size: 14px; color: var(--ink-1); }
    .tk-search input:focus { outline: 0; border-color: var(--brand); }
-   .tk-search-go { position: absolute; right: 5px; top: 5px; width: 40px; height: 36px; border: 0; border-radius: 8px; background: var(--bg-3); color: var(--ink-1); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
-   .tk-search-go:hover { background: var(--brand-soft); color: var(--brand); }
+   .tickets-page form button[type="submit"].tk-search-go { gap: 0; margin-top: 0; height: auto; right: 5px; top: 5px; width: 40px; border: 0; border-radius: 8px; background: var(--bg-3); color: var(--ink-1); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+   .tickets-page form button[type="submit"].tk-search-go:hover { background: var(--brand-soft); color: var(--brand); }
 
    .tk-table-wrap { overflow-x: auto; padding: 8px 12px 12px; }
    .tk-table { width: 100%; min-width: 800px; border-collapse: separate; border-spacing: 0; }
@@ -13239,21 +13240,17 @@ html[dir="rtl"] .lp-vtesti__rating {
     margin-bottom: 4px;
     font-variant-numeric: tabular-nums;
 }
-.lp[data-platform] .lp-stat__num { color: var(--plat); }D/;;;;;
-.lp-stat__label {
+.lp[data-platform] .lp-stat__num { color: var(--plat); }.lp-stat__label {
     font-size: 12px;
     color: var(--ink-3);
-    font-weight: 500;DDDDDDDDDDDDDDDDDDDDDDDD/DDDDD[/[DGDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD//
+    font-weight: 500;
     
     
-    DDDDDDDD[[[[[[[[DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-    ]]]]]]]]]]
     text-transform: uppercase;
     letter-spacing: 0.06em;
 }
 
 
-TDDDDDDDDDDDDDDTTTTTTTTTTTTTTTTTTTGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
 
 
 
@@ -13277,11 +13274,10 @@ TDDDDDDDDDDDDDDTTTTTTTTTTTTTTTTTTTGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
 
 
 
-DDDDDDDDD
 @media (max-width: 600px) {
     .lp-stats {
-        grid-template-columns: 1fr 1fr;DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-        max-width: 400px;DDDDDDDDDDDDDDDDDDDDDDDDDD
+        grid-template-columns: 1fr 1fr;
+        max-width: 400px;
         margin-top: -28px;
     }
     .lp-stat:nth-child(2)::after { display: none; }

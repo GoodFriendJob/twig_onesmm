@@ -85,8 +85,10 @@
       <div class="tk-list-head">
         <h2 class="box-title">Your <b>Tickets</b></h2>
         <form action="{{ page['url'] }}" method="get" class="tk-search">
-          <svg class="tk-search-ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input type="text" name="search" value="{{ search }}" placeholder="{{ lang('general.search.placeholder') }}">
+          <div class="tk-search-input">
+            <input type="text" name="search" value="{{ search }}" placeholder="{{ lang('general.search.placeholder') }}">
+            <svg class="tk-search-ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          </div>
           <button type="submit" class="tk-search-go" aria-label="Search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
         </form>
       </div>

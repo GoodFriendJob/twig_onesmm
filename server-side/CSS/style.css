@@ -120,7 +120,6 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
    margin-left: 6px; vertical-align: middle;
 }
 
-
 /* ============================================================
   PART 2 — PULSE THEME
   Tokens, layout shell, components
@@ -366,7 +365,6 @@ h1, h2, h3, h4, h5, h6,
 a { color: var(--brand); text-decoration: none; }
 a:hover, a:focus { color: var(--brand-2); text-decoration: none; }
 
-
 /* ─── App Shell (authenticated) ─── */
 
 .app {
@@ -517,8 +515,6 @@ svg.mi {
 .sidebar-greeting-text { opacity: .7; }
 .sidebar-item:hover svg.mi { opacity: .85; }
 .sidebar-item.active svg.mi { opacity: 1; }
-
-
 
 /* ─── Main column ─── */
 
@@ -786,7 +782,6 @@ svg.mi {
        font-size: 13px;
    }
 }
-
 
 /* ─── Announcement bar ─── */
 .pn-announce {
@@ -1160,9 +1155,6 @@ display: block;
   padding: 90px 0 105px 0;
   min-height: auto;
 }
-
-
-
 
 /* Desktop: make inputs slightly narrower than the submit button */
 .auth-field__wrap,
@@ -1556,7 +1548,6 @@ transition: background var(--dur-fast) ease,
    text-decoration: none;
 }
 
-
 @media (max-width: 860px) {
  .auth-field__wrap,
  .auth-field__input,
@@ -1567,7 +1558,6 @@ transition: background var(--dur-fast) ease,
  }
  .auth-h1 { font-size: 26px; }
 }
-
 
 /* ─── Buttons (Pulse) ─── */
 
@@ -1606,7 +1596,6 @@ transition: background var(--dur-fast) ease,
 .btn-sm { height: 32px; font-size: 12px; padding: 0 12px; }
 .btn-xs { height: 26px; font-size: 12px; padding: 0 10px; }
 
-
 /* ─── Form controls (Pulse) ─── */
 
 .form-control, .input {
@@ -1620,7 +1609,6 @@ transition: background var(--dur-fast) ease,
 }
 .form-control:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(240,101,67,.08); }
 textarea.form-control { height: auto; padding: 10px 12px; }
-
 
 /* ─── Cards / page header ─── */
 
@@ -1718,7 +1706,6 @@ textarea.form-control { height: auto; padding: 10px 12px; }
 .card-header { padding: 16px 20px; border-bottom: 1px solid var(--line); }
 .card-body { padding: 20px; }
 
-
 /* ─── Tables ─── */
 
 .table { margin-bottom: 0; }
@@ -1740,7 +1727,6 @@ textarea.form-control { height: auto; padding: 10px 12px; }
 }
 .table-hover > tbody > tr:hover { background: var(--bg-2); }
 
-
 /* ─── Badges & labels ─── */
 
 .badge {
@@ -1755,7 +1741,6 @@ textarea.form-control { height: auto; padding: 10px 12px; }
 .badge-warning, .label-warning { background: var(--amber-soft); color: var(--amber); }
 .badge-danger,  .label-danger  { background: var(--red-soft); color: var(--red); }
 .badge-info,    .label-info    { background: var(--blue-soft); color: var(--blue); }
-
 
 /* ─── Dropdowns ─── */
 
@@ -1833,7 +1818,6 @@ list-style: none;
    background: var(--brand-soft); color: var(--brand);
 }
 
-
 /* ─── Pagination ─── */
 
 .pagination {
@@ -1875,7 +1859,6 @@ list-style: none;
 .pagination > .active > span:hover {
    background: var(--brand); border-color: var(--brand); color: #fff;
 }
-
 
 /* ─── Theme toggle ─── */
 .theme-toggle {
@@ -1929,11 +1912,9 @@ list-style: none;
 
 /* Logo is theme-agnostic (transparent bg, works on both light/dark) */
 
-
 /* ─── Modals ─── */
 
 .modal-content { border-radius: var(--radius-lg); }
-
 
 /* ─── Alerts / notify wrapper ─── */
 
@@ -1953,7 +1934,6 @@ list-style: none;
    z-index: 9999; max-width: 380px;
    box-shadow: var(--shadow-3);
 }
-
 
 /* ─── Mobile menu trigger ─── */
 /* Hamburger sits inline at the start of the topbar (best-practice mobile layout)
@@ -2002,7 +1982,6 @@ list-style: none;
    pointer-events: auto;
 }
 
-
 /* ─── Responsive ─── */
 
 @media (max-width: 991px) {
@@ -2049,7 +2028,6 @@ list-style: none;
    .topbar-balance-btn { height: 32px; padding: 0 8px; font-size: 12px; }
    .topbar-divider { margin: 0 6px; }
 }
-
 
 /* ─── Kill stray top-of-page borders/elements above public header ─── */
 
@@ -2395,9 +2373,6 @@ body > *:first-child:not(header):not(nav):not(.app):not(.public-shell-wrap):not(
    display: none;
 }
 
-
-
-
 /* ─── Public navbar — defensive overrides for bare <ul><li> markup ─── */
 
 body:not(.has-sidebar) > header,
@@ -2471,7 +2446,6 @@ header .navbar-brand, header [class*="brand"] {
    padding: 0;
    text-decoration: none;
 }
-
 
 /* ─── New Order page ─── */
 
@@ -3532,7 +3506,6 @@ margin-bottom: 16px;
    .neworder-summary { position: static; }
 }
 
-
 /* ─── Mass Order page ─── */
 
 .massorder-page .page-header,
@@ -3603,7 +3576,6 @@ margin-bottom: 16px;
 .massorder-tips li { display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
 .massorder-tips li svg { flex-shrink: 0; margin-top: 3px; }
 .massorder-tips strong { color: var(--ink-1); font-weight: 600; }
-
 
 /* ─── API page ("API & Description") ─── */
 
@@ -3724,7 +3696,6 @@ margin-bottom: 16px;
 @media (max-width: 640px) {
    .api-var { grid-template-columns: 1fr; gap: 6px; }
 }
-
 
 /* ─── Services page ─── */
 
@@ -4784,7 +4755,6 @@ flex-wrap: wrap;
 .empty-state-text { font-size: 13.5px; font-weight: 500; color: var(--ink-2); }
 .empty-state-sub { font-size: 12px; color: var(--ink-3); }
 
-
 /* ─── Add Funds page ("Add Funds") ─── */
 
 .addfunds-layout {
@@ -4928,10 +4898,7 @@ flex-wrap: wrap;
    .addfunds-layout { grid-template-columns: 1fr; }
 }
 
-
 /* ─── Generic page toolbar + data card (subscriptions, refunds, etc) ─── */
-
-
 
 .page-toolbar {
    display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;
@@ -5001,7 +4968,6 @@ flex-wrap: wrap;
 .status-pill.status-3 { background: rgba(34,197,94,0.10); color: #15803d; border-color: rgba(34,197,94,0.25); }
 .status-pill.status-4 { background: rgba(239,68,68,0.10); color: #b91c1c; border-color: rgba(239,68,68,0.25); }
 .status-pill.status-5 { background: rgba(239,68,68,0.10); color: #b91c1c; border-color: rgba(239,68,68,0.25); }
-
 
 /* ─── Tickets page ─── */
 
@@ -5190,7 +5156,6 @@ flex-wrap: wrap;
    .tickets-page .tickets-grid { grid-template-columns: 1fr; }
 }
 
-
 /* ─── Ticket thread (viewticket) ─── */
 
 .viewticket-page .back-link {
@@ -5271,7 +5236,6 @@ flex-wrap: wrap;
    font-variant-numeric: tabular-nums;
 }
 
-
 /* ─── FAQ page ─── */
 
 .faq-page .page-header-eyebrow,
@@ -5341,7 +5305,6 @@ flex-wrap: wrap;
    .faq-grid { grid-template-columns: 1fr; }
    .faq-aside { position: static; }
 }
-
 
 /* ─── Affiliates page ("Affiliate and Grow") ─── */
 
@@ -5501,12 +5464,10 @@ flex-wrap: wrap;
    .aff-row2 { grid-template-columns: 1fr; }
 }
 
-
 /* ─── Terms ─── */
 .terms-content-wrap { max-width: 880px; margin: 0 auto; width: 100%; }
 .terms-content { max-width: none; margin: 0; }
 .terms-content .card-body { padding: 40px; }
-
 
 /* ─── Account page ─── */
 
@@ -5766,14 +5727,12 @@ padding: 22px 22px 24px;
    .account-grid > .account-card.account-card-wide:last-child { grid-column: auto; }
 }
 
-
 /* ─── Blog list ─── */
 
 .blog-page {
    /* padding-top: 28px; */
    width: 100%;
 }
-
 
 /* Controls: tabs + search */
 .blog-controls {
@@ -5856,7 +5815,6 @@ padding: 22px 22px 24px;
    -webkit-appearance: none;
 }
 .blog-search__btn:hover { background: var(--bg-3); color: var(--ink-1); }
-
 
 /* Grid */
 .blog-grid {
@@ -5984,7 +5942,6 @@ padding: 22px 22px 24px;
    .blog-tab { padding: 8px 16px; font-size: 13px; }
 }
 
-
 /* ─── Blog post — shared column width (must match .blogpost-article) ─── */
 
 .blogpost-page .back-link {
@@ -6074,9 +6031,7 @@ padding: 22px 22px 24px;
    }
 }
 
-
 /* ─── Child panels ─── */
-
 
 .panel-action-alert {
    display: flex; align-items: center; gap: 14px;
@@ -6117,7 +6072,6 @@ padding: 22px 22px 24px;
    margin-bottom: 6px;
 }
 
-
 /* ─── Custom CMS pages ─── */
 .cmspage-article {
    max-width: 880px; margin: 0 auto;
@@ -6126,7 +6080,6 @@ padding: 22px 22px 24px;
 @media (max-width: 700px) {
    .cmspage-article .card-body { padding: 24px; }
 }
-
 
 /* ─── Child panel order (layout + fields match New Order) ─── */
 
@@ -6389,7 +6342,6 @@ padding: 22px 22px 24px;
    }
 }
 
-
 /* ─── Child Panel / Reseller order page ("Child Panel / Reseller") ─── */
 .cp-layout {
    display: grid; grid-template-columns: 1fr 360px; gap: 20px; align-items: start;
@@ -6478,7 +6430,6 @@ padding: 22px 22px 24px;
    .cp-row2, .cp-ns-grid { grid-template-columns: 1fr; }
    .cp-currency { margin-left: 0; min-width: 0; width: 100%; }
 }
-
 
 /* ─── Giveaway & Rewards page ─── */
 .gv-banner {
@@ -6580,7 +6531,6 @@ padding: 22px 22px 24px;
 .gv-modal-submit { width: 100%; height: 54px; margin-top: 24px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 700; }
 @media (max-width: 640px) { .gv-modal-dialog { padding: 26px 20px 28px; } }
 
-
 /* ─── Levels & Rewards page ─── */
 .lv-hero {
    display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
@@ -6666,7 +6616,6 @@ padding: 22px 22px 24px;
 }
 @media (max-width: 560px) { .lv-cards { grid-template-columns: repeat(2, 1fr); } }
 
-
 /* ─── Notifications slide-in panel ─── */
 .notif-dot {
    position: absolute; top: 7px; right: 7px; width: 7px; height: 7px;
@@ -6714,9 +6663,8 @@ padding: 22px 22px 24px;
 .notif-readmore { display: inline-flex; align-items: center; gap: 4px; margin-top: 14px; font-size: 14px; font-weight: 600; color: var(--accent); text-decoration: none; }
 .notif-readmore:hover { filter: brightness(0.95); }
 
-
 /* ─── Support & Contact Us page ─── */
-.tk-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.tk-actions { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; }
 .tk-btn {
    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
    height: 50px; border-radius: 8px; border: 0; cursor: pointer;
@@ -6755,13 +6703,14 @@ padding: 22px 22px 24px;
 .tk-submit { width: 100%; height: 54px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 700; }
 
 /* Your tickets */
-.tk-list-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 24px 26px 8px; }
-.tk-search { position: relative; flex: 0 1 360px; min-width: 220px; display: flex; }
+.tk-list-head { display: flex; flex-direction: column; align-items: stretch; gap: 14px; padding: 24px 26px 8px; }
+.tk-search { width: 100%; max-width: 560px; display: flex; }
+.tk-search-input {position:relative; width:100%;}
 .tk-search-ic { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--ink-3); pointer-events: none; }
 .tk-search input { width: 100%; box-sizing: border-box; height: 46px; padding: 0 50px 0 44px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg-1); font-size: 14px; color: var(--ink-1); }
 .tk-search input:focus { outline: 0; border-color: var(--brand); }
-.tk-search-go { position: absolute; right: 5px; top: 5px; width: 40px; height: 36px; border: 0; border-radius: 8px; background: var(--bg-3); color: var(--ink-1); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
-.tk-search-go:hover { background: var(--brand-soft); color: var(--brand); }
+.tickets-page form button[type="submit"].tk-search-go { gap: 0; margin-top: 0; height: auto; right: 5px; top: 5px; width: 40px; border: 0; border-radius: 8px; background: var(--bg-3); color: var(--ink-1); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.tickets-page form button[type="submit"].tk-search-go:hover { background: var(--brand-soft); color: var(--brand); }
 
 .tk-table-wrap { overflow-x: auto; padding: 8px 12px 12px; }
 .tk-table { width: 100%; min-width: 800px; border-collapse: separate; border-spacing: 0; }
@@ -6835,7 +6784,6 @@ padding: 22px 22px 24px;
 
 @media (max-width: 640px) { .vt-msg { max-width: 100%; } }
 
-
 /* ─── Confirm email ─── */
 
 .confirm-email { text-align: center; }
@@ -6854,7 +6802,6 @@ padding: 22px 22px 24px;
    padding: 8px;
 }
 .confirm-change-link:hover { color: var(--brand-strong); text-decoration: underline; }
-
 
 /* ─── Notifications page ─── */
 
@@ -6939,7 +6886,6 @@ padding: 22px 22px 24px;
 .notif-save-row {
    display: flex; justify-content: flex-end;
 }
-
 
 /* ─── RTL ─── */
 
@@ -7086,7 +7032,6 @@ body.rtl .caret { margin-left: 0; margin-right: 4px; }
    body.rtl .sidebar.open { transform: translateX(0); }
    body.rtl .app-main { margin-right: 0; }
 }
-
 
 /* ============================================================
   Landing page (signin.twig public-facing) — JAP-style
@@ -7240,9 +7185,6 @@ body.rtl .caret { margin-left: 0; margin-right: 4px; }
    box-sizing: content-box;
 }
 .lp-bullets strong { color: var(--ink-1); font-weight: 600; }
-
-
-
 
 /* ============================================================
   3. SECTIONS (generic shell)
@@ -8533,7 +8475,6 @@ body.rtl .caret { margin-left: 0; margin-right: 4px; }
    .lp-section__head--center { text-align: center; }
 }
 
-
 /* ============================================================
   Landing page full-bleed within .public-shell.
   .public-shell has 32px top/bottom + 16px left/right padding.
@@ -8580,10 +8521,6 @@ body.rtl .caret { margin-left: 0; margin-right: 4px; }
 .lp-platform:focus,
 .lp-platform:focus-within { outline: 0; }
 
-
-
-
-
 /* ============================================================
   Density overrides — hero glow, metrics, eyebrow visibility
   ============================================================ */
@@ -8615,7 +8552,6 @@ body.rtl .caret { margin-left: 0; margin-right: 4px; }
 @media (max-width: 1080px) {
    .lp-faq__grid { grid-template-columns: 1fr; }
 }
-
 
 /* ============================================================
   New landing sections — hero CTAs, why-not panel,
@@ -9329,7 +9265,6 @@ box-shadow: var(--shadow-brand-lg);
    .lp-feed__head { padding: 12px 16px; }
 }
 
-
 /* ============================================================
   Platform logos — branded colors per platform.
   Logo sits as 36px rounded chip top-left of card.
@@ -9449,7 +9384,6 @@ box-shadow: var(--shadow-brand-lg);
    .lp-platform__price-unit { font-size: 10px; }
 }
 
-
 /* ============================================================
   LIGHT-SAAS REFRESH — May 2026
   - hero: pitch left, light stat cards right
@@ -9563,7 +9497,6 @@ box-shadow: var(--shadow-brand-lg);
    height: auto;
 }
 
-
 /* Hero visual — animation container (right column) */
 .lp-hero__visual {
    display: flex;
@@ -9655,8 +9588,6 @@ dotlottie-player, lottie-player {
 
 /* Hide orbit when Lottie is active (add class to .lp-hero__visual) */
 .lp-hero__visual--lottie .lp-orbit { display: none; }
-
-
 
 /* Screen-reader only utility */
 .sr-only {
@@ -9855,7 +9786,6 @@ dotlottie-player, lottie-player {
    display: none !important;
 }
 
-
 /* ── Video lightbox modal ── */
 .lp-video-modal {
    position: fixed;
@@ -9939,7 +9869,6 @@ background: var(--brand);
 box-shadow: 0 0 0 0 rgba(22,163,74,0.5);
 animation: lp-pulse 1.8s ease-out infinite;
 }
-
 
 /* ============================================================
   RESPONSIVE
@@ -10421,8 +10350,6 @@ max-width: 100%;
 overflow-x: auto;
 -webkit-overflow-scrolling: touch;
 }
-
-
 
 /* 6. Live feed — tablet-friendly (between 700px and 1080px) */
 @media (max-width: 1080px) and (min-width: 701px) {
@@ -11318,7 +11245,6 @@ color: #34d399;
 
 /* Dashboard browser dots — keep as-is (decorative, look fine dark) */
 
-
 /* ─── Additional dark overrides pass 2 ─── */
 
 /* Secondary CTA button */
@@ -11337,9 +11263,6 @@ color: #34d399;
 [data-theme="dark"] .lp-dashprev__head {
 background: linear-gradient(180deg, var(--bg-3), var(--bg-2));
 }
-
-
-
 
 /* ─── Additional dark overrides pass 3 ─── */
 
@@ -12259,7 +12182,6 @@ color: var(--brand);
 .lp-faq-panel { display: none; }
 .lp-faq-panel.is-active { display: block; }
 
-
 /* ═════════════════════════════════════════════════════════════════
 LANDING PAGE CONVERSION UPGRADE — Phases 1-6
 ═════════════════════════════════════════════════════════════════ */
@@ -12282,7 +12204,6 @@ line-height: 1;
 background: oklch(0.25 0.06 145);
 color: oklch(0.78 0.15 145);
 }
-
 
 /* ── Video Testimonials Carousel ── */
 .lp-vtesti {
@@ -13544,49 +13465,19 @@ line-height: 1.1;
 margin-bottom: 4px;
 font-variant-numeric: tabular-nums;
 }
-.lp[data-platform] .lp-stat__num { color: var(--plat); }D/;;;;;
-.lp-stat__label {
+.lp[data-platform] .lp-stat__num { color: var(--plat); }.lp-stat__label {
 font-size: 12px;
 color: var(--ink-3);
-font-weight: 500;DDDDDDDDDDDDDDDDDDDDDDDD/DDDDD[/[DGDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD//
+font-weight: 500;
 
-
-DDDDDDDD[[[[[[[[DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-]]]]]]]]]]
 text-transform: uppercase;
 letter-spacing: 0.06em;
 }
 
-
-TDDDDDDDDDDDDDDTTTTTTTTTTTTTTTTTTTGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-DDDDDDDDD
 @media (max-width: 600px) {
 .lp-stats {
-    grid-template-columns: 1fr 1fr;DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-    max-width: 400px;DDDDDDDDDDDDDDDDDDDDDDDDDD
+    grid-template-columns: 1fr 1fr;
+    max-width: 400px;
     margin-top: -28px;
 }
 .lp-stat:nth-child(2)::after { display: none; }
@@ -14346,7 +14237,6 @@ transform: none;
 .story-strip__stat { flex-direction: column; gap: 2px; text-align: center; padding: 8px 12px; }
 .story-strip__stat strong { font-size: 22px; }
 }
-
 
 /* ============================================================
 CAREERS PAGE
@@ -16242,7 +16132,6 @@ text-decoration: none;
     justify-content: center;
 }
 }
-
 
 /* ════════════════════════════════════════════════════════════════
 Dashboard shell — grouped sidebar + identity topbar
