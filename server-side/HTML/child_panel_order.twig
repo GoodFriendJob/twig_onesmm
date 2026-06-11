@@ -1,0 +1,127 @@
+{# childpanel.twig — Child panel order page (Pulse styled)
+   Variables: site.rtl, page.url, childpanel, showForm, errorForm/errorFormMessage,
+              form{domain,currency,username}, name_servers, currenciesList, price, csrftoken, lang(...)
+#}
+<div class="childpanel-order-page subscriptions-page">
+
+  {% if childpanel %}
+    <article class="card faq-content childpanel-intro">
+      <div class="card-body {% if site['rtl'] %}rtl-content{% endif %}">
+        {{ childpanel }}
+      </div>
+    </article>
+  {% endif %}
+
+  {% if showForm %}
+    <div class="childpanel-grid">
+
+      {# ── Order form ── #}
+      <section class="card">
+        <div class="card-body">
+          <div class="card-section-head">
+            <div class="h3" style="font-size:16px; font-weight:600; margin:0; color: var(--ink-1);">Order details</div>
+            <div class="muted small tabular">From {{ price }}</div>
+          </div>
+
+          <form action="{{ page['url'] }}" method="post" class="childpanel-form">
+            {% if errorForm %}
+              <div class="alert alert-dismissible alert-danger {% if site['rtl'] %}rtl-alert{% endif %}">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ errorFormMessage }}
+              </div>
+            {% endif %}
+
+            <div class="form-group">
+              <label for="domain" class="control-label">{{ lang('child_panel.form.domain') }}</label>
+              <input type="text" class="form-control" id="domain" name="CreateOrderForm[domain]" value="{{ form['domain'] }}" placeholder="panel.example.com">
+            </div>
+
+            <div class="alert alert-info childpanel-ns-alert">
+              <div class="childpanel-ns-head">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                <span>{{ lang('child_panel.form.ns.info') }}</span>
+              </div>
+              <ul class="childpanel-ns-list">
+                {% for ns in name_servers %}
+                  <li>
+                    <code>{{ ns }}</code>
+                    <button type="button" class="ns-copy-btn" onclick="
+                      var v = this.previousElementSibling.textContent;
+                      try { var ta = document.createElement('textarea'); ta.value = v; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);} catch(e){}
+                      if (navigator.clipboard) navigator.clipboard.writeText(v);
+                      var lbl = this.querySelector('.ns-copy-label'); var prev = lbl.textContent;
+                      lbl.textContent = 'Copied'; var t = this;
+                      setTimeout(function(){ lbl.textContent = prev; }, 1200);
+                    "><span class="ns-copy-label">Copy</span></button>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="control-label" for="createorderform-currency">{{ lang('child_panel.form.currency') }}</label>
+                <select id="createorderform-currency" class="form-control" name="CreateOrderForm[currency]" aria-required="true">
+                  {% for currency in currenciesList %}
+                    <option value="{{ currency['code'] }}" {% if form['currency'] == currency['code'] %}selected{% endif %}>{{ currency['name'] }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="price" class="control-label">{{ lang('child_panel.form.price') }}</label>
+                <input type="text" class="form-control tabular" id="price" value="{{ price }}" readonly>
+              </div>
+            </div>
+
+            <div class="childpanel-section-divider">
+              <span>Admin account</span>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label" for="createorderform-username">{{ lang('child_panel.form.username') }}</label>
+              <input type="text" id="createorderform-username" class="form-control" name="CreateOrderForm[username]" aria-required="true" value="{{ form['username'] }}">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="control-label" for="createorderform-password">{{ lang('child_panel.form.password') }}</label>
+                <input type="password" autocomplete="new-password" id="createorderform-password" class="form-control" name="CreateOrderForm[password]" aria-required="true">
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="createorderform-password_confirm">{{ lang('child_panel.form.confirm') }}</label>
+                <input type="password" autocomplete="new-password" id="createorderform-password_confirm" class="form-control" name="CreateOrderForm[password_confirm]" aria-required="true">
+              </div>
+            </div>
+
+            <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+
+            <button type="submit" class="btn btn-primary lp-cta--gradient auth-submit" style="width: 100%; justify-content: center; height: 48px;">
+              {{ lang('child_panel.form.submit') }}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      {# ── What you get ── #}
+      <aside class="card childpanel-aside">
+        <div class="card-body">
+          <div class="h3" style="font-size:14px; font-weight:600; margin:0 0 14px; color: var(--ink-1);">What's included</div>
+          <ul class="childpanel-features">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Custom branded domain</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Set your own service prices</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Free SSL certificate</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Auto order forwarding to Pulse</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Payment gateway integration</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Tickets, blog, FAQ included</span></li>
+          </ul>
+          <div class="childpanel-aside-foot">
+            <div class="muted small">Setup takes a few minutes after DNS propagates.</div>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  {% endif %}
+
+</div>

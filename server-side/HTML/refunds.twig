@@ -1,0 +1,92 @@
+{# refunds.twig — styled to match the Orders page
+   Variables: site.rtl, page.url, order_status, search, refundList[], pagination, searchList[], lang(...)
+#}
+<div class="subpage refunds-page">
+
+  <div class="subpage-head">
+    <h1 class="subpage-title"><span>Refunds</span> Status</h1>
+  </div>
+
+  <div class="subpage-card subpage-card--flush ord-card">
+
+    {# ─── Search ─── #}
+    <div class="ord-toolbar">
+      <form action="{{ page['url'] }}" method="get" id="history-search" class="ord-search">
+        <svg class="ord-search-ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="text" name="search" value="{{ search }}" placeholder="{{ lang('general.search.placeholder') }}">
+      </form>
+
+      {# ─── Status filter chips ─── #}
+      {% set tabs = [
+        { key: 'all',      url: page['url'],                          label: lang('orders.refunds.all') },
+        { key: 'partial',  url: page['url'] ~ '?order_status=partial',  label: lang('orders.refunds.partial') },
+        { key: 'canceled', url: page['url'] ~ '?order_status=canceled', label: lang('orders.refunds.canceled') }
+      ] %}
+      <div class="ord-filters {% if site['rtl'] %}rtl-nav{% endif %}">
+        {% for tab in tabs %}
+          <a href="{{ tab.url }}" class="ord-filter{% if tab.key == order_status %} is-active{% endif %}">{{ tab.label }}</a>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# ─── Refunds table ─── #}
+    <div class="ord-table-wrap">
+      <table class="ord-table {% if site['rtl'] %}rtl-table{% endif %}">
+        <thead>
+          <tr>
+            <th>{{ lang('orders.refunds.id') }}</th>
+            <th>{{ lang('orders.service') }}</th>
+            <th>{{ lang('orders.link') }}</th>
+            <th class="nowrap">{{ lang('orders.charge') }}</th>
+            <th class="nowrap">{{ lang('orders.remains') }}</th>
+            <th class="nowrap">{{ lang('orders.refunds.amount') }}</th>
+            <th>{{ lang('orders.refunds.status') }}</th>
+            <th class="nowrap">{{ lang('orders.refunds.date') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for refund in refundList %}
+            {% set s = (refund['status']|default(refund['order_status_name']))|lower %}
+            {% set st =
+              s matches '/complete/' ? 'green' :
+              s matches '/partial/'  ? 'amber' :
+              s matches '/cancel/'   ? 'red' : 'gray' %}
+            <tr>
+              <td class="ord-id tabular" data-label="{{ lang('orders.refunds.id') }}"><a href="{{ page_url('orders') }}?search={{ refund['id']|default(refund['order_id']) }}" class="ord-link">{{ refund['id']|default(refund['order_id']) }}</a></td>
+              <td class="ord-service" title="{{ refund['service'] }}" data-label="{{ lang('orders.service') }}"><span class="ord-service-name">{{ refund['service'] }}</span></td>
+              <td data-label="{{ lang('orders.link') }}"><span class="ord-link" title="{{ refund['link'] }}">{{ refund['link'] }}</span></td>
+              <td class="tabular nowrap num" data-label="{{ lang('orders.charge') }}">{{ refund['charge'] }}</td>
+              <td class="tabular nowrap num" data-label="{{ lang('orders.remains') }}">{{ refund['remains'] }}</td>
+              <td class="ord-charge tabular nowrap num" data-label="{{ lang('orders.refunds.amount') }}">{{ refund['refund_amount']|default(refund['amount']) }}</td>
+              <td data-label="{{ lang('orders.refunds.status') }}"><span class="ord-status ord-status--{{ st }}">{{ refund['status']|default(refund['order_status_name']) }}</span></td>
+              <td class="ord-date nowrap" data-label="{{ lang('orders.refunds.date') }}"><span class="ord-date-d tabular">{{ refund['date'] }}</span></td>
+            </tr>
+          {% else %}
+            <tr><td colspan="8"><div class="ord-empty">{{ lang('orders.refunds.empty')|default('No refunds to show.') }}</div></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% if pagination['count'] > 100 %}
+    <ul class="pagination orders-pagination {% if site['rtl'] %}rtl-pagination{% endif %}">
+      {% if pagination['current'] != 1 %}
+        <li><a href="{{ page['url'] }}?order_status={{ order_status }}&page={{ pagination['last'] }}{% if search %}&search={{ search }}{% endif %}" aria-label="Previous">&laquo;</a></li>
+      {% endif %}
+      {% set r, l = 3, 3 %}
+      {% if pagination['current'] == 1 %}{% set r = 6 %}{% endif %}
+      {% if pagination['current'] == 2 %}{% set r = 5 %}{% endif %}
+      {% if pagination['current'] >= pagination['pages'] %}{% set l = 5 %}{% endif %}
+      {% for i in 1..ceil(pagination['pages']) %}
+        {% if i >= (pagination['current']-l) and i <= (pagination['current']+r) %}
+          <li{% if i == pagination['current'] %} class="active"{% endif %}><a href="{{ page['url'] }}?order_status={{ order_status }}&page={{ i }}{% if search %}&search={{ search }}{% endif %}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if pagination['current'] < pagination['pages'] %}
+        <li><a href="{{ page['url'] }}?order_status={{ order_status }}&page={{ pagination['next'] }}{% if search %}&search={{ search }}{% endif %}" aria-label="Next">&raquo;</a></li>
+      {% endif %}
+    </ul>
+  {% endif %}
+
+</div>

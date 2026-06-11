@@ -1,0 +1,108 @@
+{# terms.twig — Pulse styled
+   Variables: site.rtl, termsofservice, lang(...)
+#}
+
+{% if not termsofservice %}
+  {% set termsofservice %}
+<h2>1. Acceptance of Terms</h2>
+<p>By accessing or using {{ site['name'] }} (the "Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to all of these Terms, do not use the Service. {{ site['name'] }} reserves the right to update or modify these Terms at any time without prior notice. Your continued use of the Service after any changes constitutes your acceptance of the new Terms.</p>
+
+<h2>2. Service Description</h2>
+<p>{{ site['name'] }} is an online platform that provides social media marketing services including but not limited to followers, likes, views, comments, and other engagement metrics for various social media platforms. All orders are processed automatically through our system.</p>
+
+<h2>3. Eligibility</h2>
+<p>You must be at least 18 years of age to use this Service. By using the Service, you represent and warrant that you are at least 18 years old and have the legal capacity to enter into these Terms.</p>
+
+<h2>4. Account Registration</h2>
+<p>To access the Service, you must register for an account. You agree to provide accurate, current, and complete information during registration and to update such information to keep it accurate, current, and complete. You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. {{ site['name'] }} will not be liable for any loss resulting from unauthorized use of your account.</p>
+
+<h2>5. Orders and Payment</h2>
+<ul>
+  <li>All prices are listed on the Service and are subject to change without notice.</li>
+  <li>Payment must be received in full before any order is processed.</li>
+  <li>Once an order is placed and funds are deducted, cancellations are only possible if the order has not yet started processing.</li>
+  <li>{{ site['name'] }} is not responsible for any financial losses resulting from fluctuations in service pricing.</li>
+  <li>Refunds for completed orders are issued solely at {{ site['name'] }}'s discretion.</li>
+</ul>
+
+<h2>6. Refund Policy</h2>
+<p>Refunds are credited to your account balance, not to your original payment method, unless explicitly stated otherwise. We do not offer cash refunds. Refunds may be granted in the following cases:</p>
+<ul>
+  <li>The order was not delivered within the specified timeframe.</li>
+  <li>The service was significantly underdelivered and cannot be completed.</li>
+  <li>A duplicate order was placed by mistake before processing began.</li>
+</ul>
+<p>{{ site['name'] }} reserves the right to refuse refunds in cases of abuse, violation of these Terms, or use of third-party accounts that have been banned or restricted.</p>
+
+<h2>7. Prohibited Uses</h2>
+<p>You agree not to use the Service for any of the following purposes:</p>
+<ul>
+  <li>Placing orders for content that is illegal, hateful, obscene, or in violation of any applicable law.</li>
+  <li>Using the Service to engage in fraud, spam, or any deceptive practices.</li>
+  <li>Attempting to gain unauthorized access to any part of the Service or its infrastructure.</li>
+  <li>Reselling or redistributing services purchased from {{ site['name'] }} without prior written authorization.</li>
+  <li>Using automated tools, bots, or scripts to interact with the Service beyond its API.</li>
+</ul>
+<p>Violation of any of the above may result in immediate account suspension or termination without a refund.</p>
+
+<h2>8. API Usage</h2>
+<p>If you access the Service via our API, you agree to use it responsibly and within the rate limits specified in our API documentation. {{ site['name'] }} reserves the right to suspend or revoke API access at any time without notice.</p>
+
+<h2>9. Third-Party Social Media Platforms</h2>
+<p>{{ site['name'] }} provides services in relation to third-party social media platforms. We are not affiliated with, endorsed by, or in any way officially connected to any social media platform. You acknowledge that:</p>
+<ul>
+  <li>The use of our services may be subject to the terms of service of the respective social media platforms.</li>
+  <li>{{ site['name'] }} is not responsible for any account restrictions, suspensions, or bans imposed by third-party platforms as a result of using our services.</li>
+  <li>Results may vary depending on the policies and algorithm changes of third-party platforms.</li>
+</ul>
+
+<h2>10. Disclaimer of Warranties</h2>
+<p>The Service is provided on an "as is" and "as available" basis without any warranties of any kind, either express or implied. {{ site['name'] }} does not warrant that the Service will be uninterrupted, error-free, or completely secure. We make no guarantees regarding the permanence of any delivered service, as social media platforms may remove or limit metrics at any time.</p>
+
+<h2>11. Limitation of Liability</h2>
+<p>To the fullest extent permitted by applicable law, {{ site['name'] }} and its affiliates, officers, directors, employees, and agents shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, or goodwill, arising from your use of the Service. Our total liability to you for any claim shall not exceed the amount paid by you to {{ site['name'] }} in the thirty (30) days preceding the event giving rise to the claim.</p>
+
+<h2>12. Indemnification</h2>
+<p>You agree to indemnify, defend, and hold harmless {{ site['name'] }}, its affiliates, and their respective officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable attorneys' fees) arising out of or in any way connected with your use of the Service or violation of these Terms.</p>
+
+<h2>13. Intellectual Property</h2>
+<p>All content, trademarks, logos, and intellectual property on the {{ site['name'] }} platform are the exclusive property of {{ site['name'] }} or its licensors. You may not reproduce, distribute, or create derivative works from any part of the Service without express written consent.</p>
+
+<h2>14. Privacy Policy</h2>
+<p>Your use of the Service is also governed by our Privacy Policy, which is incorporated into these Terms by reference. By using the Service, you consent to the collection, use, and sharing of your information as described in our Privacy Policy.</p>
+
+<h2>15. Termination</h2>
+<p>{{ site['name'] }} reserves the right to suspend or terminate your account and access to the Service at any time, with or without cause, and with or without notice. Upon termination, any unused balance may be forfeited at {{ site['name'] }}'s sole discretion if the termination is a result of a violation of these Terms.</p>
+
+<h2>16. Governing Law</h2>
+<p>These Terms shall be governed by and construed in accordance with applicable laws, without regard to its conflict of law provisions. Any disputes arising under these Terms shall be resolved exclusively through binding arbitration or in the competent courts of the jurisdiction where {{ site['name'] }} operates.</p>
+
+<h2>17. Changes to the Service</h2>
+<p>{{ site['name'] }} reserves the right to modify, suspend, or discontinue the Service (or any part thereof) at any time, temporarily or permanently, with or without notice. We shall not be liable to you or any third party for any modification, suspension, or discontinuation of the Service.</p>
+
+<h2>18. Contact Us</h2>
+<p>If you have any questions or concerns about these Terms of Service, please contact our support team through the official support channel on {{ site['name'] }}.</p>
+
+<p class="muted" style="margin-top:2rem;font-size:.8125rem;">Last updated: {{ "now"|date("F j, Y") }}</p>
+  {% endset %}
+{% endif %}
+
+<div class="terms-page subscriptions-page">
+  <div class="terms-content-wrap">
+
+    <div class="page-header">
+      <div>
+        <div class="page-header-eyebrow">Legal</div>
+        <h1 class="h1">Terms of Service</h1>
+        <p class="muted">Please read these terms carefully before using {{ site['name'] }}.</p>
+      </div>
+    </div>
+
+    <article class="card terms-content faq-content">
+      <div class="card-body {% if site['rtl'] %}rtl-content{% endif %}">
+        {{ termsofservice }}
+      </div>
+    </article>
+
+  </div>
+</div>

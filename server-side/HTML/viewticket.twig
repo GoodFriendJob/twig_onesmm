@@ -1,0 +1,89 @@
+{# viewticket.twig — "Support" ticket thread (matches new design stage 2)
+   Variables: site.rtl, ticket{thema,status}, messageList[{support,author,time,date,avatar,message,files[{name,url,size}]}],
+              canAddMessage, error, errorMessage, csrftoken, lang(...), sliceUrl()
+#}
+<div class="subpage viewticket-page">
+
+  <div class="vt-head">
+    <a href="{{ page_url('tickets') }}" class="vt-back" aria-label="Back to tickets">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </a>
+    <div>
+      <h1 class="vt-title">{{ ticket['thema'] }}</h1>
+      {% if ticket['status'] %}
+        {% set s = ticket['status']|lower %}
+        {% set st = s matches '/new/' ? 'blue' : s matches '/open/' ? 'amber' : s matches '/answer/' ? 'teal' : 'gray' %}
+        <span class="tk-status tk-status--{{ st }}">{{ ticket['status'] }}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="vt-thread {% if site['rtl'] %}rtl-content{% endif %}">
+    {% for message in messageList %}
+      <div class="vt-msg {% if message['support'] == 0 %}vt-msg--mine{% else %}vt-msg--support{% endif %}">
+        <div class="vt-msg-head">
+          {% if message['avatar'] %}
+            <img class="vt-avatar" src="{{ message['avatar'] }}" alt="">
+          {% else %}
+            <span class="vt-avatar vt-avatar--brand"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg></span>
+          {% endif %}
+          <div class="vt-msg-meta">
+            <strong class="vt-author">{{ message['author'] }}</strong>
+            <span class="vt-time"><span>{{ message['date'] }}</span> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> <span>{{ message['time'] }}</span></span>
+          </div>
+        </div>
+        <div class="vt-msg-body">{{ message['message'] }}</div>
+        {% if message['files'] %}
+          <div class="vt-attach">
+            <div class="vt-attach-count">{{ message['files']|length }} Attachments</div>
+            <div class="vt-files">
+              {% for file in message['files'] %}
+                <div class="vt-file">
+                  <span class="vt-file-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+                  <div class="vt-file-info">
+                    <span class="vt-file-name">{{ sliceUrl(file['name']) }}</span>
+                    {% if file['size'] %}<span class="vt-file-size">{{ file['size'] }}</span>{% endif %}
+                  </div>
+                  <a class="vt-file-dl" href="{{ file['url']|default('#') }}" target="_blank" rel="noopener">Download
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if canAddMessage %}
+    <div class="subpage-card vt-reply">
+      <h2 class="box-title" style="margin-bottom:18px;">Reply</h2>
+      <form method="post" action="" class="{% if site['rtl'] %}rtl-form{% endif %}">
+        {% if error %}
+          <div class="alert alert-dismissible alert-danger {% if site['rtl'] %}rtl-alert{% endif %}">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>{{ errorMessage }}
+          </div>
+        {% endif %}
+        <div class="tk-field">
+          <label class="tk-label" for="message">{{ lang('tickets.message')|default('Message') }}</label>
+          <textarea class="tk-input tk-textarea" rows="6" id="message" name="TicketMessageForm[message]" placeholder="Type your reply here ..."></textarea>
+        </div>
+        <div class="tk-field">
+          <label class="tk-label">Attachment <span class="tk-optional">(Optional)</span></label>
+          <label class="tk-dropzone" for="vt-file">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span>Click to upload or drag and drop (PNG, JPG, PDF up to 10MB)</span>
+            <input type="file" id="vt-file" name="TicketMessageForm[file]" hidden>
+          </label>
+        </div>
+        <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+        <button type="submit" class="btn btn-primary lp-cta--gradient tk-submit">
+          {{ lang('tickets.button')|default('Submit Ticket') }}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </form>
+    </div>
+  {% endif %}
+
+</div>

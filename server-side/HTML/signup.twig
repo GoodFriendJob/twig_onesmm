@@ -1,0 +1,429 @@
+{# signup.twig — Combined auth page with Sign in / Sign up toggle
+   Variables (signup route): site, page, fields[], error/errorMessage, success/successText,
+              check_agreement, googleSignIn, googleClientId, googleSignInRedirectUrl,
+              captchaCode, csrftoken, lang(...)
+   Note: signin-specific variables (captcha, registration, authText) are NOT available here.
+#}
+<div class="auth-split">
+
+  {# ─── LEFT: form ─── #}
+  <div class="auth-split__form">
+    <div class="auth-split__body">
+
+      {# ── Back button (replaces the hidden nav) ── #}
+      <a href="{{ page_url('index') }}" class="auth-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        Back to {{ site['name']|default('OneSMM') }}
+      </a>
+
+      {# ─── Tab Toggle ─── #}
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tabs__btn auth-tabs__btn--active" role="tab"
+                aria-selected="true" aria-controls="auth-panel-signin"
+                id="auth-tab-signin" data-tab="signin">
+          {{ lang('signin.title')|default('Sign in') }}
+        </button>
+        <button class="auth-tabs__btn" role="tab"
+                aria-selected="false" aria-controls="auth-panel-signup"
+                id="auth-tab-signup" data-tab="signup">
+          {{ lang('signup.title')|default('Sign up') }}
+        </button>
+        <div class="auth-tabs__indicator"></div>
+      </div>
+
+      {# ═══════════════ PANELS WRAPPER (animated height) ═══════════════ #}
+      <div class="auth-panels-wrap" id="auth-panels-wrap">
+
+      {# ═══════════════ SIGN IN PANEL ═══════════════ #}
+      <div class="auth-panel" id="auth-panel-signin" role="tabpanel"
+           aria-labelledby="auth-tab-signin" hidden>
+        <p class="auth-lede">Welcome back. Sign in to your account.</p>
+
+        {# Error alert — populated by JS when redirected from singin.twig #}
+        <div class="alert alert-danger alert-dismissible auth-signin-error" role="alert" style="display:none" id="signin-error-alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <span id="signin-error-msg"></span>
+        </div>
+
+        <form method="post" action="{{ page_url('signin') }}" class="auth-form {% if site['rtl'] %}rtl-form{% endif %}"
+              onsubmit="sessionStorage.setItem('auth_from','signup')">
+          <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+
+          {% set L_username = lang('signin.username') %}
+          {% if L_username matches '/^signin\\./' %}{% set L_username = 'Username' %}{% endif %}
+          {% set L_password = lang('signin.password') %}
+          {% if L_password matches '/^signin\\./' %}{% set L_password = 'Password' %}{% endif %}
+          {% set L_forgot = lang('signin.forgot') %}
+          {% if L_forgot matches '/^signin\\./' %}{% set L_forgot = 'Forgot password?' %}{% endif %}
+
+          <div class="auth-field">
+            <label for="si-username" class="auth-field__label">{{ L_username }}</label>
+            <div class="auth-field__wrap">
+              <input type="text" class="auth-field__input auth-field__input--plain"
+                     id="si-username" name="LoginForm[username]"
+                     autocomplete="username" required>
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label for="si-password" class="auth-field__label">{{ L_password }}</label>
+            <div class="auth-field__wrap">
+              <input type="password" class="auth-field__input auth-field__input--plain"
+                     id="si-password" name="LoginForm[password]"
+                     autocomplete="current-password" required>
+            </div>
+            <a href="{{ page_url('resetpassword') }}" class="auth-field__forgot" tabindex="-1">{{ L_forgot }}</a>
+          </div>
+
+          {% set L_signin_btn = lang('signin.button') %}
+          {% if L_signin_btn matches '/^signin\\./' %}{% set L_signin_btn = 'Sign in' %}{% endif %}
+          {% set L_signin_text = lang('signin.text') %}
+          {% if L_signin_text matches '/^signin\\./' %}{% set L_signin_text = "Don't have an account?" %}{% endif %}
+          {% set L_signup_title = lang('signup.title') %}
+          {% if L_signup_title matches '/^signup\\./' %}{% set L_signup_title = 'Sign up' %}{% endif %}
+
+          <button type="submit" class="auth-submit">
+            {{ L_signin_btn }}
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+
+          {% if googleSignIn %}
+            <div class="auth-divider"><span>or</span></div>
+            <div id="g_id_onload"
+               data-client_id="{{ googleClientId }}"
+               data-login_uri="{{ googleSignInRedirectUrl }}"
+               data-auto_prompt="false"
+               data-_csrf="{{ csrftoken }}">
+            </div>
+            <div class="g_id_signin auth-google-signin"
+               data-type="standard"
+               data-size="large"
+               data-theme="outline"
+               data-text="sign_in_with"
+               data-shape="rectangular"
+               data-logo_alignment="left"
+               data-width="400">
+            </div>
+          {% endif %}
+
+          <div class="auth-foot">
+            {{ L_signin_text }}
+            <a href="javascript:void(0)" onclick="switchAuthTab('signup')">{{ L_signup_title }}</a>
+          </div>
+        </form>
+      </div>
+
+      {# ═══════════════ SIGN UP PANEL ═══════════════ #}
+      <div class="auth-panel" id="auth-panel-signup" role="tabpanel"
+           aria-labelledby="auth-tab-signup">
+        <p class="auth-lede">Create your panel in seconds.</p>
+
+        <form method="post" action="" class="auth-form {% if site['rtl'] %}rtl-form{% endif %}">
+          <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+
+          {% if error %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              {{ errorMessage }}
+            </div>
+          {% endif %}
+
+          {% if success %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              {{ successText }}
+            </div>
+          {% endif %}
+
+          {% for field in fields %}
+            <div class="auth-field">
+              <label for="{{ field.code }}" class="auth-field__label">{{ lang(field.label) }}</label>
+              <div class="auth-field__wrap">
+                <input type="{{ field.type }}" class="auth-field__input auth-field__input--plain" id="{{ field.code }}" value="{{ field.value }}" name="RegistrationForm[{{ field.code }}]" {% if field.required %}required{% endif %}>
+              </div>
+            </div>
+          {% endfor %}
+
+          {% if site['captcha'] %}
+            <div class="auth-field captcha-block">{{ captchaCode }}</div>
+          {% endif %}
+
+          {% if check_agreement %}
+            <label class="auth-terms">
+              <input type="checkbox" class="terms-accept-checkbox" name="RegistrationForm[termsofservice]">
+              <span>
+                {{ lang('signup.accept_terms_text') }}
+                <a href="{{ page_url('terms') }}" target="_blank">{{ lang('terms.signup_checkbox') }}</a>
+              </span>
+            </label>
+          {% endif %}
+
+          <button type="submit" class="auth-submit">
+            {{ lang('signup.button')|default('Create account') }}
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+
+          {% if googleSignIn %}
+            <div class="auth-divider"><span>or</span></div>
+            {# Only render g_id_onload once — signin panel already has it if visible #}
+            <div class="g_id_signin auth-google-signin"
+               data-type="standard"
+               data-size="large"
+               data-theme="outline"
+               data-text="continue_with"
+               data-shape="rectangular"
+               data-logo_alignment="left"
+               data-width="400">
+            </div>
+          {% endif %}
+
+          <div class="auth-foot">
+            {{ lang('signup.text')|default('Already have an account?') }}
+            <a href="javascript:void(0)" onclick="switchAuthTab('signin')">{{ lang('signin.title')|default('Sign in') }}</a>
+          </div>
+        </form>
+      </div>
+      </div>{# /auth-panels-wrap #}
+
+      <div class="auth-trust-row">
+        <span class="auth-trust-item">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span id="su-trust-orders">50,000+</span> orders completed
+        </span>
+        <span class="auth-trust-item">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          4,800+ tickets answered
+        </span>
+        <span class="auth-trust-item">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span id="su-trust-users">8,000+</span> active users
+        </span>
+      </div>
+    </div>
+  </div>
+
+  {# ─── RIGHT: brand visual ─── #}
+  <div class="auth-split__visual">
+    <svg class="auth-split__grid" aria-hidden="true">
+      <defs>
+        <pattern id="auth-grid-su" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M0 0h40v40H0z" fill="none" stroke="white" stroke-opacity="0.5" stroke-width="0.5"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#auth-grid-su)"/>
+    </svg>
+
+    <div class="auth-split__eyebrow">Why teams switch</div>
+
+    <div class="auth-split__visual-body">
+      <div id="su-review" aria-live="polite">
+        <h2 class="auth-quote" id="su-review-text"></h2>
+        <div class="auth-author">
+          <div class="auth-author__avatar" id="su-review-initials"></div>
+          <div>
+            <div class="auth-author__name" id="su-review-name"></div>
+            <div class="auth-author__role" id="su-review-role"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-stats-row">
+        <div>
+          <div class="auth-stat-num tabular" id="su-stat-orders">—</div>
+          <div class="auth-stat-lbl">Orders delivered</div>
+        </div>
+        <div>
+          <div class="auth-stat-num tabular" id="su-stat-users">—</div>
+          <div class="auth-stat-lbl">Active accounts</div>
+        </div>
+        <div>
+          <div class="auth-stat-num tabular" id="su-stat-uptime">99.98%</div>
+          <div class="auth-stat-lbl">API uptime</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% if googleSignIn %}
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+{% endif %}
+
+<script>
+(function(){
+  /* ── Tab switching with smooth height animation ── */
+  var tabs = document.querySelectorAll('.auth-tabs__btn');
+  var panels = document.querySelectorAll('.auth-panel');
+  var indicator = document.querySelector('.auth-tabs__indicator');
+  var panelsWrap = document.getElementById('auth-panels-wrap');
+
+  function positionIndicator(activeBtn) {
+    if (!indicator || !activeBtn) return;
+    indicator.style.width = activeBtn.offsetWidth + 'px';
+    indicator.style.transform = 'translateX(' + activeBtn.offsetLeft + 'px)';
+  }
+
+  function updateWrapHeight() {
+    if (!panelsWrap) return;
+    var active = panelsWrap.querySelector('.auth-panel:not([hidden])');
+    if (active) {
+      panelsWrap.style.height = active.scrollHeight + 'px';
+    }
+  }
+
+  window.switchAuthTab = function(tabName) {
+    tabs.forEach(function(btn) {
+      var isActive = btn.getAttribute('data-tab') === tabName;
+      btn.classList.toggle('auth-tabs__btn--active', isActive);
+      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      if (isActive) positionIndicator(btn);
+    });
+    panels.forEach(function(panel) {
+      var show = panel.id === 'auth-panel-' + tabName;
+      panel.hidden = !show;
+    });
+    updateWrapHeight();
+    /* Update hash without scrolling */
+    history.replaceState(null, '', '#' + tabName);
+  };
+
+  tabs.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      switchAuthTab(btn.getAttribute('data-tab'));
+    });
+  });
+
+  /* Determine initial tab from URL hash — set height without animation first */
+  var hash = window.location.hash.replace('#', '');
+  var initialTab = (hash === 'signin') ? 'signin' : 'signup';
+  if (panelsWrap) panelsWrap.style.transition = 'none';
+  switchAuthTab(initialTab);
+  /* Force layout then re-enable transition */
+  if (panelsWrap) {
+    panelsWrap.offsetHeight;
+    panelsWrap.style.transition = '';
+  }
+
+  /* Show login error forwarded from singin.twig via sessionStorage */
+  var signinErr = sessionStorage.getItem('signin_error');
+  if (signinErr) {
+    sessionStorage.removeItem('signin_error');
+    var errAlert = document.getElementById('signin-error-alert');
+    var errMsg = document.getElementById('signin-error-msg');
+    if (errAlert && errMsg) {
+      errMsg.textContent = signinErr;
+      errAlert.style.display = '';
+    }
+    /* Ensure we're on the signin tab */
+    if (initialTab !== 'signin') switchAuthTab('signin');
+  }
+
+  /* Position indicator + update wrap height on resize */
+  window.addEventListener('resize', function() {
+    var active = document.querySelector('.auth-tabs__btn--active');
+    if (active) positionIndicator(active);
+    updateWrapHeight();
+  });
+
+  /* ── Review pool — shuffled on load ── */
+  var reviews = [
+    { text: '"moved about 800 orders/month over here from another panel. refill warranty alone saved me so many support headaches"', name: '@growthlab_maya', role: 'Agency owner' },
+    { text: '"tested like 5 different panels before this. delivery speed is actually what they say it is for once"', name: '@jk_resells', role: 'Reseller' },
+    { text: '"my clients used to message me about drops every week. haven\'t had that conversation in months"', name: '@priya.smm', role: 'Social media manager' },
+    { text: '"didn\'t expect much at first tbh but the first order was solid. been here since"', name: '@carlosdigital', role: 'Freelancer' },
+    { text: '"mass order feature saves me like 2 hours a day. just paste the csv and go do something else"', name: '@aisha_bulk', role: 'SMM reseller' },
+    { text: '"support actually replies in minutes not days. that matters when a client\'s campaign is running"', name: '@dani.agency', role: 'Agency co-founder' },
+    { text: '"been using this for telegram growth specifically. the subscriber quality is way better than what i was getting before"', name: '@tg_marketer91', role: 'Telegram channel owner' },
+    { text: '"api integration took me like 20 minutes. docs are clear and the endpoints actually work. rare for this space"', name: '@devsmm', role: 'Developer' },
+    { text: '"the drip feed option is underrated. i set it and forget it, followers come in naturally over days"', name: '@socialwave_co', role: 'Marketing agency' },
+    { text: '"switched from a panel that kept going down. this one has been rock solid for 4 months straight now"', name: '@resellerking', role: 'Panel reseller' },
+    { text: '"prices dropped twice since i joined and quality stayed the same. doesn\'t usually work like that lol"', name: '@budgetsmm', role: 'Reseller' },
+    { text: '"child panel setup was straightforward. running my own branded panel off the api now, clients have no idea"', name: '@whitelabel_pro', role: 'Runs a child panel' }
+  ];
+
+  for (var i = reviews.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = reviews[i]; reviews[i] = reviews[j]; reviews[j] = tmp;
+  }
+
+  var idx = 0;
+  var textEl = document.getElementById('su-review-text');
+  var nameEl = document.getElementById('su-review-name');
+  var roleEl = document.getElementById('su-review-role');
+  var initialsEl = document.getElementById('su-review-initials');
+  var reviewWrap = document.getElementById('su-review');
+
+  function showReview(i) {
+    var r = reviews[i];
+    reviewWrap.style.opacity = '0';
+    setTimeout(function() {
+      textEl.textContent = r.text;
+      nameEl.textContent = r.name;
+      roleEl.textContent = r.role;
+      initialsEl.textContent = '@';
+      reviewWrap.style.opacity = '1';
+    }, 400);
+  }
+
+  reviewWrap.style.transition = 'opacity 0.4s ease';
+  showReview(0);
+  setInterval(function() {
+    idx = (idx + 1) % reviews.length;
+    showReview(idx);
+  }, 7000);
+
+  /* ── Live stats from API ── */
+  var API_BASE = 'https://api.justboosted.com/api';
+  var ordersEl = document.getElementById('su-stat-orders');
+  var usersEl = document.getElementById('su-stat-users');
+
+  function fmt(n) {
+    if (n >= 1e9) return (n / 1e9).toFixed(1).replace(/\.0$/, '') + 'B';
+    if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+    if (n >= 1e3) return n.toLocaleString();
+    return String(n);
+  }
+
+  function animateNum(el, target, suffix) {
+    var current = parseInt((el.textContent || '0').replace(/[^0-9]/g, ''), 10) || 0;
+    if (current === target) { el.textContent = fmt(target) + (suffix || ''); return; }
+    var diff = target - current;
+    var steps = 30;
+    var step = 0;
+    var iv = setInterval(function() {
+      step++;
+      var progress = step / steps;
+      var ease = 1 - Math.pow(1 - progress, 3);
+      var val = Math.round(current + diff * ease);
+      el.textContent = fmt(val) + (suffix || '');
+      if (step >= steps) clearInterval(iv);
+    }, 25);
+  }
+
+  var trustOrdersEl = document.getElementById('su-trust-orders');
+  var trustUsersEl = document.getElementById('su-trust-users');
+
+  function fetchStats() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', API_BASE + '/public/stats', true);
+    xhr.onload = function() {
+      if (xhr.status !== 200) return;
+      try {
+        var d = JSON.parse(xhr.responseText);
+        if (d.totalOrders) {
+          animateNum(ordersEl, d.totalOrders, '+');
+          trustOrdersEl.textContent = fmt(d.totalOrders) + '+';
+        }
+        if (d.totalUsers) {
+          animateNum(usersEl, d.totalUsers, '+');
+          trustUsersEl.textContent = fmt(d.totalUsers) + '+';
+        }
+      } catch (e) {}
+    };
+    xhr.send();
+  }
+
+  fetchStats();
+  setInterval(fetchStats, 30000);
+})();
+</script>

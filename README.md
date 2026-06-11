@@ -40,7 +40,7 @@ The server starts in authenticated mode by default. All dashboard pages render w
 | **Child Panel** | `child_panel.twig` | http://localhost:8000/child_panel | Child panel list |
 | **Child Panel Order** | `child_panel_order.twig` | http://localhost:8000/child_panel_order | Order a child panel |
 | **Support** | `tickets.twig` | http://localhost:8000/tickets | New ticket form + ticket list |
-| **View Ticket** | `viewtickets.twig` | http://localhost:8000/viewtickets | Ticket thread view |
+| **View Ticket** | `viewticket.twig` | http://localhost:8000/viewticket | Ticket thread view |
 | **Account** | `account.twig` | http://localhost:8000/account | Profile, password, 2FA, API key |
 | **Updates** | `updates.twig` | http://localhost:8000/updates | Platform updates/changelog |
 
@@ -161,7 +161,7 @@ handoff-package/
     ├── child_panel.twig   ← dashboard: child panel list
     ├── child_panel_order.twig ← dashboard: order child panel
     ├── tickets.twig       ← dashboard: support tickets
-    ├── viewtickets.twig   ← dashboard: ticket thread
+    ├── viewticket.twig   ← dashboard: ticket thread
     ├── account.twig       ← dashboard: user account/settings
     └── updates.twig       ← dashboard: platform updates
 ```

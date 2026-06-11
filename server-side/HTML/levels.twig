@@ -1,0 +1,221 @@
+{# levels.twig — "Levels & Rewards"
+   Real Perfect Panel variables consumed (per Docs.html → block-variables-user):
+     user.username, user.first_name, user.last_name, user.avatar (optional, may not exist)
+     user.level.id, user.level.title, user.level.discount   (requires "User Level System" module)
+     user.spent          numeric — used for progress math
+     user.spent_formatted display string ("$138")
+     site.currency.symbol
+
+   Local data (MUST mirror admin → Settings → Modules → User Level System):
+     levels_ladder — the full tier ladder for the table/cards and next-level math.
+#}
+
+{# ── 1. Level ladder — KEEP IN SYNC WITH ADMIN MODULE CONFIG ── #}
+{% set levels_ladder = [
+  { id: 1, title: 'Level 1', threshold: 0,     discount: 0 },
+  { id: 2, title: 'Level 2', threshold: 100,   discount: 1 },
+  { id: 3, title: 'Level 3', threshold: 1000,  discount: 2 },
+  { id: 4, title: 'Level 4', threshold: 10000, discount: 3 },
+  { id: 5, title: 'Level 5', threshold: 50000, discount: 5 }
+] %}
+
+{# ── 2. Resolve current level: prefer PP's user.level.id, fall back to ladder math ── #}
+{% set _ppLevel    = user['level']|default(null) %}
+{% set _ppLevelId  = (_ppLevel is iterable and _ppLevel['id']) ? _ppLevel['id'] : null %}
+{% set _spent      = (user['spent']|default(0)) + 0 %}
+{% set _ccy        = site.currency.symbol|default('$') %}
+{% set _spentText  = user['spent_formatted']|default(_ccy ~ _spent) %}
+
+{% set _currentLevelId = _ppLevelId %}
+{% if _currentLevelId is null %}
+  {% set _currentLevelId = 1 %}
+  {% for lvl in levels_ladder %}
+    {% if _spent >= lvl.threshold %}{% set _currentLevelId = lvl.id %}{% endif %}
+  {% endfor %}
+{% endif %}
+
+{# Pull current + next objects out of the ladder #}
+{% set _current = levels_ladder|first %}
+{% set _next    = null %}
+{% for lvl in levels_ladder %}
+  {% if lvl.id == _currentLevelId %}{% set _current = lvl %}{% endif %}
+  {% if lvl.id == _currentLevelId + 1 %}{% set _next = lvl %}{% endif %}
+{% endfor %}
+
+{# Progress math toward next level #}
+{% if _next %}
+  {% set _nextThreshold   = _next.threshold %}
+  {% set _remaining       = _nextThreshold - _spent %}
+  {% if _remaining < 0 %}{% set _remaining = 0 %}{% endif %}
+  {% set _percent         = _nextThreshold > 0 ? ((_spent / _nextThreshold) * 100)|round(0, 'floor') : 100 %}
+  {% if _percent > 100 %}{% set _percent = 100 %}{% endif %}
+  {% set _nextReach       = _ccy ~ _nextThreshold %}
+  {% set _remainingText   = _ccy ~ _remaining ~ ' Remaining' %}
+{% else %}
+  {% set _percent         = 100 %}
+{% endif %}
+
+{# Display name + initials (works whether or not user.avatar exists) #}
+{% set _firstName   = user['first_name']|default('') %}
+{% set _lastName    = user['last_name']|default('') %}
+{% set _fullName    = (_firstName ~ ' ' ~ _lastName)|trim %}
+{% set _displayName = _fullName ?: user['username']|default('Member') %}
+{% set _initials    = _displayName|slice(0, 2)|upper %}
+
+{# Level title display: prefer the title PP returns, else our ladder title #}
+{% set _currentTitle = (_ppLevel is iterable and _ppLevel['title']) ? _ppLevel['title'] : _current.title %}
+
+{% set level_icons = {
+  1: 'https://storage.perfectcdn.com/aedutt/qjbpxiehfpz4dm4k.svg',
+  2: 'https://storage.perfectcdn.com/aedutt/8qcxf14hsp65d3yd.svg',
+  3: 'https://storage.perfectcdn.com/aedutt/2p4g0wdx7g206n1k.svg',
+  4: 'https://storage.perfectcdn.com/aedutt/toz72eltlyahoqq7.svg',
+  5: 'https://storage.perfectcdn.com/aedutt/p3pik9ixeh6k5zpf.svg'
+} %}
+{% set step_icons = {
+  'cart':   'https://storage.perfectcdn.com/aedutt/jijzrfhtkkkh2pu3.svg',
+  'chart':  'https://storage.perfectcdn.com/aedutt/cj7sn36pbs3oxbyp.svg',
+  'smiley': 'https://storage.perfectcdn.com/aedutt/fo3pghw8paz5yb3b.svg'
+} %}
+
+<div class="subpage levels-page">
+
+  <div class="subpage-head">
+    <h1 class="subpage-title"><span>Levels</span> &amp; Rewards</h1>
+  </div>
+
+  <div class="subpage-body">
+
+    {# ─── Hero: current level + progress ─── #}
+    <div class="subpage-card lv-hero">
+      <div class="lv-hero-user">
+        {% if user['avatar'] %}
+          <img class="lv-avatar" src="{{ user['avatar'] }}" alt="{{ _displayName }}">
+        {% else %}
+          <span class="lv-avatar lv-avatar--initials" aria-hidden="true">{{ _initials }}</span>
+        {% endif %}
+        <div>
+          <div class="lv-hero-name">{{ _displayName }}</div>
+          <div class="lv-hero-meta">
+            <img class="lv-hero-badge" src="{{ level_icons[_currentLevelId]|default(level_icons[1]) }}" alt="">
+            <span class="lv-hero-level">{{ _currentTitle }}</span>
+            <span class="lv-stars" aria-label="Level {{ _currentLevelId }} of {{ levels_ladder|length }}">
+              {% for i in 1..(levels_ladder|length) %}
+                {% if i <= _currentLevelId %}★{% else %}<span class="lv-star-off">★</span>{% endif %}
+              {% endfor %}
+            </span>
+          </div>
+          <div class="lv-hero-spent">Total spent: <b>{{ _spentText }}</b></div>
+        </div>
+      </div>
+
+      <div class="lv-progress-wrap">
+        {% if _next %}
+          <div class="lv-progress-head">
+            <span class="lv-progress-next">Next Level: <b>{{ _next.title }}</b></span>
+            <span class="lv-progress-pct">{{ _percent }}%</span>
+          </div>
+          <div class="lv-progress-sub">Reach <span class="lv-reach">{{ _nextReach }}</span>&nbsp;&nbsp;{{ _remainingText }}</div>
+          <div class="lv-bar"><div class="lv-bar-fill" style="width: {{ _percent }}%"></div></div>
+        {% else %}
+          <div class="lv-progress-head">
+            <span class="lv-progress-next">You're at the <b>top level</b></span>
+            <span class="lv-progress-pct">100%</span>
+          </div>
+          <div class="lv-progress-sub">Enjoying the maximum discount.</div>
+          <div class="lv-bar"><div class="lv-bar-fill" style="width: 100%"></div></div>
+        {% endif %}
+      </div>
+    </div>
+
+    {# ─── How it works ─── #}
+    <div class="subpage-card">
+      <div class="lv-how-head">
+        <h2 class="box-title" style="text-align:center;">How <b>it works</b></h2>
+        <p class="lv-how-sub">Spend, level up, and save automatically on every order.</p>
+      </div>
+      <div class="lv-steps">
+        <div class="lv-step">
+          <div class="lv-step-ic"><img src="{{ step_icons['cart'] }}" alt=""></div>
+          <div class="lv-step-num">01</div>
+          <div class="lv-step-title">Place Orders</div>
+          <div class="lv-step-desc">And grow your social media</div>
+        </div>
+        <div class="lv-step-arrow" aria-hidden="true">
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div class="lv-step">
+          <div class="lv-step-ic"><img src="{{ step_icons['chart'] }}" alt=""></div>
+          <div class="lv-step-num">02</div>
+          <div class="lv-step-title">Reach the minimum threshold</div>
+          <div class="lv-step-desc">After you've spent the minimum amount</div>
+        </div>
+        <div class="lv-step-arrow" aria-hidden="true">
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div class="lv-step">
+          <div class="lv-step-ic"><img src="{{ step_icons['smiley'] }}" alt=""></div>
+          <div class="lv-step-num">03</div>
+          <div class="lv-step-title">Enjoy the Discount</div>
+          <div class="lv-step-desc">Each level gives you additional discount</div>
+        </div>
+      </div>
+    </div>
+
+    {# ─── Levels table ─── #}
+    <div class="subpage-card">
+      <div class="box-head"><h2 class="box-title">Member <b>Levels</b></h2></div>
+      <p class="lv-desc-sub">Every order moves you closer to the next tier. Higher levels unlock an automatic discount on every order you place.</p>
+      <table class="lv-table">
+        <tbody>
+          {% for lvl in levels_ladder %}
+            <tr>
+              <td class="lv-table-ic"><img src="{{ level_icons[lvl.id]|default(level_icons[1]) }}" alt=""></td>
+              <td class="lv-lvl-name">Level <b>{{ lvl.id }}</b></td>
+              <td class="lv-lvl-req">
+                {%- if lvl.threshold == 0 -%}
+                  Entry level
+                {%- else -%}
+                  Users who have spent {{ _ccy }}{{ lvl.threshold }} or more
+                {%- endif -%}
+              </td>
+              <td class="lv-discount-cell">
+                {% if lvl.discount > 0 %}
+                  <span class="lv-discount-pill {% if loop.last %}is-top{% endif %}">{{ lvl.discount }}%</span>
+                  <span class="lv-discount-word {% if loop.last %}is-top{% endif %}">discount</span>
+                {% else %}
+                  <span class="lv-discount-word">No additional benefit</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {# ─── Level cards ─── #}
+    <div class="subpage-card">
+      <div class="box-head"><h2 class="box-title">All <b>Tiers</b></h2></div>
+      <p class="lv-desc-sub">Your current level is highlighted below. Keep ordering to unlock the next discount.</p>
+      <div class="lv-cards">
+        {% for lvl in levels_ladder %}
+          <div class="lv-lc {% if lvl.id == _currentLevelId %}is-current{% endif %}">
+            <div class="lv-lc-ic"><img src="{{ level_icons[lvl.id]|default(level_icons[1]) }}" alt=""></div>
+            <div class="lv-lc-name">Level <b>{{ lvl.id }}</b></div>
+            <div class="lv-lc-entry">
+              {%- if lvl.threshold == 0 -%}Entry level
+              {%- else -%}{{ _ccy }}{{ lvl.threshold }}+ spent
+              {%- endif -%}
+            </div>
+            <div class="lv-lc-benefit">
+              {%- if lvl.discount > 0 -%}{{ lvl.discount }}% Discount
+              {%- else -%}No additional benefit
+              {%- endif -%}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+</div>

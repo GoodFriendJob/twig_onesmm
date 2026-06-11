@@ -1,0 +1,98 @@
+{# updates.twig — Pulse styled
+   Variables: types, type{key,label}, search, updatesList[], pagination, site, page, lang(...)
+#}
+<div class="updates-page">
+
+  <div class="updates-toolbar">
+    {% if types %}
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span>{{ type.label }}</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:6px"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <ul class="dropdown-menu">
+          {% for typeItem in types %}
+            <li class="{% if typeItem.key == type.key %}active{% endif %}">
+              <a class="dropdown-item" href="{{ page['url'] }}{% if typeItem.key != 'all' %}{{ '/' ~ typeItem.key }}{% endif %}">
+                {{ typeItem.label }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <form action="{{ page['url'] }}" method="get" id="history-search" class="updates-search {% if site['rtl'] %}rtl-form{% endif %}">
+      <div class="input-with-icon">
+        <span class="input-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </span>
+        <input type="text" name="search" class="form-control" value="{{ search }}" placeholder="{{ lang('general.search.placeholder') }}">
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="table-responsive">
+      <table class="table updates-table {% if site['rtl'] %}rtl-table{% endif %}">
+        <thead>
+          <tr>
+            <th>{{ lang('updates.service') }}</th>
+            <th class="col-date">{{ lang('updates.date') }}</th>
+            <th>{{ lang('updates.update') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for update in updatesList %}
+            <tr>
+              <td class="service-name">
+                <span class="tabular muted">#{{ update['service_id'] }}</span>
+                <span class="ink">{{ update['service'] }}</span>
+              </td>
+              <td class="nowrap muted">{{ update['date'] }}</td>
+              <td>{{ update['update'] }}</td>
+            </tr>
+          {% endfor %}
+          {% if updatesList is empty %}
+            <tr><td colspan="3" class="empty-row">No updates yet.</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% if pagination['count'] > 100 %}
+    {% if search %}
+      {% set params = {} %}
+      {% set params = params | merge(['search=' ~ search]) %}
+      {% set params = '?' ~ params|join('&') %}
+    {% endif %}
+    <ul class="pagination {% if site['rtl'] %}rtl-pagination{% endif %}">
+      {% if pagination['current'] != 1 %}
+        <li>
+          <a href="{{ page['url'] }}{{ type.key != 'all' ? '/' ~ type.key : '' }}{{ pagination['prev'] > 1 ? '/' ~ pagination['prev'] : '' }}{{ params }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+        </li>
+      {% endif %}
+
+      {% set r, l = 3, 3 %}
+      {% if pagination['current'] == 1 %}{% set r = 6 %}{% endif %}
+      {% if pagination['current'] == 2 %}{% set r = 5 %}{% endif %}
+      {% if pagination['current'] >= pagination['pages'] %}{% set l = 5 %}{% endif %}
+
+      {% for i in 1..ceil(pagination['pages']) %}
+        {% if i >= (pagination['current']-l) and i <= (pagination['current']+r) %}
+          <li{% if i == pagination['current'] %} class="active"{% endif %}>
+            <a href="{{ page['url'] }}{{ type.key != 'all' ? '/' ~ type.key : '' }}{{ i > 1 ? '/' ~ i : '' }}{{ params }}">{{ i }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% if pagination['current'] < pagination['pages'] %}
+        <li>
+          <a href="{{ page['url'] }}{{ type.key != 'all' ? '/' ~ type.key : '' }}/{{ pagination['next'] }}{{ params }}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+        </li>
+      {% endif %}
+    </ul>
+  {% endif %}
+
+</div>

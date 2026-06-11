@@ -201,7 +201,7 @@ $twig->addFunction(new \Twig\TwigFunction('page_url', function ($route) {
         'contact'       => '/contact',
         'api'           => '/api',
         'tickets'       => '/tickets',
-        'viewticket'    => '/viewtickets',
+        'viewticket'    => '/viewticket',
         'account'       => '/account',
         'affiliates'    => '/affiliates',
         'massorder'     => '/massorder',
@@ -218,7 +218,7 @@ $twig->addFunction(new \Twig\TwigFunction('page_url', function ($route) {
     return $routes[$route] ?? '/' . $route;
 }));
 
-// ── Mock `sliceUrl()` function (used in viewtickets.twig for file name display) ──
+// ── Mock `sliceUrl()` function (used in viewticket.twig for file name display) ──
 $twig->addFunction(new \Twig\TwigFunction('sliceUrl', function ($url) {
     $name = basename($url);
     return strlen($name) > 30 ? substr($name, 0, 27) . '...' : $name;
@@ -226,7 +226,7 @@ $twig->addFunction(new \Twig\TwigFunction('sliceUrl', function ($url) {
 
 // ── Dashboard pages (auto-authenticate) ──
 $dashboardPages = [
-    'neworder', 'account', 'addfunds', 'orders', 'tickets', 'viewtickets',
+    'neworder', 'account', 'addfunds', 'orders', 'tickets', 'viewticket',
     'services', 'api', 'massorder', 'drip_feed', 'refill', 'refunds',
     'subscriptions', 'affiliates', 'child_panel', 'child_panel_order', 'updates',
     'giveaway', 'levels',
@@ -247,9 +247,9 @@ if (preg_match('#^blog/(.+)$#', $slug, $m)) {
     $slug = 'blog-post';
 }
 
-// Handle ticket detail sub-URLs: /viewticket(s)/{id} → viewtickets.twig
-if (preg_match('#^viewtickets?(?:/.*)?$#', $slug)) {
-    $slug = 'viewtickets';
+// Handle ticket detail sub-URLs: /viewticket(s)/{id} → viewticket.twig
+if (preg_match('#^viewticket?(?:/.*)?$#', $slug)) {
+    $slug = 'viewticket';
 }
 
 $templateFile = $slug . '.twig';
@@ -307,7 +307,7 @@ $context = [
             ['name' => 'Giveaway',           'link' => '/giveaway',      'active' => ($slug === 'giveaway'),     'external' => false],
             ['name' => 'API',                'link' => '/api',           'active' => ($slug === 'api'),          'external' => false],
             // Support
-            ['name' => 'Support | Contact Us', 'link' => '/tickets',     'active' => ($slug === 'tickets' || $slug === 'viewtickets'), 'external' => false],
+            ['name' => 'Support | Contact Us', 'link' => '/tickets',     'active' => ($slug === 'tickets' || $slug === 'viewticket'), 'external' => false],
             // ['name' => 'How to use',         'link' => '/howto',         'active' => ($slug === 'howto'),        'external' => false],
             ['name' => 'How to use',         'link' => '/tickets',         'active' => ($slug === 'howto'),        'external' => false],
         ],
@@ -774,11 +774,368 @@ if ($slug === 'neworder') {
     $context['errorMessage'] = '';
     $context['success'] = false;
     $context['order'] = ['charge' => '$0.70'];
-    // neworder.twig uses JS-driven category/service selects, so no server-side list needed
-    // The platform chips + category dropdowns are hardcoded in the template
     $context['serviceCategoryList'] = $context['serviceCategoryList'] ?? [];
     // Preview-only: render demo Link + Quantity fields (Perfect Panel injects these live).
     $context['demo_order_fields'] = true;
+
+    // ── Categories with icons — feeds the search bar + category dropdown ──
+    $context['categories'] = true;
+    $context['extended_categories'] = [
+        ['id' => 41, 'name' => 'Telegram - Channel Members',  'icon' => ['icon_type' => 'emoji', 'icon' => '✈️',  'url' => '']],
+        ['id' => 42, 'name' => 'Telegram - Post Views',       'icon' => ['icon_type' => 'emoji', 'icon' => '👁️', 'url' => '']],
+        ['id' => 43, 'name' => 'Telegram - Reactions',        'icon' => ['icon_type' => 'emoji', 'icon' => '❤️', 'url' => '']],
+        ['id' => 44, 'name' => 'Telegram - Premium Members',  'icon' => ['icon_type' => 'emoji', 'icon' => '⭐', 'url' => '']],
+        ['id' => 11, 'name' => 'Instagram - Followers',       'icon' => ['icon_type' => 'emoji', 'icon' => '📸', 'url' => '']],
+        ['id' => 12, 'name' => 'Instagram - Likes',           'icon' => ['icon_type' => 'emoji', 'icon' => '❤️', 'url' => '']],
+        ['id' => 31, 'name' => 'YouTube - Subscribers',       'icon' => ['icon_type' => 'emoji', 'icon' => '🎬', 'url' => '']],
+        ['id' => 51, 'name' => 'TikTok - Followers & Views',  'icon' => ['icon_type' => 'emoji', 'icon' => '🎵', 'url' => '']],
+    ];
+
+    // ── window.modules.siteOrder mock — drives the service select + right-side detail panel ──
+    // Each service has unique, rich description content so the right rail demonstrates how
+    // varied service content loads when the user picks something from the dropdown.
+    $services = [
+        // ── Telegram: Channel Members (cid 41, platform_id 6) ──
+        1001 => [
+            'id' => 1001, 'cid' => 41, 'platform_id' => 6, 'type' => 0, 'position' => 1,
+            'origin_name' => 'Telegram Channel Members – Real & Active [HQ]',
+            'name' => '1001 - Telegram Channel Members – Real & Active [HQ] - $3.50 per 1000',
+            'price' => 3.50, 'min' => 100, 'max' => 100000,
+            'min_max_label' => 'Min: 100 — Max: 100,000',
+            'average_time' => '2 hours 14 minutes',
+            'start_time'   => '0 – 30 minutes',
+            'speed'        => '~5,000 / day',
+            'refill' => true, 'cancel' => true, 'dripfeed' => true, 'favorite' => true,
+            'description' =>
+                '<p><strong>The flagship Telegram member service.</strong> Real-looking profiles with avatars, names, and message history. Built for channels that need <em>credibility</em> at first glance.</p>'
+              . '<ul>'
+              . '<li>✅ Profiles include avatar + bio + message history</li>'
+              . '<li>✅ 30-day automatic refill against drops</li>'
+              . '<li>✅ Gradual delivery — looks natural to Telegram\'s spam detector</li>'
+              . '<li>✅ Cancellable up to 5 minutes after order</li>'
+              . '<li>✅ Compatible with drip-feed (split into runs)</li>'
+              . '</ul>'
+              . '<p><strong>Recommended for:</strong> launching new channels, building social proof before paid promo, recovering from sudden drops.</p>',
+        ],
+        1002 => [
+            'id' => 1002, 'cid' => 41, 'platform_id' => 6, 'type' => 0, 'position' => 2,
+            'origin_name' => 'Telegram Channel Subscribers – Premium [USA Targeted]',
+            'name' => '1002 - Telegram Channel Subscribers – Premium [USA Targeted] - $7.20 per 1000',
+            'price' => 7.20, 'min' => 50, 'max' => 25000,
+            'min_max_label' => 'Min: 50 — Max: 25,000',
+            'average_time' => '6 – 12 hours',
+            'start_time'   => '1 – 2 hours',
+            'speed'        => '~2,000 / day',
+            'refill' => true, 'cancel' => false, 'dripfeed' => false, 'favorite' => false,
+            'description' =>
+                '<p><strong>🇺🇸 USA-targeted Telegram subscribers.</strong> Accounts with US phone numbers, English bios, and US timezone activity patterns.</p>'
+              . '<div style="background:rgba(255,98,85,.08);border-left:3px solid var(--accent,#FF6255);padding:10px 14px;border-radius:6px;margin:12px 0">'
+              . '<strong>Why geo-targeted matters:</strong> Telegram\'s algorithm weighs subscriber demographics when recommending channels in Discover. A US-skewed audience helps US content surface to other US users.'
+              . '</div>'
+              . '<p><strong>Quality tier:</strong> Premium (lowest drop rate available — typically &lt;5%)<br><strong>Refill window:</strong> 60 days from order completion</p>',
+        ],
+        1003 => [
+            'id' => 1003, 'cid' => 41, 'platform_id' => 6, 'type' => 0, 'position' => 3,
+            'origin_name' => 'Telegram Channel Members – Instant [Mix Quality]',
+            'name' => '1003 - Telegram Channel Members – Instant [Mix Quality] - $1.20 per 1000',
+            'price' => 1.20, 'min' => 500, 'max' => 200000,
+            'min_max_label' => 'Min: 500 — Max: 200,000',
+            'average_time' => '15 – 45 minutes',
+            'start_time'   => 'Instant',
+            'speed'        => '~20,000 / day',
+            'refill' => false, 'cancel' => true, 'dripfeed' => false, 'favorite' => false,
+            'description' =>
+                '<p>Budget-tier service. Mixed-quality accounts delivered <strong>fast</strong>. Trade-off is a higher drop rate (typically 15–25%) and no refill.</p>'
+              . '<p><strong>Best for:</strong></p>'
+              . '<ul>'
+              . '<li>Quick visual boost before a campaign launch</li>'
+              . '<li>Hitting a round-number milestone (10K, 50K) for screenshots</li>'
+              . '<li>Test orders before scaling to premium services</li>'
+              . '</ul>'
+              . '<p><em>Not recommended for channels under 1K real members — drops will be visible.</em></p>',
+        ],
+        1004 => [
+            'id' => 1004, 'cid' => 41, 'platform_id' => 6, 'type' => 0, 'position' => 4,
+            'origin_name' => 'Telegram Channel Subscribers – Gradual Delivery (7 days)',
+            'name' => '1004 - Telegram Channel Subscribers – Gradual Delivery (7 days) - $4.80 per 1000',
+            'price' => 4.80, 'min' => 1000, 'max' => 50000,
+            'min_max_label' => 'Min: 1,000 — Max: 50,000',
+            'average_time' => '3 – 7 days',
+            'start_time'   => '2 – 4 hours',
+            'speed'        => '~1,000 / day (spread)',
+            'refill' => true, 'cancel' => false, 'dripfeed' => true, 'favorite' => false,
+            'description' =>
+                '<p><strong>Slow drip delivery — most algorithm-safe option.</strong> Members are added over 3–7 days at a randomized natural cadence.</p>'
+              . '<p>This mimics the growth pattern of a channel gaining traction from organic discovery, which Telegram\'s anti-spam systems treat favorably.</p>'
+              . '<p><strong>Drop rate:</strong> Typically 5–8%, fully covered by 30-day refill.</p>',
+        ],
+
+        // ── Telegram: Post Views (cid 42, platform_id 6) ──
+        1101 => [
+            'id' => 1101, 'cid' => 42, 'platform_id' => 6, 'type' => 0, 'position' => 1,
+            'origin_name' => 'Telegram Post Views – Last 1 Post [Instant]',
+            'name' => '1101 - Telegram Post Views – Last 1 Post - $0.08 per 1000',
+            'price' => 0.08, 'min' => 100, 'max' => 1000000,
+            'min_max_label' => 'Min: 100 — Max: 1,000,000',
+            'average_time' => '5 – 15 minutes',
+            'start_time'   => 'Instant',
+            'speed'        => 'Up to 100K / hour',
+            'refill' => false, 'cancel' => false, 'dripfeed' => false, 'favorite' => false,
+            'description' =>
+                '<p>Adds views to the <strong>most recent post</strong> in your channel. Useful for boosting visible engagement on a single piece of content (e.g. a pinned announcement or promo).</p>'
+              . '<p><strong>Note:</strong> Just enter your channel link (<code>t.me/channelname</code>). The service auto-detects your latest post.</p>',
+        ],
+        1102 => [
+            'id' => 1102, 'cid' => 42, 'platform_id' => 6, 'type' => 0, 'position' => 2,
+            'origin_name' => 'Telegram Post Views – Last 5 Posts',
+            'name' => '1102 - Telegram Post Views – Last 5 Posts - $0.30 per 1000',
+            'price' => 0.30, 'min' => 100, 'max' => 1000000,
+            'min_max_label' => 'Min: 100 — Max: 1,000,000',
+            'average_time' => '20 – 60 minutes',
+            'start_time'   => '0 – 10 minutes',
+            'speed'        => 'Up to 50K / hour per post',
+            'refill' => false, 'cancel' => false, 'dripfeed' => false, 'favorite' => false,
+            'description' =>
+                '<p>Views are distributed equally across your <strong>5 most recent posts</strong>. Order 5,000 views → each post receives ~1,000.</p>'
+              . '<p>Better than single-post boosts for channel-wide credibility — consistent view counts across your feed look more natural.</p>',
+        ],
+        1103 => [
+            'id' => 1103, 'cid' => 42, 'platform_id' => 6, 'type' => 100, 'position' => 3,
+            'origin_name' => 'Telegram Auto Views Subscription [30 days]',
+            'name' => '1103 - Telegram Auto Views Subscription [30 days] - $0.45 per 1000',
+            'price' => 0.45, 'min' => 100, 'max' => 50000,
+            'min_max_label' => 'Min: 100 — Max: 50,000 per post',
+            'average_time' => '5 – 30 minutes after each post',
+            'start_time'   => 'Within 5 minutes of new post',
+            'speed'        => 'Real-time monitoring',
+            'refill' => false, 'cancel' => true, 'dripfeed' => false, 'favorite' => true,
+            'description' =>
+                '<p><strong>📡 Auto-monitor + auto-deliver.</strong> Every time you publish a new post in your channel, this service detects it within 5 minutes and adds the configured view count automatically.</p>'
+              . '<p><strong>Subscription details:</strong></p>'
+              . '<ul>'
+              . '<li>Choose min/max view range per post</li>'
+              . '<li>Configure how many future posts to cover</li>'
+              . '<li>Optional delay (instant, 30 min, 1 hr, etc.)</li>'
+              . '<li>Pause/resume anytime — no penalty</li>'
+              . '</ul>'
+              . '<p><em>Most used by news channels and daily content publishers.</em></p>',
+        ],
+
+        // ── Telegram: Reactions (cid 43, platform_id 6) ──
+        1201 => [
+            'id' => 1201, 'cid' => 43, 'platform_id' => 6, 'type' => 0, 'position' => 1,
+            'origin_name' => 'Telegram Mix Positive Reactions 👍❤️🔥',
+            'name' => '1201 - Telegram Mix Positive Reactions - $0.85 per 1000',
+            'price' => 0.85, 'min' => 50, 'max' => 100000,
+            'min_max_label' => 'Min: 50 — Max: 100,000',
+            'average_time' => '30 – 90 minutes',
+            'start_time'   => '5 – 20 minutes',
+            'speed'        => '~20,000 / hour',
+            'refill' => false, 'cancel' => true, 'dripfeed' => false, 'favorite' => false,
+            'description' =>
+                '<p>Adds a natural mix of positive Telegram reactions: <strong>👍 ❤️ 🔥 🎉 🙏 👏 💯</strong></p>'
+              . '<p>Distribution is randomized per order to look organic — no two orders end up with identical reaction ratios.</p>'
+              . '<p><strong>Tip:</strong> Pair with view services for stronger engagement signals. Reactions without views look botted; the combination looks like a hit post.</p>',
+        ],
+        1202 => [
+            'id' => 1202, 'cid' => 43, 'platform_id' => 6, 'type' => 0, 'position' => 2,
+            'origin_name' => 'Telegram Custom Emoji Reactions',
+            'name' => '1202 - Telegram Custom Emoji Reactions - $1.40 per 1000',
+            'price' => 1.40, 'min' => 50, 'max' => 50000,
+            'min_max_label' => 'Min: 50 — Max: 50,000',
+            'average_time' => '1 – 2 hours',
+            'start_time'   => '10 – 30 minutes',
+            'speed'        => '~15,000 / hour',
+            'refill' => false, 'cancel' => true, 'dripfeed' => false, 'favorite' => false,
+            'description' =>
+                '<p>Choose <strong>any single emoji reaction</strong> to push on your post — supports all standard Telegram emojis plus custom premium emojis from your sticker packs.</p>'
+              . '<p><strong>Common use cases:</strong></p>'
+              . '<ul>'
+              . '<li>Push a 🔥 reaction for "trending" content</li>'
+              . '<li>Push ❤️ for emotional / personal posts</li>'
+              . '<li>Push 🎉 for announcements and giveaways</li>'
+              . '</ul>',
+        ],
+
+        // ── Telegram: Premium Members (cid 44, platform_id 6) ──
+        1301 => [
+            'id' => 1301, 'cid' => 44, 'platform_id' => 6, 'type' => 0, 'position' => 1,
+            'origin_name' => 'Telegram Premium Members [HQ Real]',
+            'name' => '1301 - Telegram Premium Members [HQ Real] - $24.00 per 1000',
+            'price' => 24.00, 'min' => 50, 'max' => 5000,
+            'min_max_label' => 'Min: 50 — Max: 5,000',
+            'average_time' => '12 – 24 hours',
+            'start_time'   => '2 – 4 hours',
+            'speed'        => '~500 / day',
+            'refill' => true, 'cancel' => false, 'dripfeed' => false, 'favorite' => false,
+            'description' =>
+                '<p><strong>⭐ The premium tier.</strong> Members are real Telegram Premium subscribers — verified by the gold star next to their name.</p>'
+              . '<p><strong>Why this matters:</strong> Premium members are higher-spending, more active users. Their presence in your subscriber list signals real audience quality to advertisers, sponsors, and other premium users browsing your channel.</p>'
+              . '<ul>'
+              . '<li>💎 100% verified Telegram Premium accounts</li>'
+              . '<li>💎 90-day refill warranty (highest of any service)</li>'
+              . '<li>💎 Less than 2% historical drop rate</li>'
+              . '<li>💎 Mostly EN/RU/AR speakers, varied geo</li>'
+              . '</ul>',
+        ],
+
+        // ── Instagram: Followers (cid 11, platform_id 1) ──
+        2001 => [
+            'id' => 2001, 'cid' => 11, 'platform_id' => 1, 'type' => 0, 'position' => 1,
+            'origin_name' => 'Instagram Followers – Real & Active [Premium]',
+            'name' => '2001 - Instagram Followers – Real & Active [Premium] - $4.20 per 1000',
+            'price' => 4.20, 'min' => 100, 'max' => 200000,
+            'min_max_label' => 'Min: 100 — Max: 200,000',
+            'average_time' => '4 – 8 hours',
+            'start_time'   => '0 – 1 hour',
+            'speed'        => '~5,000 / day',
+            'refill' => true, 'cancel' => true, 'dripfeed' => true, 'favorite' => true,
+            'description' =>
+                '<p><strong>Real-profile Instagram followers.</strong> Accounts have profile pictures, bios, posts, and varied follower/following counts.</p>'
+              . '<p><strong>Delivery pattern:</strong> gradual over 4–8 hours by default, or stretchable to 7+ days via drip-feed.</p>'
+              . '<p><strong>Warranty:</strong> 30-day automatic refill. If drops exceed 10% in that window, the system tops you back up — no manual ticket needed.</p>',
+        ],
+        2002 => [
+            'id' => 2002, 'cid' => 11, 'platform_id' => 1, 'type' => 0, 'position' => 2,
+            'origin_name' => 'Instagram Followers – HQ [30 Days Refill]',
+            'name' => '2002 - Instagram Followers – HQ [30 Days Refill] - $2.80 per 1000',
+            'price' => 2.80, 'min' => 50, 'max' => 100000,
+            'min_max_label' => 'Min: 50 — Max: 100,000',
+            'average_time' => '2 – 6 hours',
+            'start_time'   => '15 – 60 minutes',
+            'speed'        => '~8,000 / day',
+            'refill' => true, 'cancel' => false, 'dripfeed' => false, 'favorite' => false,
+            'description' =>
+                '<p>Mid-tier followers with high-quality profiles. Cost-effective sweet spot between budget mix-quality and full real &amp; active.</p>'
+              . '<p>Best balance of <strong>price × retention</strong> for accounts under 50K.</p>',
+        ],
+
+        // ── Instagram: Likes (cid 12, platform_id 1) ──
+        2101 => [
+            'id' => 2101, 'cid' => 12, 'platform_id' => 1, 'type' => 0, 'position' => 1,
+            'origin_name' => 'Instagram Likes – Instant',
+            'name' => '2101 - Instagram Likes – Instant - $0.65 per 1000',
+            'price' => 0.65, 'min' => 50, 'max' => 50000,
+            'min_max_label' => 'Min: 50 — Max: 50,000',
+            'average_time' => '10 – 30 minutes',
+            'start_time'   => 'Instant',
+            'speed'        => 'Up to 30K / hour',
+            'refill' => false, 'cancel' => true, 'dripfeed' => false, 'favorite' => false,
+            'description' =>
+                '<p>Standard Instagram likes from worldwide profiles. Delivered fast — most orders begin within seconds of submission.</p>'
+              . '<p><strong>Note:</strong> Make sure your post is set to public before ordering.</p>',
+        ],
+        2102 => [
+            'id' => 2102, 'cid' => 12, 'platform_id' => 1, 'type' => 100, 'position' => 2,
+            'origin_name' => 'Instagram Auto Likes – Per Post Subscription',
+            'name' => '2102 - Instagram Auto Likes – Per Post Subscription - $1.20 per 1000',
+            'price' => 1.20, 'min' => 100, 'max' => 10000,
+            'min_max_label' => 'Min: 100 — Max: 10,000 per post',
+            'average_time' => '5 – 20 minutes after each post',
+            'start_time'   => 'Within 10 minutes of new post',
+            'speed'        => 'Real-time per-post delivery',
+            'refill' => false, 'cancel' => true, 'dripfeed' => false, 'favorite' => true,
+            'description' =>
+                '<p><strong>📡 Set it and forget it.</strong> Every new post you publish receives the configured likes automatically — no need to come back and order per post.</p>'
+              . '<ul>'
+              . '<li>Choose min/max likes range</li>'
+              . '<li>Set number of posts to cover</li>'
+              . '<li>Configure delay (instant / 10 min / 30 min / 1 hr)</li>'
+              . '<li>Old posts can also be included if you choose</li>'
+              . '</ul>',
+        ],
+
+        // ── YouTube: Subscribers (cid 31, platform_id 4) ──
+        3001 => [
+            'id' => 3001, 'cid' => 31, 'platform_id' => 4, 'type' => 0, 'position' => 1,
+            'origin_name' => 'YouTube Subscribers – Real [Lifetime Guarantee]',
+            'name' => '3001 - YouTube Subscribers – Real [Lifetime Guarantee] - $9.50 per 1000',
+            'price' => 9.50, 'min' => 50, 'max' => 50000,
+            'min_max_label' => 'Min: 50 — Max: 50,000',
+            'average_time' => '24 – 72 hours',
+            'start_time'   => '6 – 12 hours',
+            'speed'        => '~500 / day',
+            'refill' => true, 'cancel' => false, 'dripfeed' => true, 'favorite' => false,
+            'description' =>
+                '<p><strong>🎬 Real YouTube subscribers with lifetime drop protection.</strong></p>'
+              . '<p>If <em>any</em> subscriber drops at <em>any</em> point in the lifetime of your channel, we refill it — no time limit. This is the strongest warranty in the panel.</p>'
+              . '<p><strong>Why YouTube subs are slower:</strong> YouTube\'s spam detection penalizes high-velocity subscriber gains heavily. Our gradual cadence (~500/day) stays well under their threshold.</p>',
+        ],
+        3002 => [
+            'id' => 3002, 'cid' => 31, 'platform_id' => 4, 'type' => 0, 'position' => 2,
+            'origin_name' => 'YouTube Watch Time – 4000 Hours Monetization Package',
+            'name' => '3002 - YouTube Watch Time – 4000 Hours - $45.00 per package',
+            'price' => 45.00, 'min' => 1, 'max' => 5,
+            'min_max_label' => 'Min: 1 — Max: 5 packages',
+            'average_time' => '5 – 14 days',
+            'start_time'   => '12 – 24 hours',
+            'speed'        => '~400 hours / day',
+            'refill' => false, 'cancel' => false, 'dripfeed' => false, 'favorite' => false,
+            'description' =>
+                '<p><strong>🎯 Monetization-ready watch time.</strong> Each package delivers ~4,000 hours of high-retention watch time across your channel\'s videos — the threshold YouTube requires for Partner Program eligibility.</p>'
+              . '<div style="background:rgba(34,197,94,.10);border-left:3px solid #22c55e;padding:10px 14px;border-radius:6px;margin:12px 0">'
+              . '<strong>Retention guarantee:</strong> All watch time delivered at 60–90% video retention. Lower retention = ineligible for monetization, so we don\'t deliver low-retention views.'
+              . '</div>'
+              . '<p><strong>What you need before ordering:</strong> 1,000+ subscribers (the other YouTube monetization requirement).</p>',
+        ],
+
+        // ── TikTok: Followers & Views (cid 51, platform_id 3) ──
+        5001 => [
+            'id' => 5001, 'cid' => 51, 'platform_id' => 3, 'type' => 0, 'position' => 1,
+            'origin_name' => 'TikTok Followers – HQ [Refill]',
+            'name' => '5001 - TikTok Followers – HQ [Refill] - $3.20 per 1000',
+            'price' => 3.20, 'min' => 100, 'max' => 500000,
+            'min_max_label' => 'Min: 100 — Max: 500,000',
+            'average_time' => '3 – 8 hours',
+            'start_time'   => '30 – 90 minutes',
+            'speed'        => '~10,000 / day',
+            'refill' => true, 'cancel' => true, 'dripfeed' => true, 'favorite' => false,
+            'description' =>
+                '<p>High-quality TikTok followers with 30-day refill warranty.</p>'
+              . '<p><strong>TikTok-specific behavior:</strong> follower velocity influences the For You Page algorithm. Gradual delivery (recommended) avoids triggering anti-spam flags that could shadow-limit your content.</p>',
+        ],
+        5002 => [
+            'id' => 5002, 'cid' => 51, 'platform_id' => 3, 'type' => 0, 'position' => 2,
+            'origin_name' => 'TikTok Views – Cheap & Fast',
+            'name' => '5002 - TikTok Views – Cheap & Fast - $0.18 per 1000',
+            'price' => 0.18, 'min' => 500, 'max' => 10000000,
+            'min_max_label' => 'Min: 500 — Max: 10,000,000',
+            'average_time' => '15 – 60 minutes',
+            'start_time'   => 'Instant',
+            'speed'        => 'Up to 1M / hour',
+            'refill' => false, 'cancel' => false, 'dripfeed' => false, 'favorite' => false,
+            'description' =>
+                '<p>The cheapest TikTok service in the panel — pure view count, no engagement.</p>'
+              . '<p><strong>Best used for:</strong> hitting visible view milestones (1M, 10M) on existing videos that already have organic engagement. Views alone don\'t drive the FYP — combine with likes and comments for algorithmic lift.</p>',
+        ],
+    ];
+
+    // PP's per-service-type field config — drives which inputs render under #fields
+    $siteOrderFields = (object) [
+        '0'   => [
+            ['name' => 'link',     'field' => 'text'],
+            ['name' => 'quantity', 'field' => 'text'],
+        ],
+        '100' => [
+            ['name' => 'username',  'field' => 'text'],
+            ['name' => 'min',       'field' => 'text'],
+            ['name' => 'max',       'field' => 'text'],
+            ['name' => 'posts',     'field' => 'text'],
+            ['name' => 'old_posts', 'field' => 'text'],
+            ['name' => 'delay',     'field' => 'text'],
+        ],
+    ];
+
+    $siteOrderJson = json_encode([
+        'services' => (object) $services,
+        'fields'   => $siteOrderFields,
+        'currency' => ['sign' => '$', 'symbol' => '$', 'code' => 'USD'],
+        'format'   => (object) [],
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+    // Layout's custom_footer slot renders AFTER `window.modules = {}` is initialised,
+    // so this safely populates the data the neworder.twig JS polls for.
+    $context['site']['custom_footer'] = '<script>(function(){window.modules=window.modules||{};window.modules.siteOrder=' . $siteOrderJson . ';}());</script>';
 }
 
 // ── Mock data: Orders (order history) ──
@@ -937,7 +1294,7 @@ if ($slug === 'tickets') {
 }
 
 // ── Mock data: View Ticket ──
-if ($slug === 'viewtickets') {
+if ($slug === 'viewticket') {
     $context['ticket'] = [
         'id' => 55,
         'thema' => 'A Sample Subject Here',

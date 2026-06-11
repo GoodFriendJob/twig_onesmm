@@ -1,0 +1,229 @@
+{# howto.twig — How to use OneSMM
+   A step-by-step guide for new users.
+   Variables: site, page, user, csrftoken, lang(...)
+#}
+<div class="howto-page">
+
+  {# ── Video placeholder ── #}
+  <div class="howto-video-wrap">
+    <div class="howto-video-placeholder">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="5 3 19 12 5 21 5 3"/>
+      </svg>
+      <p>Video tutorial coming soon</p>
+    </div>
+  </div>
+
+  {# ── Steps ── #}
+  <div class="howto-steps">
+
+    <div class="howto-step">
+      <div class="howto-step__num">1</div>
+      <div class="howto-step__content">
+        <h2 class="howto-step__title">Create your free account</h2>
+        <p class="howto-step__desc">
+          Click the button below or go to the <a href="{{ page_url('signup') }}">sign up page</a>.
+          Pick a username, enter your email and a password — that's it.
+          No credit card required. Your account is ready instantly.
+        </p>
+        <a href="{{ page_url('signup') }}" class="howto-cta">Create account →</a>
+      </div>
+    </div>
+
+    <div class="howto-step">
+      <div class="howto-step__num">2</div>
+      <div class="howto-step__content">
+        <h2 class="howto-step__title">Add funds to your balance</h2>
+        <p class="howto-step__desc">
+          Go to <a href="{{ page_url('addfunds') }}">Add Funds</a> and choose your payment method.
+          We accept crypto (Bitcoin, Ethereum, USDT), credit/debit cards, Apple Pay, Google Pay,
+          and 30+ regional payment methods. Funds appear in your balance instantly on most methods.
+        </p>
+        <div class="howto-tip">
+          <strong>Tip:</strong> Start small — you can add as little as $1 to test things out.
+        </div>
+      </div>
+    </div>
+
+    <div class="howto-step">
+      <div class="howto-step__num">3</div>
+      <div class="howto-step__content">
+        <h2 class="howto-step__title">Browse and pick a service</h2>
+        <p class="howto-step__desc">
+          Head to the <a href="{{ page_url('services') }}">Services</a> page.
+          Use the category filter or search to find what you need — Telegram members, Instagram likes,
+          YouTube views, and thousands more. Each service shows the price per 1,000, minimum/maximum
+          order size, and average delivery time.
+        </p>
+      </div>
+    </div>
+
+    <div class="howto-step">
+      <div class="howto-step__num">4</div>
+      <div class="howto-step__content">
+        <h2 class="howto-step__title">Place your order</h2>
+        <p class="howto-step__desc">
+          Go to <a href="{{ page_url('neworder') }}">New Order</a>. Choose a platform (Telegram, Instagram, etc.),
+          then select a service from the dropdown. Paste your channel/profile link, set a quantity, and click Submit.
+        </p>
+        <div class="howto-tip">
+          <strong>Important:</strong> We never ask for your password. Just paste your public link — that's all we need.
+        </div>
+      </div>
+    </div>
+
+    <div class="howto-step">
+      <div class="howto-step__num">5</div>
+      <div class="howto-step__content">
+        <h2 class="howto-step__title">Track delivery in real time</h2>
+        <p class="howto-step__desc">
+          Visit the <a href="{{ page_url('orders') }}">Orders</a> page to see your order status.
+          Most orders start within 60 seconds. You'll see statuses like "In progress", "Completed",
+          or "Partial" (with automatic refund for the undelivered portion).
+        </p>
+      </div>
+    </div>
+
+    <div class="howto-step">
+      <div class="howto-step__num">6</div>
+      <div class="howto-step__content">
+        <h2 class="howto-step__title">Auto-refill protects your investment</h2>
+        <p class="howto-step__desc">
+          Eligible services include a 30-day auto-refill warranty. If any followers, members, or views
+          drop during that period, our system detects it and tops you back up automatically.
+          No support ticket needed.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {# ── FAQ ── #}
+  <div class="howto-faq">
+    <h2 class="howto-faq__title">Quick answers</h2>
+    <details class="howto-faq__item">
+      <summary>How long does delivery take?</summary>
+      <p>Most orders start within 60 seconds. Smaller orders complete in minutes; larger ones are delivered gradually over hours to look natural.</p>
+    </details>
+    <details class="howto-faq__item">
+      <summary>Is my account safe?</summary>
+      <p>Yes. We never ask for your social media password. You only provide a public link. All payments are encrypted.</p>
+    </details>
+    <details class="howto-faq__item">
+      <summary>What happens if I order too much?</summary>
+      <p>You can cancel pending orders. Partial orders automatically refund the undelivered portion to your balance.</p>
+    </details>
+    <details class="howto-faq__item">
+      <summary>Can I get a refund?</summary>
+      <p>Partial orders are auto-refunded. Cancelled orders get a full refund. For other issues, contact support.</p>
+    </details>
+  </div>
+
+  {# ── CTA ── #}
+  <div class="howto-bottom-cta">
+    <h2>Ready to get started?</h2>
+    <p>Create your free account and place your first order in under 5 minutes.</p>
+    <div class="howto-bottom-cta__buttons">
+      <a href="{{ page_url('signup') }}" class="howto-cta howto-cta--primary">Create free account</a>
+      <a href="{{ page_url('services') }}" class="howto-cta howto-cta--secondary">Browse services</a>
+    </div>
+  </div>
+
+</div>
+
+<style>
+.howto-page { padding: 8px 0 48px; max-width: 800px; margin: 0 auto; }
+
+.howto-header { border: 0; padding: 0; margin: 0 0 32px; }
+.howto-header .h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 6px; color: var(--ink-1); }
+.howto-header .muted { font-size: 14px; color: var(--ink-3); margin: 0; }
+
+.howto-video-wrap { margin-bottom: 40px; }
+.howto-video-placeholder {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; padding: 64px 24px;
+    background: var(--bg-2); border: 2px dashed var(--line);
+    border-radius: var(--radius-lg, 12px); color: var(--ink-3);
+    font-size: 14px; text-align: center;
+}
+.howto-video-placeholder svg { opacity: 0.4; }
+
+.howto-steps { display: flex; flex-direction: column; gap: 0; }
+.howto-step {
+    display: flex; gap: 20px; padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+}
+.howto-step:first-child { padding-top: 0; }
+.howto-step:last-child { border-bottom: none; }
+
+.howto-step__num {
+    flex-shrink: 0; width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--brand); color: #fff;
+    font-size: 15px; font-weight: 700; border-radius: 10px;
+    margin-top: 2px;
+}
+.howto-step__content { flex: 1; min-width: 0; }
+.howto-step__title { font-size: 18px; font-weight: 600; margin: 0 0 8px; color: var(--ink-1); }
+.howto-step__desc { font-size: 14px; line-height: 1.65; color: var(--ink-2); margin: 0 0 12px; }
+.howto-step__desc a { color: var(--brand); text-decoration: none; font-weight: 500; }
+.howto-step__desc a:hover { text-decoration: underline; }
+
+.howto-tip {
+    font-size: 13px; color: var(--ink-2); background: var(--bg-2);
+    border-left: 3px solid var(--brand); padding: 10px 14px;
+    border-radius: 0 8px 8px 0; margin-top: 8px;
+}
+
+.howto-cta {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 8px 18px; border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+    text-decoration: none; transition: all .15s ease;
+}
+.howto-cta--primary, .howto-step .howto-cta {
+    background: var(--brand); color: #fff;
+}
+.howto-cta--primary:hover, .howto-step .howto-cta:hover {
+    background: var(--brand-strong); color: #fff; text-decoration: none;
+}
+.howto-cta--secondary {
+    background: var(--bg-2); color: var(--ink-1); border: 1px solid var(--line);
+}
+.howto-cta--secondary:hover { border-color: var(--ink-3); color: var(--ink-1); text-decoration: none; }
+
+.howto-faq { margin-top: 48px; }
+.howto-faq__title { font-size: 22px; font-weight: 600; margin: 0 0 16px; color: var(--ink-1); }
+.howto-faq__item {
+    border: 1px solid var(--line); border-radius: 10px;
+    margin-bottom: 8px; overflow: hidden;
+}
+.howto-faq__item summary {
+    padding: 14px 18px; font-size: 14px; font-weight: 500;
+    color: var(--ink-1); cursor: pointer; list-style: none;
+}
+.howto-faq__item summary::-webkit-details-marker { display: none; }
+.howto-faq__item summary::before {
+    content: '+'; float: right; font-size: 18px; font-weight: 400;
+    color: var(--ink-3); margin-left: 12px; line-height: 1;
+}
+.howto-faq__item[open] summary::before { content: '−'; }
+.howto-faq__item p {
+    padding: 0 18px 14px; margin: 0;
+    font-size: 13.5px; line-height: 1.6; color: var(--ink-2);
+}
+
+.howto-bottom-cta {
+    margin-top: 48px; padding: 40px 32px;
+    background: var(--bg-2); border-radius: var(--radius-lg, 12px);
+    text-align: center;
+}
+.howto-bottom-cta h2 { font-size: 22px; font-weight: 600; margin: 0 0 8px; color: var(--ink-1); }
+.howto-bottom-cta p { font-size: 14px; color: var(--ink-2); margin: 0 0 20px; }
+.howto-bottom-cta__buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+@media (max-width: 600px) {
+    .howto-step { flex-direction: column; gap: 12px; }
+    .howto-step__num { width: 30px; height: 30px; font-size: 13px; }
+    .howto-header .h1 { font-size: 24px; }
+}
+</style>

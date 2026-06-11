@@ -1,0 +1,351 @@
+{# account.twig — Pulse styled
+   Variables: site.rtl, site.languages, page.url, user{username,email,lang,timezone,is_generated_apikey,apikey,apikey_created},
+              success/successText, successChangeEmail/successChangeEmailMessage, errorChangeEmail/errorChangeEmailMessage,
+              error/errorText, twofactorauth{success,error,activated,active_code,url{generate,approve}},
+              user_invoice_module, errorUserInvoice, invoice_details, timezones, apiKey{errorMessage}, csrftoken, lang(...)
+#}
+<div class="account-page subscriptions-page">
+
+  <ul class="status-pills nav nav-pills account-tabs">
+    <li class="active"><a href="{{ page_url('account') }}">{{ lang('account.tab.general') }}</a></li>
+    <li><a href="{{ page_url('notifications') }}">{{ lang('account.tab.notifications') }}</a></li>
+  </ul>
+
+  {% if success %}
+    <div class="alert alert-dismissible alert-success {% if site['rtl'] %}rtl-alert{% endif %}">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      {{ successText }}
+    </div>
+  {% endif %}
+  {% if twofactorauth.success %}
+    <div class="alert alert-dismissible alert-success {% if site['rtl'] %}rtl-alert{% endif %}">
+      <button type="button" class="close">&times;</button>
+      {{ twofactorauth.success }}
+    </div>
+  {% endif %}
+
+  <div class="account-grid">
+
+    {# ── Profile ── #}
+    <section class="card account-card" id="profile">
+      <div class="card-body">
+        <div class="account-card-head">
+          <div>
+            <div class="account-card-title">{{ lang('account.profile')|default('Profile') }}</div>
+            <div class="muted small">Your sign-in details. Username can't be changed.</div>
+          </div>
+          <div class="account-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+        </div>
+
+        {% if successChangeEmail %}
+          <div class="alert alert-dismissible alert-success {% if site['rtl'] %}rtl-alert{% endif %}">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ successChangeEmailMessage }}
+          </div>
+        {% endif %}
+        {% if errorChangeEmail %}
+          <div class="alert alert-dismissible alert-danger {% if site['rtl'] %}rtl-alert{% endif %}">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ errorChangeEmailMessage }}
+          </div>
+        {% endif %}
+
+        <div class="form-group">
+          <label for="username" class="control-label">{{ lang('account.username') }}</label>
+          <input type="text" class="form-control" id="username" value="{{ user['username'] }}" readonly>
+        </div>
+        <div class="form-group">
+          <label for="email" class="control-label">{{ lang('account.email') }}</label>
+          <input type="text" class="form-control" id="email" value="{{ user['email'] }}" readonly>
+        </div>
+        <button class="btn btn-default account-secondary-btn" id="changeEmailLink">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          {{ lang('confirmemail.button.change') }}
+        </button>
+      </div>
+    </section>
+
+    {# ── Password ── #}
+    <section class="card account-card" id="password">
+      <div class="card-body">
+        <div class="account-card-head">
+          <div>
+            <div class="account-card-title">{{ lang('account.password')|default('Password') }}</div>
+            <div class="muted small">Use a strong, unique password.</div>
+          </div>
+          <div class="account-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+        </div>
+
+        <form {% if site['rtl'] %}class="rtl-form"{% endif %} method="post" action="">
+          {% if error %}
+            <div class="alert alert-dismissible alert-danger {% if site['rtl'] %}rtl-alert{% endif %}">
+              <button type="button" class="close">&times;</button>
+              {{ errorText }}
+            </div>
+          {% endif %}
+          <div class="form-group">
+            <label for="current" class="control-label">{{ lang('account.password.current') }}</label>
+            <input type="password" autocomplete="current-password" class="form-control" id="current" name="SettingsFrom[current_password]">
+          </div>
+          <div class="form-group">
+            <label for="new" class="control-label">{{ lang('account.password.new') }}</label>
+            <input type="password" autocomplete="new-password" class="form-control" id="new" name="SettingsFrom[password]">
+          </div>
+          <div class="form-group">
+            <label for="confirm" class="control-label">{{ lang('account.password.confirm') }}</label>
+            <input type="password" autocomplete="new-password" class="form-control" id="confirm" name="SettingsFrom[confirm_password]">
+          </div>
+          <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+          <button type="submit" class="btn btn-primary">{{ lang('account.password.button') }}</button>
+        </form>
+      </div>
+    </section>
+
+    {# ── 2FA ── #}
+    <section class="card account-card account-card-2fa" id="2fa">
+      <div class="card-body">
+        <div class="account-card-head">
+          <div>
+            <div class="account-card-title">
+              {{ lang('2fa.title') }}
+              {% if twofactorauth.activated %}
+                <span class="status-pill status-2" style="margin-left:8px;">Disabled</span>
+              {% else %}
+                <span class="status-pill status-1" style="margin-left:8px;">Enabled</span>
+              {% endif %}
+            </div>
+            <div class="muted small">
+              {% if not twofactorauth.activated %}
+                {{ lang('account.2fa.enabled') }}
+              {% else %}
+                Add a second step at sign-in for extra protection.
+              {% endif %}
+            </div>
+          </div>
+          <div class="account-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+        </div>
+
+        <div id="2fa-approve-error-block"
+             style="{% if twofactorauth.error %}display: block;{% else %}display: none;{% endif %}"
+             class="alert alert-dismissible alert-danger {% if site['rtl'] %}rtl-alert{% endif %}">
+          <button type="button" class="close">&times;</button>
+          <span id="2fa-error-text">{{ twofactorauth.error }}</span>
+        </div>
+
+        {# 2FA generate code #}
+        <form id="2fa-generate-form" method="post" {% if site['rtl'] %}class="rtl-form"{% endif %}
+              action="{{ twofactorauth.url.generate }}"
+              style="{% if twofactorauth.active_code %}display: none;{% else %}display: block;{% endif %}">
+          <p class="muted small" style="margin: 0 0 14px;">{{ lang('account.2fa.description') }}</p>
+          <input type="hidden" name="enabled" value="{{ twofactorauth.activated }}">
+          <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+          <button id="2fa-generate" type="submit" class="btn btn-primary">
+            {% if twofactorauth.activated %}
+              {{ lang('account.2fa.enable') }}
+            {% else %}
+              {{ lang('account.2fa.disable') }}
+            {% endif %}
+          </button>
+        </form>
+
+        {# 2FA approve code #}
+        <form id="2fa-approve-form" method="post" {% if site['rtl'] %}class="rtl-form"{% endif %}
+              action="{{ twofactorauth.url.approve }}"
+              style="{% if twofactorauth.active_code %}display: block;{% else %}display: none;{% endif %}">
+          <p class="muted small" style="margin: 0 0 14px;">{{ lang('2fa.sent') }}</p>
+          <div class="form-group">
+            <label for="code" class="control-label">{{ lang('2fa.code') }}</label>
+            <input type="text" autocomplete="one-time-code" inputmode="numeric" id="code" name="code" class="form-control auth-otp" placeholder="••••••" maxlength="8">
+          </div>
+          <input type="hidden" name="enabled" value="{{ twofactorauth.activated }}">
+          <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+          <button id="2fa-approve" type="submit" class="btn btn-primary">
+            {% if twofactorauth.activated %}
+              {{ lang('account.2fa.enable') }}
+            {% else %}
+              {{ lang('account.2fa.disable') }}
+            {% endif %}
+          </button>
+        </form>
+      </div>
+    </section>
+
+    {# ── Language ── #}
+    {% if site['languages']|length > 1 %}
+      <section class="card account-card" id="language-card">
+        <div class="card-body">
+          <div class="account-card-head">
+            <div>
+              <div class="account-card-title">{{ lang('account.language')|default('Language') }}</div>
+              <div class="muted small">Changes the dashboard language.</div>
+            </div>
+            <div class="account-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+          </div>
+
+          <form {% if site['rtl'] %}class="rtl-form"{% endif %} method="post" action="">
+            <div class="form-group">
+              <label for="language" class="control-label">{{ lang('account.language') }}</label>
+              <select class="form-control" id="language" name="SettingsFrom[lang]">
+                {% for language in site['languages'] %}
+                  <option value="{{ language['code'] }}" {% if language['code'] == user['lang'] %}selected{% endif %}>{{ language['name'] }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+            <button type="submit" class="btn btn-primary">{{ lang('account.save') }}</button>
+          </form>
+        </div>
+      </section>
+    {% endif %}
+
+    {# ── Timezone ── #}
+    <section class="card account-card" id="timezone-card">
+      <div class="card-body">
+        <div class="account-card-head">
+          <div>
+            <div class="account-card-title">{{ lang('account.timezone')|default('Timezone') }}</div>
+            <div class="muted small">Used for dates throughout the dashboard.</div>
+          </div>
+          <div class="account-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+        </div>
+
+        <form {% if site['rtl'] %}class="rtl-form"{% endif %} action="" method="post">
+          <div class="form-group">
+            <label for="timezone" class="control-label">{{ lang('account.timezone') }}</label>
+            <select name="SettingsFrom[timezone]" id="timezone" class="form-control">
+              {% for timezone, label in timezones %}
+                <option value="{{ timezone }}" {% if timezone == user['timezone'] %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+          <button type="submit" class="btn btn-primary">{{ lang('account.save') }}</button>
+        </form>
+      </div>
+    </section>
+
+    {# ── Invoice details ── #}
+    {% if user_invoice_module %}
+      <section class="card account-card account-card-wide" id="invoice">
+        <div class="card-body">
+          <div class="account-card-head">
+            <div>
+              <div class="account-card-title">{{ lang('account.invoice.details')|default('Invoice details') }}</div>
+              <div class="muted small">Company name, address, tax ID — appears on PDF invoices.</div>
+            </div>
+            <div class="account-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+            </div>
+          </div>
+
+          <form {% if site['rtl'] %}class="rtl-form"{% endif %} action="" method="post">
+            {% if errorUserInvoice %}
+              <div class="alert alert-dismissible alert-danger {% if site['rtl'] %}rtl-alert{% endif %}">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ errorUserInvoice }}
+              </div>
+            {% endif %}
+            <div class="form-group">
+              <label for="invoice_details" class="control-label">{{ lang('account.invoice.details') }}</label>
+              <textarea class="form-control" name="SettingsFrom[invoice_details]" rows="6" id="invoice_details" placeholder="Company name&#10;Street, City, Postcode&#10;Country&#10;VAT / Tax ID">{{ invoice_details }}</textarea>
+            </div>
+            <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+            <button type="submit" class="btn btn-primary">{{ lang('account.save') }}</button>
+          </form>
+        </div>
+      </section>
+    {% endif %}
+
+    {# ── API key ── #}
+    <section class="card account-card account-card-wide" id="api-key">
+      <div class="card-body">
+        <div class="account-card-head">
+          <div>
+            <div class="account-card-title">{{ lang('account.api_key')|default('API key') }}</div>
+            <div class="muted small">Use this key to integrate with the Pulse API. Keep it secret.</div>
+          </div>
+          <div class="account-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>
+          </div>
+        </div>
+
+        <div style="{% if apiKey.errorMessage %}display: block;{% else %}display: none;{% endif %}"
+             class="alert alert-dismissible alert-danger {% if site['rtl'] %}rtl-alert{% endif %}">
+          <button type="button" class="close">&times;</button>
+          <span>{{ apiKey.errorMessage }}</span>
+        </div>
+
+        <form {% if site['rtl'] %}class="rtl-form"{% endif %} action="{{ page['url'] }}/newkey" method="post">
+          {% if user['is_generated_apikey'] %}
+            <div class="form-group">
+              <label for="api_key" class="control-label">{{ lang('account.api_key') }}</label>
+              <div class="api-key-row">
+                <input type="text" class="form-control" id="api_key" value="{{ user['apikey'] }}" readonly>
+                <button type="button" class="btn btn-default api-copy-btn" onclick="
+                  var el = document.getElementById('api_key');
+                  el.select(); el.setSelectionRange(0, 99999);
+                  try { document.execCommand('copy'); } catch(e) {}
+                  if (navigator.clipboard) navigator.clipboard.writeText(el.value);
+                  this.querySelector('.api-copy-label').textContent = 'Copied';
+                  setTimeout(function(){ document.querySelector('.api-copy-label').textContent = 'Copy'; }, 1400);
+                ">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  <span class="api-copy-label">Copy</span>
+                </button>
+              </div>
+              <small class="help-block muted">{{ lang('account.api_key.date') }} {{ user['apikey_created'] }}</small>
+            </div>
+          {% else %}
+            <p class="muted small" style="margin: 0 0 14px;">No API key yet. Generate one to use the API.</p>
+          {% endif %}
+
+          <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+          <button type="submit" class="btn btn-primary">{{ lang('account.generate_key') }}</button>
+        </form>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+{# ── Change email modal (preserved from original) ── #}
+<div class="modal fade" tabindex="-1" role="dialog" id="changeEmailModal" data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <form id="changeEmailForm" class="modal-content{% if site['rtl'] %} rtl-form{% endif %}" method="post" action="">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">{{ lang('confirmemail.change_email.title') }}</h4>
+      </div>
+      <div class="modal-body">
+        <div id="changeEmailError" class="error-summary alert alert-dismissible alert-danger hidden{% if site['rtl'] %} rtl-alert {% endif %}"></div>
+        <div class="form-group">
+          <label for="current-email" class="control-label">{{ lang('confirmemail.change_email.current_email') }}</label>
+          <span class="form-control" id="current-email" disabled>{{ user['email'] }}</span>
+        </div>
+        <div class="form-group">
+          <label for="new-email" class="control-label">{{ lang('confirmemail.change_email.new_email') }}</label>
+          <input type="email" class="form-control" id="new-email" name="ChangeEmailForm[email]">
+        </div>
+        <div class="form-group">
+          <label for="current-password" class="control-label">{{ lang('confirmemail.change_email.current_password') }}</label>
+          <input type="password" class="form-control" id="current-password" name="ChangeEmailForm[password]">
+        </div>
+        <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ lang('confirmemail.change_email.close') }}</button>
+        <button type="submit" class="btn btn-primary lp-cta--gradient" id="changeEmailSubmitBtn">{{ lang('confirmemail.change_email.submit') }}</button>
+      </div>
+    </form>
+  </div>
+</div>

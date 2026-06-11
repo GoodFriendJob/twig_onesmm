@@ -1,0 +1,275 @@
+{# giveaway.twig — "Giveaway & Rewards" (matches new design)
+   Variables: site.name, giveaway_intro, giveaways[{icon,title,earn_label,reward,url}],
+              giveaway_steps[{num,title,desc}], giveaway_rules[], lang(...)
+#}
+{% set gv_icons = {
+  'blackhatworld': 'https://storage.perfectcdn.com/aedutt/4i09uzh2zwq7cw7h.svg',
+  'google':        'https://storage.perfectcdn.com/aedutt/1iehjp87q28ikauw.svg',
+  'linkedin':      'https://storage.perfectcdn.com/aedutt/saya6ulwd2n4bo8c.svg',
+  'quora':         'https://storage.perfectcdn.com/aedutt/mlpe0enydo8ny1pz.svg',
+  'reddit':        'https://storage.perfectcdn.com/aedutt/wqtoy4yjcjabu3bb.svg',
+  'trustpilot':    'https://storage.perfectcdn.com/aedutt/outhn2dlgzre6y50.svg',
+  'video':         'https://storage.perfectcdn.com/aedutt/gpz3rk7enkpcbrm4.svg',
+  'youtube':       'https://storage.perfectcdn.com/aedutt/ephq0loub9ebem1t.svg'
+} %}
+{% set step_icons = {
+  'cart':   'https://storage.perfectcdn.com/aedutt/jijzrfhtkkkh2pu3.svg',
+  'chart':  'https://storage.perfectcdn.com/aedutt/cj7sn36pbs3oxbyp.svg',
+  'check':  'https://storage.perfectcdn.com/aedutt/ix64kyig682ijknz.svg',
+  'gift':   'https://storage.perfectcdn.com/aedutt/jp4temkgwukn0q2y.svg',
+  'smiley': 'https://storage.perfectcdn.com/aedutt/fo3pghw8paz5yb3b.svg',
+  'upload': 'https://storage.perfectcdn.com/aedutt/ox31d883d0ukkro8.svg'
+} %}
+
+{# ─── Defaults (used when Perfect Panel does not pass the arrays through) ─── #}
+{% set _site_name = site['name']|default('OneSMM') %}
+
+{% if giveaways is not defined or giveaways is empty %}
+  {% set giveaways = [
+    {
+      'logo_key': 'reddit',
+      'gname': 'Reddit',
+      'title': 'Share a post on Reddit',
+      'earn_label': 'And earn',
+      'reward': '$1 Balance',
+      'modal_title': 'Reddit Giveaway',
+      'detail': {
+        'how_it_works': '<ul><li>Open the Reddit thread we send you and leave a genuine comment about your experience with ' ~ _site_name ~ '.</li><li>Take a clear screenshot showing your Reddit username and the live comment.</li><li>Submit the screenshot through the proof form on this card.</li><li>Our team verifies the comment and credits your balance within 24 hours.</li></ul>',
+        'reward': '<ul><li>$1 panel balance per approved comment.</li><li>One Reddit reward per account, per month.</li></ul>',
+        'conditions': '<ul><li>Account must be at least 30 days old with positive karma.</li><li>Comment must remain live for at least 14 days.</li><li>Bot, throwaway, or scripted accounts are not eligible.</li></ul>'
+      }
+    },
+    {
+      'logo_key': 'blackhatworld',
+      'gname': 'BlackHatWorld',
+      'title': 'Start a thread on BlackHatWorld',
+      'earn_label': 'And earn',
+      'reward': '$1 Balance',
+      'modal_title': 'BlackHatWorld Giveaway',
+      'detail': {
+        'how_it_works': '<ul><li>Start a new thread in the SMM section reviewing ' ~ _site_name ~ '.</li><li>Include screenshots of orders you have placed and your honest experience.</li><li>Submit the thread URL through the proof form.</li><li>We verify and credit your balance after review.</li></ul>',
+        'reward': '<ul><li>$1 panel balance per approved thread.</li><li>One BHW reward per account, per month.</li></ul>',
+        'conditions': '<ul><li>Account must be Jr. VIP or above.</li><li>Thread must remain visible for at least 30 days.</li><li>Duplicate or low-effort threads are rejected.</li></ul>'
+      }
+    },
+    {
+      'logo_key': 'google',
+      'gname': 'Google',
+      'title': 'Leave a Google business review',
+      'earn_label': 'And earn',
+      'reward': '$1 Balance',
+      'modal_title': 'Google Review Giveaway',
+      'detail': {
+        'how_it_works': '<ul><li>Visit our Google Business profile (link provided in the form).</li><li>Leave a 5-star review with at least two sentences about your experience.</li><li>Submit a screenshot of your live review through the proof form.</li><li>Balance is credited within 24 hours of verification.</li></ul>',
+        'reward': '<ul><li>$1 panel balance per approved review.</li><li>One Google reward per account, lifetime.</li></ul>',
+        'conditions': '<ul><li>Google account must be at least 60 days old.</li><li>Review must stay live for at least 30 days.</li><li>Reviews removed by Google for policy violations forfeit the reward.</li></ul>'
+      }
+    },
+    {
+      'logo_key': 'quora',
+      'gname': 'Quora',
+      'title': 'Answer a question on Quora',
+      'earn_label': 'And earn up to',
+      'reward': '$5 Balance',
+      'modal_title': 'Quora Giveaway',
+      'detail': {
+        'how_it_works': '<ul><li>Pick a relevant Quora question about SMM panels, growth, or ' ~ _site_name ~ '.</li><li>Write a helpful, original answer that mentions us naturally.</li><li>Submit the live answer URL through the proof form.</li><li>Our team rates the answer and credits balance accordingly.</li></ul>',
+        'reward': '<ul><li>$1–$5 balance based on answer quality, depth, and engagement.</li><li>Maximum two Quora rewards per account, per month.</li></ul>',
+        'conditions': '<ul><li>Account must have at least 5 prior answers.</li><li>Answers must be original — copy-paste is detected and rejected.</li><li>Answer must stay live for at least 30 days.</li></ul>'
+      }
+    },
+    {
+      'logo_key': 'video',
+      'gname': 'Video Review',
+      'title': 'Post a short video review',
+      'earn_label': 'And earn',
+      'reward': '$5 Balance',
+      'modal_title': 'Video Review Giveaway',
+      'detail': {
+        'how_it_works': '<ul><li>Record a 30–60 second honest review of ' ~ _site_name ~ ' on YouTube Shorts, TikTok, or Reels.</li><li>Tag us and include the panel name in the caption.</li><li>Submit the live video link through the proof form.</li><li>Balance is credited within 24 hours of verification.</li></ul>',
+        'reward': '<ul><li>$5 panel balance per approved video.</li><li>One video reward per account, per month.</li></ul>',
+        'conditions': '<ul><li>Account must have at least 100 followers.</li><li>Video must stay live for at least 30 days.</li><li>Edited highlight reels of other creators are not eligible.</li></ul>'
+      }
+    },
+    {
+      'logo_key': 'linkedin',
+      'gname': 'LinkedIn',
+      'title': 'Write a LinkedIn post about us',
+      'earn_label': 'And earn',
+      'reward': '$1 Balance',
+      'modal_title': 'LinkedIn Giveaway',
+      'detail': {
+        'how_it_works': '<ul><li>Write a LinkedIn post explaining how you use ' ~ _site_name ~ ' for client work.</li><li>Tag us and use the post hashtag we provide.</li><li>Submit the live post URL through the proof form.</li><li>We verify and credit balance after review.</li></ul>',
+        'reward': '<ul><li>$1 panel balance per approved post.</li><li>One LinkedIn reward per account, per month.</li></ul>',
+        'conditions': '<ul><li>Profile must be complete with a real photo and job title.</li><li>Post must stay live for at least 30 days.</li><li>Spammy, hashtag-only posts are rejected.</li></ul>'
+      }
+    },
+    {
+      'logo_key': 'youtube',
+      'gname': 'YouTube',
+      'title': 'Make a YouTube tutorial mentioning us',
+      'earn_label': 'And earn up to',
+      'reward': '$5 Balance',
+      'modal_title': 'YouTube Tutorial Giveaway',
+      'detail': {
+        'how_it_works': '<ul><li>Record a tutorial showing how you use ' ~ _site_name ~ ' (placing orders, checking results, etc.).</li><li>Upload to YouTube as a public video.</li><li>Submit the video URL through the proof form.</li><li>Balance is credited based on quality and length.</li></ul>',
+        'reward': '<ul><li>$1–$5 panel balance based on production quality, length, and channel size.</li><li>One YouTube reward per channel, per month.</li></ul>',
+        'conditions': '<ul><li>Channel must have at least 100 subscribers.</li><li>Video must be 3 minutes or longer.</li><li>Video must stay public for at least 60 days.</li></ul>'
+      }
+    },
+    {
+      'logo_key': 'trustpilot',
+      'gname': 'Trustpilot',
+      'title': 'Leave a Trustpilot review',
+      'earn_label': 'And earn',
+      'reward': '$1 Balance',
+      'modal_title': 'Trustpilot Giveaway',
+      'detail': {
+        'how_it_works': '<ul><li>Open our Trustpilot profile (link in the form).</li><li>Leave a verified 5-star review of your experience.</li><li>Submit a screenshot of the live review through the proof form.</li><li>Balance is credited within 24 hours of verification.</li></ul>',
+        'reward': '<ul><li>$1 panel balance per approved review.</li><li>One Trustpilot reward per account, lifetime.</li></ul>',
+        'conditions': '<ul><li>Trustpilot account must be verified with a real name.</li><li>Review must stay live for at least 30 days.</li><li>Reviews flagged by Trustpilot for policy violations forfeit the reward.</li></ul>'
+      }
+    }
+  ] %}
+{% endif %}
+
+{% if giveaway_steps is not defined or giveaway_steps is empty %}
+  {% set giveaway_steps = [
+    { 'num': '01', 'icon_key': 'check',  'title': 'Complete the Task',    'desc': 'Pick a platform and follow the instructions on that card.' },
+    { 'num': '02', 'icon_key': 'upload', 'title': 'Submit Your Proof',    'desc': 'Upload a screenshot through the Learn More form on each card.' },
+    { 'num': '03', 'icon_key': 'gift',   'title': 'Receive Your Reward',  'desc': 'After verification, balance lands in your panel within 24 hours.' }
+  ] %}
+{% endif %}
+
+{% if giveaway_rules is not defined or giveaway_rules is empty %}
+  {% set giveaway_rules = [
+    'You must be a registered ' ~ _site_name ~ ' user with a confirmed email address before submitting any proof.',
+    'Each user can claim each platform reward once per month — duplicate submissions are ignored automatically.',
+    'Tasks must remain publicly visible for at least 14 days. Reviews, posts, or comments removed early forfeit the reward.',
+    'Screenshots must clearly show your profile, the action, and the destination URL — cropped or edited proofs are rejected.',
+    'Fake, bot, or throwaway accounts disqualify the user across all linked panels permanently.',
+    'Our team reviews submissions in the order received; verification usually completes within 24 hours on business days.',
+    'Balance rewards can be used for any service on the panel but are non-withdrawable to external payment methods.',
+    'We may add, change, or pause individual tasks at any time. Already-approved rewards are honoured under the original terms.',
+    _site_name ~ ' reserves the right to refuse a reward we believe is submitted in bad faith.'
+  ] %}
+{% endif %}
+<div class="subpage giveaway-page">
+
+  <div class="subpage-head">
+    <h1 class="subpage-title"><span>Giveaway</span> &amp; Rewards</h1>
+  </div>
+
+  <div class="subpage-body">
+
+    {# ─── Intro banner ─── #}
+    <div class="gv-banner">
+      <svg class="aff-wm-one aff-wm-one--reflink" viewBox="0 0 125 192" fill="#fff" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M75.5494 0H125L63.1868 62.1583H83.7912C85.2484 62.1583 86.646 62.7404 87.6764 63.7766C88.7068 64.8127 89.2857 66.2181 89.2857 67.6835V186.475C89.2857 187.94 88.7068 189.346 87.6764 190.382C86.646 191.418 85.2484 192 83.7912 192H45.3297C43.8724 192 42.4749 191.418 41.4445 190.382C40.414 189.346 39.8352 187.94 39.8352 186.475V75.9712H0L75.5494 0Z"/></svg>
+      <span class="gv-banner-ic">
+        <img src="https://storage.perfectcdn.com/aedutt/xjdgwk2uwpfz65k2.svg" alt="" width="40" height="40">
+      </span>
+      <p class="gv-banner-text">{% if giveaway_intro %}{{ giveaway_intro }}{% else %}Complete simple social media tasks we've listed below, share your experience with {{ site['name'] }}, and earn balance rewards after verification. Every action you take helps our community grow, and we make sure you get rewarded for it.{% endif %}</p>
+    </div>
+
+    {# ─── Reward cards ─── #}
+    <div class="gv-grid">
+      {% for g in giveaways %}
+        <div class="gv-card">
+          <div class="gv-card-body">
+            <div class="gv-logo"><img src="{{ gv_icons[g['logo_key']]|default(gv_icons['reddit']) }}" alt="{{ g['title'] }}"></div>
+            <div class="gv-task">{{ g['title'] }}</div>
+            <div class="gv-earn-label">{{ g['earn_label']|default('And earn') }}</div>
+            <div class="gv-reward">{{ g['reward'] }}</div>
+          </div>
+          <button type="button" class="gv-learn" data-gv-open="{{ loop.index }}">
+            {{ lang('giveaway.learn_more')|default('Learn More') }}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      {% endfor %}
+    </div>
+
+    {# ─── Per-card "Learn More" detail popups ─── #}
+    {% for g in giveaways %}
+      <div class="gv-modal" id="gv-modal-{{ loop.index }}" hidden>
+        <div class="gv-modal-dialog">
+          <button type="button" class="gv-modal-close" aria-label="Close">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          </button>
+          <div class="gv-modal-logo"><img src="{{ gv_icons[g['logo_key']]|default(gv_icons['reddit']) }}" alt=""></div>
+          <h3 class="gv-modal-title">{{ g['modal_title']|default(g['gname'] ~ ' Giveaway') }}</h3>
+          <hr class="gv-modal-rule">
+          <div class="gv-modal-body">
+            <h4 class="gv-modal-h">🔷 How It Works</h4>
+            <div class="gv-modal-sec">{{ g['detail']['how_it_works'] }}</div>
+            <h4 class="gv-modal-h">💰 Reward</h4>
+            <div class="gv-modal-sec">{{ g['detail']['reward'] }}</div>
+            <h4 class="gv-modal-h">⚙️ Conditions</h4>
+            <div class="gv-modal-sec">{{ g['detail']['conditions'] }}</div>
+            <div class="gv-modal-foot">
+              <p class="gv-modal-note"><strong>Please read the General Giveaway Rules before applying for this giveaway.</strong></p>
+              <p>Check the <a href="#">Google Drive link</a> for subreddit and related post for comments details.</p>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary lp-cta--gradient gv-modal-submit">
+            Submit proof
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    {% endfor %}
+
+    {# ─── How to participate ─── #}
+    <div class="subpage-card gv-how">
+      <div class="gv-how-head">
+        <h2 class="box-title" style="text-align:center;">How <b>to Participate</b></h2>
+        <p class="gv-how-sub">It takes just a few simple steps</p>
+      </div>
+      <div class="gv-steps">
+        {% for step in giveaway_steps %}
+          <div class="gv-step">
+            <div class="gv-step-ic"><img src="{{ step_icons[step['icon_key']]|default(step_icons['check']) }}" alt=""></div>
+            <div class="gv-step-num">{{ step['num'] }}</div>
+            <div class="gv-step-title">{{ step['title'] }}</div>
+            <div class="gv-step-desc">{{ step['desc'] }}</div>
+          </div>
+          {% if not loop.last %}
+            <div class="gv-step-arrow"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    {# ─── General rules ─── #}
+    <div class="gv-rules">
+      <h2 class="box-title">General <b>Rules</b></h2>
+      <p class="box-sub" style="margin-bottom:18px;">Please read and follow all rules carefully.</p>
+      <ul class="gv-rules-list">
+        {% for rule in giveaway_rules %}
+          <li>{{ rule }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  function close(m){ m.hidden = true; if (!document.querySelector('.gv-modal:not([hidden])')) document.body.style.overflow = ''; }
+  document.querySelectorAll('[data-gv-open]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var m = document.getElementById('gv-modal-' + btn.getAttribute('data-gv-open'));
+      if (m){ m.hidden = false; document.body.style.overflow = 'hidden'; m.scrollTop = 0; }
+    });
+  });
+  document.querySelectorAll('.gv-modal').forEach(function(m){
+    m.addEventListener('click', function(e){
+      if (e.target === m || e.target.closest('.gv-modal-close')) close(m);
+    });
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') document.querySelectorAll('.gv-modal:not([hidden])').forEach(close);
+  });
+})();
+</script>

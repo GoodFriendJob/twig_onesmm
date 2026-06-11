@@ -1,0 +1,148 @@
+{# orders.twig — "Orders Status" (matches new design)
+   Variables: site.rtl, page.url, status, search, orderList[], task,
+              pagination, searchList[], lang(...)
+#}
+<div class="subpage orders-page">
+
+  <div class="subpage-head">
+    <h1 class="subpage-title"><span>Orders</span> Status</h1>
+  </div>
+
+  <div class="subpage-card subpage-card--flush ord-card">
+
+    {# ─── Search ─── #}
+    <div class="ord-toolbar">
+      <form action="{{ page['url'] }}" method="get" id="history-search" class="ord-search">
+        <svg class="ord-search-ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="text" name="search" value="{{ search }}" placeholder="{{ lang('general.search.placeholder') }}">
+      </form>
+
+      {# ─── Status filter chips ─── #}
+      {% set tabs = [
+        { key: 'all',        url: page['url'],                  label: lang('orders.all') },
+        { key: 'pending',    url: page['url'] ~ '/pending',     label: lang('orders.status.pending') },
+        { key: 'inprogress', url: page['url'] ~ '/inprogress',  label: lang('orders.status.inprogress') },
+        { key: 'completed',  url: page['url'] ~ '/completed',   label: lang('orders.status.completed') },
+        { key: 'partial',    url: page['url'] ~ '/partial',     label: lang('orders.status.partial') },
+        { key: 'processing', url: page['url'] ~ '/processing',  label: lang('orders.status.processing') },
+        { key: 'canceled',   url: page['url'] ~ '/canceled',    label: lang('orders.status.canceled') }
+      ] %}
+      <div class="ord-filters {% if site['rtl'] %}rtl-nav{% endif %}">
+        {% for tab in tabs %}
+          <a href="{{ tab.url }}" class="ord-filter{% if tab.key == status %} is-active{% endif %}">{{ tab.label }}</a>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# ─── Orders table ─── #}
+    <div class="ord-table-wrap">
+      <table class="ord-table {% if site['rtl'] %}rtl-table{% endif %}">
+        <thead>
+          <tr>
+            <th>{{ lang('orders.id') }}</th>
+            <th>{{ lang('orders.date') }}</th>
+            <th>{{ lang('orders.link') }}</th>
+            <th class="num">{{ lang('orders.charge') }}</th>
+            <th class="nowrap num">{{ lang('orders.startcount') }}</th>
+            <th class="num">{{ lang('orders.quantity') }}</th>
+            <th>{{ lang('orders.service') }}</th>
+            <th>{{ lang('orders.status') }}</th>
+            <th class="num">{{ lang('orders.remains') }}</th>
+            {% if task == 1 %}<th class="ord-col-act"></th>{% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orderList %}
+            {% set s = order['status']|lower %}
+            {% set st =
+              s matches '/complete/'           ? 'green' :
+              s matches '/progress|processing/'? 'blue' :
+              s matches '/partial/'            ? 'amber' :
+              s matches '/pending/'            ? 'yellow' :
+              s matches '/paus/'               ? 'gray' :
+              s matches '/cancel/'             ? 'red' : 'gray' %}
+            {% set act =
+              (s matches '/complete/' or s matches '/cancel/') ? 'reorder' :
+              s matches '/paus/'    ? 'resume' :
+              s matches '/partial/' ? 'action' : 'cancel' %}
+            <tr>
+              <td class="ord-id tabular" data-label="{{ lang('orders.id') }}">{{ order['id'] }}</td>
+              <td class="ord-date nowrap" data-label="{{ lang('orders.date') }}">
+                <span class="ord-date-d tabular">{{ order['date'] }}</span>
+                {% if order['time'] %}<span class="ord-date-t tabular">{{ order['time'] }}</span>{% endif %}
+              </td>
+              <td data-label="{{ lang('orders.link') }}"><span class="ord-link" title="{{ order['link'] }}">{{ order['link'] }}</span></td>
+              <td class="ord-charge tabular num" data-label="{{ lang('orders.charge') }}">{{ order['charge'] }}</td>
+              <td class="tabular nowrap num" data-label="{{ lang('orders.startcount') }}">{{ order['start_count'] }}</td>
+              <td class="tabular num" data-label="{{ lang('orders.quantity') }}">{{ order['quantity'] }}</td>
+              <td class="ord-service" title="{{ order['service'] }}" data-label="{{ lang('orders.service') }}">
+                {% if order['service_id'] %}<span class="ord-service-id">{{ order['service_id'] }}</span><span class="ord-service-sep">|</span>{% endif %}
+                <span class="ord-service-name">{{ order['service'] }}</span>
+              </td>
+              <td data-label="{{ lang('orders.status') }}"><span class="ord-status ord-status--{{ st }}">{{ order['status'] }}</span></td>
+              <td class="ord-remains tabular num{% if s matches '/partial|paus/' %} is-warn{% endif %}" data-label="{{ lang('orders.remains') }}">{{ order['remains'] }}</td>
+              {% if task == 1 %}
+                <td class="ord-col-act" data-label="">
+                  {% if order['refilling'] == 1 %}
+                    <span class="ord-status ord-status--blue">{{ lang('orders.refilling') }}</span>
+                  {% elseif act == 'reorder' %}
+                    <a href="{{ page['url'] }}/{{ order['id'] }}/reorder" class="ord-act ord-act--grad">{{ lang('orders.button.reorder')|default('Reorder') }}
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                    </a>
+                  {% elseif act == 'resume' %}
+                    <a href="{{ page['url'] }}/{{ order['id'] }}/resume" class="ord-act ord-act--grad">{{ lang('orders.button.resume')|default('Resume') }}
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8 5v14l11-7z"/></svg>
+                    </a>
+                  {% elseif act == 'action' %}
+                    <a href="{{ page['url'] }}/{{ order['id'] }}" class="ord-act ord-act--grad">{{ lang('orders.button.action')|default('Action') }}</a>
+                  {% else %}
+                    <a href="{{ page['url'] }}/{{ order['id'] }}/cancel" class="ord-act ord-act--ghost">{{ lang('orders.button.cancel')|default('Cancel') }}</a>
+                  {% endif %}
+                </td>
+              {% endif %}
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="{{ task == 1 ? 10 : 9 }}">
+                <div class="ord-empty">{{ lang('orders.empty')|default('No orders match this filter.') }}</div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {# ─── Pagination ─── #}
+  {% if pagination['count'] > 100 %}
+    {% if searchList %}
+      {% set params = {} %}
+      {% for search in searchList %}
+        {% set params = params | merge([search['name'] ~ '=' ~ search['value']]) %}
+      {% endfor %}
+      {% set params = '?' ~ params|join('&') %}
+    {% endif %}
+    <ul class="pagination orders-pagination {% if site['rtl'] %}rtl-pagination{% endif %}">
+      {% if pagination['current'] != 1 %}
+        <li><a href="{{ page['url'] }}/{{ status }}/{{ pagination['last'] }}{{ params }}" aria-label="Previous">&laquo;</a></li>
+      {% endif %}
+      {% set r, l = 3, 3 %}
+      {% if pagination['current'] == 1 %}{% set r = 6 %}{% endif %}
+      {% if pagination['current'] == 2 %}{% set r = 5 %}{% endif %}
+      {% if pagination['current'] >= pagination['pages'] %}{% set l = 5 %}{% endif %}
+      {% for i in 1..ceil(pagination['pages']) %}
+        {% if i >= (pagination['current'] - l) and i <= (pagination['current'] + r) %}
+          <li {% if i == pagination['current'] %}class="active"{% endif %}><a href="{{ page['url'] }}/{{ status }}/{{ i }}{{ params }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if pagination['current'] < pagination['pages'] %}
+        <li><a href="{{ page['url'] }}/{{ status }}/{{ pagination['next'] }}{{ params }}" aria-label="Next">&raquo;</a></li>
+      {% endif %}
+    </ul>
+  {% endif %}
+
+</div>
+
+{% if orderList|length > 0 %}
+<script>try{localStorage.setItem('onesmm_has_orders','1')}catch(e){}</script>
+{% endif %}
