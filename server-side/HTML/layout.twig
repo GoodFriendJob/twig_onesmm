@@ -466,7 +466,7 @@
                      Special-case link "/" — only active when on the bare home URL (host + optional "/"),
                      never when on a sub-path. Slice-based polyfill keeps Twig 1.x happy. #}
                   {% if menu['link'] == '/' %}
-                    {% set _is_active = _page_path matches '#://[^/]+/?$#' %}
+                    {% set _is_active = (_page_path matches '#^https?://[^/]+/?$#') or (_page_path == '/') or (_page_path == '') %}
                   {% else %}
                     {% set _link_len = menu['link']|length %}
                     {% set _tail = _page_path|slice(-(_link_len)) %}
@@ -474,7 +474,7 @@
                   {% endif %}
                   <a href="{{ menu['link'] }}"
                      class="sidebar-item {% if _is_active %}active{% endif %}">
-                    {% if '/orders/new' in _ml or '/neworder' in _ml or '/new-order' in _ml or '/new_order' in _ml %}
+                    {% if menu['link'] == '/' or '/orders/new' in _ml or '/neworder' in _ml or '/new-order' in _ml or '/new_order' in _ml %}
                       <svg class="mi" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8H12"/><path d="M8 4L8 12"/><path opacity="0.4" d="M5.9 15H10.1C13.6 15 15 13.6 15 10.1V5.9C15 2.4 13.6 1 10.1 1H5.9C2.4 1 1 2.4 1 5.9V10.1C1 13.6 2.4 15 5.9 15Z"/></svg>
                     {% elseif '/orders/mass' in _ml or '/massorder' in _ml or 'mass-order' in _ml or 'mass_order' in _ml %}
                       <svg class="mi" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8.6717 1.94688L12.605 3.69354C13.7384 4.19354 13.7384 5.02021 12.605 5.52021L8.6717 7.26686C8.22503 7.46686 7.4917 7.46686 7.04503 7.26686L3.11172 5.52021C1.97839 5.02021 1.97839 4.19354 3.11172 3.69354L7.04503 1.94688C7.4917 1.74687 8.22503 1.74687 8.6717 1.94688Z"/><path opacity="0.4" d="M2 7.33398C2 7.89398 2.42 8.54065 2.93333 8.76732L7.46 10.7807C7.80667 10.934 8.2 10.934 8.54 10.7807L13.0667 8.76732C13.58 8.54065 14 7.89398 14 7.33398"/><path opacity="0.4" d="M2 10.666C2 11.286 2.36667 11.846 2.93333 12.0993L7.46 14.1127C7.80667 14.266 8.2 14.266 8.54 14.1127L13.0667 12.0993C13.6333 11.846 14 11.286 14 10.666"/></svg>
