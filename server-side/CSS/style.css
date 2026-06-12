@@ -4699,9 +4699,9 @@ flex-wrap: wrap;
 }
 .pay-instr-title { font-size: 16px; font-weight: 700; color: var(--ink-1); margin: 0 0 12px; }
 .pay-instr-body { font-size: 14px; line-height: 1.7; color: var(--ink-2); }
-.pay-instr-body p { margin: 0 0 12px; }
+.pay-instr-body p { margin: 0 0 5px; }
 .pay-instr-body p:last-child { margin-bottom: 0; }
-.pay-instr-body strong, .pay-instr-body b { color: var(--ink-1); font-weight: 700; }
+.pay-instr-body strong, .pay-instr-body b { font-weight: 700; }
 
 /* Amount */
 .pay-amount { margin-bottom: 22px; }

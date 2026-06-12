@@ -14,14 +14,12 @@
   <div class="addfunds-layout">
 
     {# ─── LEFT: payment form ─── #}
-    <div class="addfunds-main subpage-card">
+    <div class="card card-body">
       <form method="post" action="" id="addfunds-form" {% if site['rtl'] %}class="rtl-form"{% endif %}>
         <input type="hidden" name="_csrf" value="{{ csrftoken }}">
 
-        <div class="box-head">
-          <h2 class="box-title">Choose a <b>Payment Method</b></h2>
-          <p class="box-sub">Extra descriptions can be displayed here for the users to read. It can be as long as you desire, but better to keep it short and appealing to the users</p>
-        </div>
+        <h3 class="card-head">Choose a <b>Payment Method</b></h3>
+        <p>Pick how you'd like to top up. Most methods credit your balance automatically within seconds of confirmation.</p>
 
         {% if success %}
           <div class="alert alert-success alert-dismissible {% if site['rtl'] %}rtl-alert{% endif %}">
@@ -50,29 +48,42 @@
           {% for payment in paymentsList %}
             {% set isSel = currentPayment == payment['id'] or (currentPayment is empty and loop.first) %}
             <label class="pay-tile{% if isSel %} is-active{% endif %}"
-                   data-cat="{{ payment['category']|default('other') }}"
-                   data-payment-id="{{ payment['id'] }}"
-                   data-name="{{ payment['name'] }}"
-                   data-icon="{{ payment['icon']|default('') }}"
-                   data-instruction="{{ payment['instruction']|default('')|e('html_attr') }}">
+                  data-cat="{{ payment['category']|default('other') }}"
+                  data-payment-id="{{ payment['id'] }}"
+                  data-name="{{ payment['name'] }}"
+                  data-icon="{{ payment['icon']|default('') }}"
+                  data-instruction="{{ payment['instruction']|default('') }}">
               <input type="radio" class="pay-tile-radio" name="AddFoundsForm[type]" value="{{ payment['id'] }}"{% if isSel %} checked{% endif %}>
-              <span class="pay-tile-ic pay-ic--{{ payment['icon_key']|default('generic') }}">
-                {% if payment['icon_key'] == 'cryptomus' %}
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5"/><path d="M12 22V12"/></svg>
-                {% elseif payment['icon_key'] == 'heleket' %}
-                  <svg viewBox="0 0 24 24" fill="#E8313A"><path d="M12 23a7 7 0 0 0 7-7c0-2-1-4-2.5-5.5C15 9 14 7 14 4c-2 1.5-4 3.5-5 5.5C8 8 7.5 7 7.5 6 6 8 5 10.5 5 13a7 7 0 0 0 7 10z"/></svg>
-                {% elseif payment['icon_key'] == 'cryptogate' %}
+              <span class="pay-tile-ic">
+                {% set _pn = payment['name']|lower %}
+                {% if payment['icon'] %}
+                  <img src="{{ payment['icon'] }}" alt="{{ payment['name'] }}" class="pay-tile-img" loading="lazy"
+                      onerror="this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='';}">
+                  <span class="pay-ic-letter" style="display:none">{{ payment['name']|first|upper }}</span>
+                {% elseif 'cryptomus' in _pn %}
+                  <svg viewBox="-2 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.8112 17.8461L10.087 23.7504C9.86807 23.8857 9.58841 23.8866 9.36065 23.7525C9.36065 23.7525 2.61548 19.7379 0.675999 18.6379C0.162034 18.3466 0.172379 18.2562 0.172379 17.8869C0.172379 15.6626 0.172379 6.03073 0.172379 6.03073C0.227206 5.9053 0.317034 5.79633 0.440827 5.72503L10.0531 0.191193C10.2658 0.0689158 10.5372 0.074872 10.7581 0.20696L19.766 5.59347C19.8632 5.65163 19.9407 5.73292 20 5.82419V13.6729C20 13.6729 20 16.544 20 17.4129C20 17.6471 19.9498 17.7562 19.8112 17.8461ZM1.07684 8.20661L0.958936 17.1425C0.954605 17.4655 1.17213 17.8569 1.44484 18.0166L8.85249 22.192C9.1252 22.3519 9.34979 22.2194 9.35412 21.8965L9.47203 13.1235C9.47636 12.8006 9.25883 12.4093 8.98612 12.2494L1.57847 7.91093C1.30576 7.7512 1.08117 7.88355 1.07684 8.20661ZM18.373 5.9211L10.9471 1.44725C10.6737 1.28264 10.2191 1.28692 9.93167 1.45695L2.1251 5.9114C1.83767 6.08159 1.82618 6.35293 2.09969 6.5177L9.52544 10.9915C9.79895 11.1562 10.2536 11.1519 10.541 10.9818L18.3476 6.5274C18.635 6.3572 18.6463 6.08587 18.373 5.9211Z"/></svg>
+                {% elseif 'heleket' in _pn %}
+                  <svg viewBox="-1.5 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.77165 20.3586L0 16.7172L6.11811 0L8.43307 4.8H12.7323L14.5512 0L21 18.2069L9.25984 24L15.874 17.5448L12.7323 8.6069H7.93701L4.96063 17.0483L7.77165 20.3586Z" fill="#F31819"/></svg>
+                {% elseif 'cryptogate' in _pn %}
                   <svg viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="1.5" stroke-linejoin="round"><path d="M6 3h12l3 5-9 13L3 8z"/><path d="M3 8h18M8.5 3 6 8l6 13 6-13-2.5-5"/></svg>
-                {% elseif payment['icon_key'] == '1xgate' %}
-                  <span class="pay-1xgate"><b>1X</b>GATE</span>
-                {% elseif payment['icon_key'] == 'paypal' %}
+                {% elseif '1xgate' in _pn or '1xbet' in _pn %}
+                  <svg viewBox="0 0 102 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:auto;height:18px"><path fill-rule="evenodd" clip-rule="evenodd" d="M20.3302 7.59024C19.387 7.65087 18.4434 7.71168 17.5 7.7723C17.6258 7.52961 17.7515 7.28673 17.8774 7.04404C18.5789 5.30148 20.9725 4.61162 23.5377 5.40544C23.0347 9.95656 22.5313 14.5093 22.0283 19.0604C21.0851 18.9998 20.1413 18.939 19.1981 18.8784C19.1981 18.8178 19.1981 18.7569 19.1981 18.6963C19.5755 14.9947 19.9528 11.2918 20.3302 7.59024ZM25.0472 5.22337C26.3911 5.17457 27.8155 5.20607 28.6321 5.5875C29.2609 6.74053 29.89 7.89374 30.5189 9.04677C29.9528 9.77504 29.3868 10.5033 28.8208 11.2316C28.6321 11.1101 28.4434 10.9889 28.2547 10.8674C27.1857 8.98633 26.1162 7.10448 25.0472 5.22337ZM34.2925 5.22337C35.3615 5.22337 36.4309 5.22337 37.5 5.22337C35.8021 7.40799 34.1036 9.59316 32.4057 11.7778C33.7892 14.2051 35.173 16.6331 36.5566 19.0604C35.2126 19.1092 33.7883 19.0777 32.9717 18.6963C32.1542 17.24 31.3364 15.7831 30.5189 14.3267C30.2674 14.5088 30.0157 14.6908 29.7642 14.8729C29.2345 16.1073 27.7449 18.247 26.5566 18.8784C25.5504 18.8784 24.544 18.8784 23.5377 18.8784C23.6636 18.7569 23.7892 18.6357 23.9151 18.5142C27.3738 14.0844 30.8336 9.65324 34.2925 5.22337Z" fill="#00297E"/><path fill-rule="evenodd" clip-rule="evenodd" d="M44.5864 11.8341C47.1591 11.8981 49.7328 11.9622 52.3055 12.0262C51.2894 20.6347 39.4436 23.4623 36.8672 14.9081C35.0226 8.7828 40.5016 4.76744 44.9629 4.14919C49.3514 3.54112 53.104 6.96897 49.2932 9.3365C45.7604 6.42123 40.2759 7.18088 39.6913 12.6026C39.1559 17.5682 46.2902 17.8848 48.3518 14.9081C48.3518 14.8441 48.3518 14.7799 48.3518 14.7159C46.9712 14.7159 45.5904 14.7159 44.2098 14.7159C44.3354 13.7555 44.4608 12.7945 44.5864 11.8341ZM58.7068 4.91768C60.0079 4.84333 61.3885 4.70692 61.9074 5.49405C63.288 10.1686 64.6688 14.8445 66.0494 19.519C65.108 19.519 64.1665 19.519 63.2253 19.519C62.8487 18.5586 62.4722 17.5976 62.0957 16.6372C60.1504 16.6372 58.2045 16.6372 56.2592 16.6372C55.7573 17.5976 55.255 18.5586 54.7531 19.519C53.749 19.455 52.7448 19.3909 51.7407 19.3269C54.0625 14.5244 56.385 9.72017 58.7068 4.91768ZM66.9907 4.91768C69.7517 4.91768 72.5137 4.91768 75.2747 4.91768C75.212 5.81412 75.1491 6.71095 75.0864 7.6074C74.2079 7.6074 73.3291 7.6074 72.4506 7.6074C72.0741 11.5776 71.6975 15.5488 71.321 19.519C70.3169 19.455 69.3127 19.3909 68.3086 19.3269C68.6852 15.4848 69.0617 11.6416 69.4383 7.79952C69.3756 7.73554 69.3127 7.67137 69.25 7.6074C68.4342 7.6074 67.6182 7.6074 66.8025 7.6074C66.8651 6.71095 66.928 5.81412 66.9907 4.91768ZM78.287 16.6372C79.9813 16.6372 81.6761 16.6372 83.3704 16.6372C83.2448 17.5976 83.1194 18.5586 82.9938 19.519C80.2955 19.455 77.5965 19.3909 74.8981 19.3269C75.3374 14.5244 75.7768 9.72017 76.216 4.91768C78.977 4.91768 81.739 4.91768 84.5 4.91768C84.3744 5.81412 84.249 6.71095 84.1235 7.6074C82.3665 7.67137 80.6088 7.73554 78.8518 7.79952C78.8518 8.56801 78.8518 9.3365 78.8518 10.105C80.5461 10.105 82.2409 10.105 83.9352 10.105C83.8096 11.0656 83.6842 12.0262 83.5586 12.9868C81.8644 12.9868 80.1696 12.9868 78.4753 12.9868C78.4126 14.2035 78.3497 15.4205 78.287 16.6372ZM59.6481 9.3365C59.0206 10.7453 58.3929 12.1544 57.7654 13.5632C58.8949 13.5632 60.0249 13.5632 61.1543 13.5632C61.1543 13.4992 61.1543 13.4351 61.1543 13.3711C60.7836 12.2183 60.524 10.0376 59.6481 9.3365Z" fill="#0094DA"/></svg>
+                {% elseif 'paypal' in _pn %}
                   <svg viewBox="0 0 24 24" fill="none"><path fill="#253B80" d="M8.3 21H5.6c-.3 0-.5-.3-.4-.6L7.7 4.9c.1-.5.5-.9 1-.9h5.1c2.6 0 4.4 1.4 4 4.2-.5 3-2.7 4.6-5.7 4.6h-2c-.4 0-.7.3-.8.7L8.3 21z"/><path fill="#179BD7" d="M18.6 8.8c.3 2.9-1.8 5-4.9 5h-1.9c-.4 0-.7.3-.8.7L9.8 21c0 .3.1.5.4.5h2.5c.4 0 .8-.3.9-.8l.9-5.4c.1-.4.4-.7.8-.7h.6c2.6 0 4.3-1.4 4.8-3.9.2-1.2-.2-2.3-1.1-3z"/></svg>
-                {% elseif payment['icon_key'] == 'wise' %}
+                {% elseif 'wise' in _pn %}
                   <svg viewBox="0 0 24 24" fill="none" stroke="#37B24D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13"/><path d="m13 6 6 6-6 6"/></svg>
-                {% elseif payment['icon_key'] == 'usdt' %}
+                {% elseif 'usdt' in _pn or 'tether' in _pn %}
                   <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#26A17B"/><rect x="6.5" y="7" width="11" height="2.4" rx="1.2" fill="#fff"/><rect x="10.8" y="7.6" width="2.4" height="9.6" rx="1.2" fill="#fff"/></svg>
-                {% elseif payment['icon_key'] == 'crypto_direct' %}
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#1FA2B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><path d="M14 4h6v6"/><path d="M20 4 10 14"/></svg>
+                {% elseif 'perfect money' in _pn or 'perfectmoney' in _pn %}
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#C8102E"/><path d="M8 7h4.2a3 3 0 0 1 0 6H10v4H8V7zm2 2v2h2.2a1 1 0 0 0 0-2H10z" fill="#fff"/></svg>
+                {% elseif 'payeer' in _pn %}
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1C6BBA"/><path d="M7 7h4.5a3 3 0 0 1 0 6H9v4H7V7zm2 2v2h2.5a1 1 0 0 0 0-2H9z" fill="#fff"/></svg>
+                {% elseif 'stripe' in _pn or 'visa' in _pn or 'master' in _pn or 'credit' in _pn or 'debit' in _pn or 'card' in _pn %}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+                {% elseif 'bitcoin' in _pn or 'btc' in _pn %}
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#F7931A"/><path d="M15.3 10.7c.2-1.3-.8-2-2.1-2.4l.4-1.7-1-.3-.4 1.6-.8-.2.4-1.7-1-.2-.4 1.7-2-.5-.3 1.1s.8.2.7.2c.4.1.5.4.5.6l-1 4.2c-.1.1-.2.3-.5.2 0 0-.7-.2-.7-.2l-.5 1.2 1.9.5-.4 1.7 1 .3.4-1.7.8.2-.4 1.7 1 .3.4-1.7c1.8.3 3.1.2 3.7-1.4.5-1.3 0-2-.9-2.5.7-.2 1.2-.6 1.3-1.6zm-2.3 3.3c-.3 1.3-2.5.6-3.2.4l.6-2.3c.7.2 3 .5 2.6 1.9zm.3-3.3c-.3 1.2-2.1.6-2.7.4l.5-2.1c.6.2 2.5.4 2.2 1.7z" fill="#fff"/></svg>
+                {% elseif 'crypto' in _pn or 'coin' in _pn or 'usdc' in _pn or 'ethereum' in _pn or ' eth' in _pn or 'trx' in _pn or 'tron' in _pn or 'binance' in _pn or 'bnb' in _pn %}
+                  <svg viewBox="-2 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.8112 17.8461L10.087 23.7504C9.86807 23.8857 9.58841 23.8866 9.36065 23.7525C9.36065 23.7525 2.61548 19.7379 0.675999 18.6379C0.162034 18.3466 0.172379 18.2562 0.172379 17.8869C0.172379 15.6626 0.172379 6.03073 0.172379 6.03073C0.227206 5.9053 0.317034 5.79633 0.440827 5.72503L10.0531 0.191193C10.2658 0.0689158 10.5372 0.074872 10.7581 0.20696L19.766 5.59347C19.8632 5.65163 19.9407 5.73292 20 5.82419V13.6729C20 13.6729 20 16.544 20 17.4129C20 17.6471 19.9498 17.7562 19.8112 17.8461ZM1.07684 8.20661L0.958936 17.1425C0.954605 17.4655 1.17213 17.8569 1.44484 18.0166L8.85249 22.192C9.1252 22.3519 9.34979 22.2194 9.35412 21.8965L9.47203 13.1235C9.47636 12.8006 9.25883 12.4093 8.98612 12.2494L1.57847 7.91093C1.30576 7.7512 1.08117 7.88355 1.07684 8.20661ZM18.373 5.9211L10.9471 1.44725C10.6737 1.28264 10.2191 1.28692 9.93167 1.45695L2.1251 5.9114C1.83767 6.08159 1.82618 6.35293 2.09969 6.5177L9.52544 10.9915C9.79895 11.1562 10.2536 11.1519 10.541 10.9818L18.3476 6.5274C18.635 6.3572 18.6463 6.08587 18.373 5.9211Z"/></svg>
                 {% else %}
                   <span class="pay-ic-letter">{{ payment['name']|first|upper }}</span>
                 {% endif %}
@@ -118,23 +129,58 @@
       </form>
     </div>
 
-    {# ─── RIGHT: descriptions + history ─── #}
+    {# ─── RIGHT: trust signals + history ─── #}
     <aside class="addfunds-side">
-      <div class="subpage-card">
-        <h2 class="box-title">Extra <b>Descriptions here</b></h2>
-        <p class="box-sub">{% if addfunds_aside %}{{ addfunds_aside }}{% else %}Extra descriptions can be displayed here for the users to read. It can be as long as you desire, but better to keep it short and appealing to the users{% endif %}</p>
-      </div>
+      {% if addfunds_aside %}
+        <div class="card card-body">
+          <h3 class="card-head">Good to <b>know</b></h3>
+          <p>{{ addfunds_aside }}</p>
+        </div>
+      {% else %}
+        <div class="card card-body2">
+          <h3 class="card-head">Why deposit <b>with OneSMM</b></h3>
+          <ul class="trust-list">
+            <li class="trust-item">
+              <span class="trust-ic" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </span>
+              <div class="trust-text">
+                <div class="trust-title">Instant credit</div>
+                <div class="trust-desc">Most methods top up your balance within seconds of confirmation.</div>
+              </div>
+            </li>
+            <li class="trust-item">
+              <span class="trust-ic" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </span>
+              <div class="trust-text">
+                <div class="trust-title">Verified gateways</div>
+                <div class="trust-desc">Every processor is vetted. Transactions are encrypted end-to-end.</div>
+              </div>
+            </li>
+            <li class="trust-item">
+              <span class="trust-ic" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </span>
+              <div class="trust-text">
+                <div class="trust-title">24/7 support</div>
+                <div class="trust-desc">Stuck on a deposit? Open a ticket and we'll fix it fast.</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      {% endif %}
 
       {% if paymentList %}
-        <div class="subpage-card subpage-card--flush">
-          <div class="aff-card-head"><h2 class="box-title">Payment <b>History</b></h2></div>
+        <div class="card card-body2">
+          <h3 class="card-head">Payment <b>History</b></h3>
           <div class="aff-table-wrap">
-            <table class="aff-table {% if site['rtl'] %}rtl-table{% endif %}">
+            <table class="aff-table addfunds-history-table {% if site['rtl'] %}rtl-table{% endif %}">
               <thead>
                 <tr>
-                  <th>{{ lang('addfunds.date') }}</th>
-                  <th>{{ lang('addfunds.amount') }}</th>
-                  <th>{{ lang('addfunds.method') }}</th>
+                  <th class="col-date">{{ lang('addfunds.date') }}</th>
+                  <th class="col-amount">{{ lang('addfunds.amount') }}</th>
+                  <th class="col-method">{{ lang('addfunds.method') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -144,8 +190,8 @@
                       <span class="hist-date">{{ payment['date'] }}</span>
                       {% if payment['time'] %}<span class="hist-time">{{ payment['time'] }}</span>{% endif %}
                     </td>
-                    <td class="aff-comm tabular">{{ payment['amount'] }}</td>
-                    <td class="{% if payment['affiliation'] %}hist-affil{% endif %}">{{ payment['method'] }}</td>
+                    <td class="aff-comm tabular hist-amount">{{ payment['amount'] }}</td>
+                    <td class="hist-method{% if payment['affiliation'] %} hist-affil{% endif %}" title="{{ payment['method'] }}">{{ payment['method'] }}</td>
                   </tr>
                 {% endfor %}
               </tbody>
