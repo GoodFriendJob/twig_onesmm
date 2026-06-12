@@ -13,7 +13,7 @@
       <div class="card">
         <div class="card-body">
           <div class="platform-head">
-            <div class="h3">{{ lang('massorder.label') }}</div>
+            <div class="h3">One order per line in format</div>
           </div>
           <form {% if site['rtl'] %}class="rtl-form"{% endif %} method="post" action="{{ page['url'] }}">
             <input type="hidden" name="_csrf" value="{{ csrftoken }}">
@@ -51,7 +51,7 @@
             {% endif %}
 
             <div class="form-group">
-              <label for="links" class="control-label">Order Entry</label>
+              <label for="links" class="control-label">{{ lang('massorder.label') }}</label>
               <textarea class="form-control mono massorder-textarea" name="MassOrderForm[orders]" rows="15" id="links" placeholder="{{ lang('massorder.placeholder') }}"></textarea>
             </div>
 
