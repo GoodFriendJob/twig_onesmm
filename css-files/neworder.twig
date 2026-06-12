@@ -67,11 +67,15 @@
             </div>
             <div class="platform-grid" id="platform-grid">
               <button type="button" class="pulse-platform-chip is-active" data-pulse-platform="all" data-keywords="all">
-                <span class="platform-icon platform-all"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
+                <span class="platform-icon platform-all">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 8.27V4.23C22 2.64 21.36 2 19.77 2H15.73C14.14 2 13.5 2.64 13.5 4.23V8.27C13.5 9.86 14.14 10.5 15.73 10.5H19.77C21.36 10.5 22 9.86 22 8.27Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 8.52V3.98C10.5 2.57 9.86 2 8.27 2H4.23C2.64 2 2 2.57 2 3.98V8.51C2 9.93 2.64 10.49 4.23 10.49H8.27C9.86 10.5 10.5 9.93 10.5 8.52Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 19.77V15.73C10.5 14.14 9.86 13.5 8.27 13.5H4.23C2.64 13.5 2 14.14 2 15.73V19.77C2 21.36 2.64 22 4.23 22H8.27C9.86 22 10.5 21.36 10.5 19.77Z" stroke-linecap="round" stroke-linejoin="round"/><path opacity="0.4" d="M15 15.5H21" stroke-linecap="round"/><path opacity="0.4" d="M15 19.5H21" stroke-linecap="round"/></svg>
+                </span>
                 <span class="platform-name">All</span>
               </button>
               <button type="button" class="pulse-platform-chip" data-pulse-platform="telegram" data-platform-id="6" data-keywords="telegram tg">
-                <span class="platform-icon platform-tg"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21.95 4.27 18.7 19.6c-.24 1.08-.88 1.35-1.78.84l-4.92-3.63-2.37 2.28c-.26.26-.48.48-.99.48l.36-5.05 9.18-8.3c.4-.36-.09-.55-.62-.2L6.21 13.16 1.32 11.62c-1.06-.33-1.08-1.06.22-1.57l19.12-7.37c.88-.33 1.65.2 1.29 1.59z"/></svg></span>
+                <span class="platform-icon platform-tg">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21.95 4.27 18.7 19.6c-.24 1.08-.88 1.35-1.78.84l-4.92-3.63-2.37 2.28c-.26.26-.48.48-.99.48l.36-5.05 9.18-8.3c.4-.36-.09-.55-.62-.2L6.21 13.16 1.32 11.62c-1.06-.33-1.08-1.06.22-1.57l19.12-7.37c.88-.33 1.65.2 1.29 1.59z"/></svg>
+                </span>
                 <span class="platform-name">Telegram</span>
               </button>
               <button type="button" class="pulse-platform-chip is-coming-soon" data-pulse-platform="instagram" data-platform-id="1" data-coming-soon="true" data-keywords="instagram insta ig">
@@ -210,7 +214,16 @@
                 </div>
                 <div class="form-group fields" id="order_quantity">
                   <label class="control-label">Quantity</label>
-                  <input type="number" class="form-control" name="quantity" value="5000" min="500" max="40000" step="100">
+                  {# Static slider control — rendered on page load. The JS below only
+                     wires behaviour onto these elements (no DOM building). #}
+                  <div class="qty-control">
+                    <input type="text" class="qty-display-value" inputmode="numeric" autocomplete="off" spellcheck="false" aria-label="Quantity" title="Click to type a quantity" value="5,000">
+                    <div class="qty-slider-wrap">
+                      <input type="range" class="qty-range">
+                      <div class="qty-ticks"></div>
+                    </div>
+                    <input type="number" class="form-control qty-original-input" name="quantity" value="5000" min="500" max="40000" step="100">
+                  </div>
                   <div class="min-max">Min: 500 - Max: 40,000</div>
                 </div>
               {% endif %}
@@ -765,13 +778,65 @@ window.__pulseCategories = [
       minMaxLabel.textContent = svc.min_max_label;
     }
 
+    // Push the service's real min/max onto the quantity input as attributes so the
+    // slider reads the correct range. The slider's min/max MutationObserver picks
+    // these up and re-syncs its bounds (otherwise it falls back to value × 10).
+    var qtyForBounds = document.querySelector('#order_quantity input[name*="quantity"]');
+    if (qtyForBounds) {
+      var sMin = parseInt(svc.min, 10);
+      var sMax = parseInt(svc.max, 10);
+      if (!isNaN(sMin)) qtyForBounds.setAttribute('min', sMin);
+      if (!isNaN(sMax) && sMax > (isNaN(sMin) ? 0 : sMin)) qtyForBounds.setAttribute('max', sMax);
+      // Clamp the current value into the new range
+      var curQ = parseInt(qtyForBounds.value, 10);
+      if (!isNaN(sMin) && (isNaN(curQ) || curQ < sMin)) qtyForBounds.value = sMin;
+      if (!isNaN(sMax) && curQ > sMax) qtyForBounds.value = sMax;
+    }
+
     // Reset drip-feed on service change — collapse options, uncheck box
     var dripCheck = document.getElementById('field-orderform-fields-check');
     var dripOpts  = document.getElementById('dripfeed-options');
     if (dripCheck) dripCheck.checked = false;
     if (dripOpts)  dripOpts.classList.add('hidden');
 
+    // Recalc charge for the new service + current quantity
+    recalcCharge();
   }
+
+  // ── Charge recalc ──────────────────────────────────────────────────────────
+  // PP's bundled neworder JS sometimes misses updates when our slider mutates the
+  // hidden quantity input. Compute charge ourselves from selected service price.
+  function recalcCharge(){
+    var chargeEl = document.getElementById('charge');
+    if (!chargeEl) return;
+    var data = window.modules && window.modules.siteOrder;
+    if (!data || !data.services) return;
+    var svcSel = document.getElementById('orderform-service');
+    if (!svcSel || !svcSel.value) return;
+    var svc = data.services[svcSel.value];
+    if (!svc) return;
+    var qtyInput = document.querySelector('#order_quantity input[name*="quantity"]');
+    if (!qtyInput) return;
+    var qty = parseFloat(qtyInput.value);
+    if (isNaN(qty) || qty <= 0) { chargeEl.value = ''; return; }
+    var price = parseFloat(svc.price);
+    if (isNaN(price)) return;
+    var charge = (qty * price) / 1000;
+    var cur = data.currency || {};
+    var sym = cur.sign || cur.symbol || '$';
+    var rightSide = cur.position === 'right' || cur.position === 1;
+    chargeEl.value = rightSide ? (charge.toFixed(2) + sym) : (sym + charge.toFixed(2));
+    // Keep stepper in sync now that charge has a value
+    if (typeof updateStepper === 'function') updateStepper();
+  }
+  // Recompute whenever the visible quantity input changes (covers slider, typing,
+  // and any future enhancement that writes back to the hidden quantity field).
+  document.addEventListener('input', function(e){
+    if (e.target && e.target.closest && e.target.closest('#order_quantity')) recalcCharge();
+  }, true);
+  document.addEventListener('change', function(e){
+    if (e.target && e.target.closest && e.target.closest('#order_quantity')) recalcCharge();
+  }, true);
 
   // ── Drip-feed checkbox toggle ─────────────────────────────────────────────
   // PP uses data-depend but may not wire the handler in custom templates.
@@ -1197,12 +1262,19 @@ window.__pulseCategories = [
 </script>
 
 <script>
-// ── Quantity slider — enhances Perfect Panel's quantity number input ──────────
+// ── Quantity slider — enhances Perfect Panel's quantity input ────────────────
+// PP renders the quantity as a plain <input type="text" name="OrderForm[fields][quantity]">.
+// We hide that input (kept in DOM for form submission), then render a card with:
+//   [display value]  [slider + tick row]
 (function(){
-  function fmt(v){
+  function fmtTick(v){
     v = Math.round(v);
     if (v >= 1000) { var k = Math.round((v/1000)*10)/10; return k + 'K'; }
     return String(v);
+  }
+  function fmtDisplay(v){
+    v = Math.round(v) || 0;
+    return v.toLocaleString('en-US');
   }
   function niceStep(r){
     if (r <= 0) return 1;
@@ -1215,23 +1287,36 @@ window.__pulseCategories = [
 
   function enhance(group){
     if (!group) return;
-    var num = group.querySelector('input[type="number"], input[name="quantity"], input[name*="quantity"]');
+    var num = group.querySelector('input[type="number"], input[type="text"][name*="quantity"], input[name="quantity"], input[name*="quantity"]');
     if (!num) return;
-    if (group.querySelector('.qty-range')) return; // already enhanced
+    if (num.dataset.qtyEnhanced) return; // already wired
+    num.dataset.qtyEnhanced = '1';
 
-    var control = document.createElement('div');
-    control.className = 'qty-control';
-    num.parentNode.insertBefore(control, num);
-    control.appendChild(num);
+    // The original input is kept in the DOM (hidden) so PP form submission and value reads still work.
+    num.classList.add('qty-original-input');
 
-    var range = document.createElement('input');
-    range.type = 'range';
-    range.className = 'qty-range';
-    control.appendChild(range);
+    // Prefer the static control markup rendered with the page. Only build it when
+    // Perfect Panel injected a bare input (no slider markup present).
+    var control = group.querySelector('.qty-control');
+    if (!control) {
+      control = document.createElement('div');
+      control.className = 'qty-control';
+      control.innerHTML =
+        '<input type="text" class="qty-display-value" inputmode="numeric" autocomplete="off" spellcheck="false" aria-label="Quantity" title="Click to type a quantity">' +
+        '<div class="qty-slider-wrap">' +
+          '<input type="range" class="qty-range">' +
+          '<div class="qty-ticks"></div>' +
+        '</div>';
+      num.parentNode.insertBefore(control, num);
+      control.appendChild(num); // re-parent the original input inside the control
+    } else if (num.parentNode !== control) {
+      control.appendChild(num);
+    }
 
-    var ticks = document.createElement('div');
-    ticks.className = 'qty-ticks';
-    control.parentNode.insertBefore(ticks, control.nextSibling);
+    var display = control.querySelector('.qty-display-value');
+    var range   = control.querySelector('.qty-range');
+    var ticks   = control.querySelector('.qty-ticks');
+    if (!display || !range || !ticks) return;
 
     function bounds(){
       var min = parseInt(num.getAttribute('min'), 10);
@@ -1244,7 +1329,11 @@ window.__pulseCategories = [
     function paint(b){
       var val = Math.min(Math.max(parseInt(range.value, 10) || b.min, b.min), b.max);
       var pct = b.max > b.min ? (val - b.min) / (b.max - b.min) * 100 : 0;
-      range.style.background = 'linear-gradient(90deg, var(--accent) 0%, var(--accent) ' + pct + '%, var(--bg-3) ' + pct + '%, var(--bg-3) 100%)';
+      // Resolve track color at runtime so the gradient works even if CSS vars don't inherit.
+      // Filled portion uses the brand CTA gradient (#ff6255 → #ff8d64), matching the submit button.
+      var cs = getComputedStyle(range);
+      var track = (cs.getPropertyValue('--bg-3') || '').trim() || '#E3E5E5';
+      range.style.background = 'linear-gradient(to right, #ff6255 0%, #ff8d64 ' + pct + '%, ' + track + ' ' + pct + '%, ' + track + ' 100%)';
     }
     function buildTicks(b){
       ticks.innerHTML = '';
@@ -1255,7 +1344,7 @@ window.__pulseCategories = [
       vals.forEach(function(v){
         var pct = b.max > b.min ? (v - b.min) / (b.max - b.min) * 100 : 0;
         var s = document.createElement('span');
-        s.textContent = fmt(v);
+        s.textContent = fmtTick(v);
         s.style.left = pct + '%';
         s.style.transform = 'translateX(-' + pct + '%)';
         ticks.appendChild(s);
@@ -1265,21 +1354,70 @@ window.__pulseCategories = [
       var b = bounds();
       range.min = b.min; range.max = b.max; range.step = b.step;
       range.value = Math.min(Math.max(parseInt(num.value, 10) || b.min, b.min), b.max);
+      if (document.activeElement !== display) {
+        display.value = fmtDisplay(parseInt(range.value, 10));
+      }
       buildTicks(b); paint(b);
     }
 
     range.addEventListener('input', function(){
       num.value = range.value;
+      if (document.activeElement !== display) {
+        display.value = fmtDisplay(parseInt(range.value, 10));
+      }
       paint(bounds());
       fire(num, 'input'); fire(num, 'change');
     });
     num.addEventListener('input', function(){
       var b = bounds();
       var v = parseInt(num.value, 10);
-      if (!isNaN(v)) range.value = Math.min(Math.max(v, b.min), b.max);
+      if (!isNaN(v)) {
+        range.value = Math.min(Math.max(v, b.min), b.max);
+        if (document.activeElement !== display) {
+          display.value = fmtDisplay(parseInt(range.value, 10));
+        }
+      }
       paint(b);
     });
-    // Re-sync if Perfect Panel updates min/max per selected service
+
+    // Typing in the display field updates slider + hidden form input
+    display.addEventListener('input', function(){
+      var b = bounds();
+      var raw = (display.value || '').replace(/[^0-9]/g, '');
+      if (raw === '') { paint(b); return; }
+      var v = parseInt(raw, 10);
+      if (isNaN(v)) { paint(b); return; }
+      // While typing, allow values up to max — clamp the slider and hidden input
+      var clamped = Math.min(Math.max(v, b.min), b.max);
+      range.value = clamped;
+      num.value = clamped;
+      paint(b);
+      fire(num, 'input'); fire(num, 'change');
+    });
+    display.addEventListener('focus', function(){
+      // Show raw digits so the user can edit without comma juggling
+      var raw = (display.value || '').replace(/[^0-9]/g, '');
+      display.value = raw;
+      setTimeout(function(){ try { display.select(); } catch(e){} }, 0);
+    });
+    display.addEventListener('blur', function(){
+      var b = bounds();
+      var v = parseInt((display.value || '').replace(/[^0-9]/g, ''), 10);
+      if (isNaN(v)) v = parseInt(range.value, 10) || b.min;
+      v = Math.min(Math.max(v, b.min), b.max);
+      display.value = fmtDisplay(v);
+      range.value = v;
+      num.value = v;
+      paint(b);
+      fire(num, 'input'); fire(num, 'change');
+    });
+    display.addEventListener('keydown', function(e){
+      if (e.key === 'Enter') { e.preventDefault(); display.blur(); }
+    });
+    // Re-sync if Perfect Panel updates min/max per selected service.
+    // NOTE: do NOT watch 'value' — PP writes the value attribute back on its own
+    // change handler, which would re-fire sync() mid-drag and snap the thumb/fill
+    // back to PP's value (the slider would look frozen). The design omits it too.
     new MutationObserver(sync).observe(num, { attributes: true, attributeFilter: ['min', 'max', 'step'] });
 
     sync();
