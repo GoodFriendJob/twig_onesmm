@@ -2134,7 +2134,6 @@
    
    .addfunds-grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; margin-bottom: 28px; }
    .addfunds-grid .card-body { padding: 24px; }
-   .addfunds-grid .form-group { margin-bottom: 18px; }
    .addfunds-grid #amount { font-size: 22px; font-weight: 600; height: 52px; letter-spacing: -0.01em; }
    
    .amount-presets { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
@@ -2277,7 +2276,6 @@
    }
    .tickets-page .card-section-head .small { font-size: 11.5px; }
    
-   .tickets-page .form-group { margin-bottom: 16px; }
    .tickets-tips { background: var(--bg-2); border: 1px solid var(--line); }
    .tickets-tips .h3 { font-size: 14px; font-weight: 600; margin: 0 0 12px; color: var(--ink-1); }
    .tickets-tips-list {
@@ -2369,7 +2367,6 @@
    .ticket-file:hover { background: var(--bg-1); color: var(--ink-1); }
    
    .ticket-reply { margin-top: 10px; }
-   .viewticket-page .form-group { margin-bottom: 14px; }
    /* OTP input on 2fa */
    .auth-otp {
        text-align: center;
@@ -2612,7 +2609,6 @@
        display: inline-flex; align-items: center; justify-content: center;
    }
    
-   .account-page .form-group { margin-bottom: 14px; }
    .account-secondary-btn {
        display: inline-flex; align-items: center; gap: 6px;
        height: 38px; padding: 0 14px;
@@ -2898,8 +2894,6 @@
        max-width: 1080px;
        margin: 0 auto;
    }
-   
-   .childpanel-form .form-group { margin-bottom: 14px; }
    
    .childpanel-form .form-row {
        display: grid; grid-template-columns: 1fr 1fr; gap: 12px;

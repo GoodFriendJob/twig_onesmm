@@ -146,7 +146,6 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
    --line-4: #ffffff;
    --bg-1: rgba(255,255,255,.3);
    --bg-2: #F8F9FC;
-   /* --bg-3: #EFF1F5; */
    --bg-3: #E3E5E5;
    --bg-4: #F9FBFC;
    --bg-5: #f2f4f5;
@@ -183,8 +182,8 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
    --sidebar-rail-w: 76px;
    /* ── Dashboard shell (Figma) ── */
    --shell-bg: #F2F4F5;
-   --glass-side: rgba(255, 255, 255, 0.30);
-   --glass-top: rgba(255, 255, 255, 0.80);
+   --glass-side: rgba(255,255,255,0.3);
+   --glass-top: rgba(255,255,255,.8);
    --glass-border: #FFFFFF;
    --shadow-side: 10px 0 20px rgba(51, 68, 102, 0.16);
    --shadow-top: 0 5px 20px rgba(77, 140, 153, 0.15);
@@ -531,12 +530,9 @@ svg.mi {
 .topbar {
    display: flex;
    align-items: center;
-   gap: 10px;
    height: var(--topbar-h);
    padding: 0 20px;
    box-sizing: border-box;
-   background: var(--bg-1);
-   border-bottom: 1px solid var(--line);
    position: fixed;
    top: 0;
    left: var(--sidebar-w);
@@ -1593,6 +1589,8 @@ transition: background var(--dur-fast) ease,
 .btn-xs { height: 26px; font-size: 12px; padding: 0 10px; }
 
 /* ─── Form controls (Pulse) ─── */
+.form-group { margin-bottom: 20px; }
+.form-group:last-child { margin-bottom: 0; }
 .modal-body label, .control-label {
    font-size: 12px;
    font-weight: 400;
@@ -1606,7 +1604,7 @@ transition: background var(--dur-fast) ease,
    padding: 0 30px;
    border: 1px solid var(--line);
    border-radius: 12px;
-   background: var(--line-4);
+   background: var(--glass-border);
    font-size: 14px; 
    font-weight:400;
    color: var(--ink-1);
@@ -2525,8 +2523,7 @@ header .navbar-brand, header [class*="brand"] {
 }
 .neworder-form { min-width: 0; }
 .neworder-form .card-body { padding: 24px; }
-.neworder-form .form-group { margin-bottom: 20px; }
-.neworder-form .form-group:last-child { margin-bottom: 0; }
+
 .search-dropdown .select2-selection { box-sizing: border-box; width: 100%; }
 .neworder-form textarea.form-control { height: auto; min-height: 80px; }
 .neworder-form #charge { background: var(--bg-2); cursor: not-allowed; }
@@ -2590,7 +2587,6 @@ header .navbar-brand, header [class*="brand"] {
 .neworder-form #dripfeed-options { padding-left: 0; }
 .neworder-form #dripfeed-options.hidden,
 .neworder-form .depend-fields.hidden { display: none; }
-.neworder-form #dripfeed-options .form-group { margin-bottom: 12px; }
 .neworder-form #dripfeed-options input[readonly] {
    background: var(--bg-2); cursor: not-allowed;
 }
@@ -4964,12 +4960,6 @@ flex-wrap: wrap;
 }
 .tickets-page .card-section-head .small { font-size: 11.5px; }
 
-.tickets-page .form-group {
-   margin-bottom: 18px;
-   width: 100%;
-   max-width: 100%;
-   box-sizing: border-box;
-}
 .tickets-page textarea.form-control {
    height: auto;
    min-height: 140px;
@@ -5147,8 +5137,6 @@ flex-wrap: wrap;
 .ticket-file:hover { background: var(--bg-1); color: var(--ink-1); }
 
 .ticket-reply { margin-top: 10px; }
-.viewticket-page .form-group,
-.account-page .form-group { margin-bottom: 14px; }
 .viewticket-page textarea.form-control { min-height: 110px; }
 
 /* OTP input on 2fa */
@@ -5442,7 +5430,6 @@ flex-wrap: wrap;
    font-size: 14px; color: var(--ink-1);
    transition: border-color .15s, box-shadow .15s;
 }
-.account-page .form-group { width: 100%; }
 .account-page input.form-control[readonly],
 .account-page .form-group > input[readonly] {
    background: var(--bg-2); color: var(--ink-2); cursor: default;
@@ -5570,12 +5557,7 @@ justify-content: flex-end;
 }
 .modal-header .close > span { line-height: 1; }
 .modal-body {
-padding: 22px 22px 24px;
-}
-.modal-body .form-group {
-   margin-bottom: 16px;
-   width: 100%;
-   display: block;
+   padding: 24px;
 }
 .modal-body .form-group:last-child { margin-bottom: 4px; }
 .modal-body .form-control,
@@ -6024,12 +6006,6 @@ padding: 22px 22px 24px;
 .childpanel-form { min-width: 0; }
 .childpanel-form .card { margin-bottom: 0; overflow: visible; }
 .childpanel-form .card-body { padding: 24px; }
-.childpanel-form .form-group {
-   margin-bottom: 18px;
-   width: 100%;
-   max-width: 100%;
-   box-sizing: border-box;
-}
 .childpanel-form .form-group:last-child { margin-bottom: 0; }
 .childpanel-form textarea.form-control {
    height: auto;
@@ -16003,23 +15979,23 @@ backdrop-filter: blur(14px);
 
 /* ── Sidebar head: brand + tagline + collapse toggle ── */
 .sidebar-head {
-position: relative;
-display: flex;
-align-items: center;
-justify-content: center;
-padding: 20px 16px 4px;
-border-bottom: 0;
+   position: relative;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 20px 16px 4px;
+   border-bottom: 0;
 }
 .sidebar-brand {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-gap: 4px;
-height: auto;
-padding: 0;
-border: 0;
-text-align: center;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   gap: 4px;
+   height: auto;
+   padding: 0;
+   border: 0;
+   text-align: center;
 }
 .sidebar-brand img { max-height: 59px; }
 .sidebar-brand .brand-logo-combo { flex-direction: column; gap: 6px; }
