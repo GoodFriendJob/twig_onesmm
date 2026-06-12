@@ -791,6 +791,9 @@ window.__pulseCategories = [
       var curQ = parseInt(qtyForBounds.value, 10);
       if (!isNaN(sMin) && (isNaN(curQ) || curQ < sMin)) qtyForBounds.value = sMin;
       if (!isNaN(sMax) && curQ > sMax) qtyForBounds.value = sMax;
+      // Notify the slider controller so it re-reads min/max and re-renders at once
+      // (setAttribute alone fires no event).
+      qtyForBounds.dispatchEvent(new Event('input', { bubbles: true }));
     }
 
     // Reset drip-feed on service change — collapse options, uncheck box
@@ -997,7 +1000,7 @@ window.__pulseCategories = [
     );
     var hasLink = !!(linkInput && linkInput.value && linkInput.value.trim());
 
-    var qtyInput = document.querySelector('#order_quantity input[name="quantity"]');
+    var qtyInput = document.querySelector('#order_quantity input[name*="quantity"]');
     var qtyVal = qtyInput && parseInt(qtyInput.value, 10);
     var hasQty = !!(qtyVal && qtyVal > 0);
 
@@ -1263,19 +1266,26 @@ window.__pulseCategories = [
 
 <script>
 // ── Quantity slider — enhances Perfect Panel's quantity input ────────────────
-// PP renders the quantity as a plain <input type="text" name="OrderForm[fields][quantity]">.
-// We hide that input (kept in DOM for form submission), then render a card with:
-//   [display value]  [slider + tick row]
+// PP renders the quantity as a plain <input name="OrderForm[fields][quantity]"> and,
+// on the live site, re-renders / re-binds that input asynchronously after window load
+// (once window.modules.siteOrder is ready). Binding listeners or a closure directly to
+// the input therefore goes stale, and reading min/max from the input is unreliable —
+// PP may replace it without our attributes, which is why the slider sometimes ran on a
+// bogus 0–(value×10) scale instead of the service's real range. This controller is built
+// to survive all of that:
+//   • interactions are DELEGATED on document, so they never go stale;
+//   • the real input is re-resolved from the DOM on every interaction;
+//   • the slider RANGE comes from the selected service's min/max in siteOrder data
+//     (authoritative), not from the input's attributes; and
+//   • a reconciler rebuilds/relinks the control on #fields mutations and on a short
+//     interval, so a late PP re-render self-heals within a fraction of a second.
 (function(){
   function fmtTick(v){
     v = Math.round(v);
     if (v >= 1000) { var k = Math.round((v/1000)*10)/10; return k + 'K'; }
     return String(v);
   }
-  function fmtDisplay(v){
-    v = Math.round(v) || 0;
-    return v.toLocaleString('en-US');
-  }
+  function fmtDisplay(v){ v = Math.round(v) || 0; return v.toLocaleString('en-US'); }
   function niceStep(r){
     if (r <= 0) return 1;
     var p = Math.pow(10, Math.floor(Math.log10(r)));
@@ -1285,18 +1295,105 @@ window.__pulseCategories = [
   }
   function fire(el, type){ el.dispatchEvent(new Event(type, { bubbles: true })); }
 
-  function enhance(group){
-    if (!group) return;
-    var num = group.querySelector('input[type="number"], input[type="text"][name*="quantity"], input[name="quantity"], input[name*="quantity"]');
-    if (!num) return;
-    if (num.dataset.qtyEnhanced) return; // already wired
-    num.dataset.qtyEnhanced = '1';
+  // PP's real quantity input within a group (never our display field or the range).
+  function realInput(group){
+    if (!group) return null;
+    var inputs = group.querySelectorAll('input');
+    var fallback = null;
+    for (var i = 0; i < inputs.length; i++){
+      var el = inputs[i];
+      if (el.classList.contains('qty-display-value')) continue;
+      if (el.type === 'range') continue;
+      if (/quantity/i.test(el.name || '')) return el;
+      if (el.type === 'number' && !fallback) fallback = el;
+    }
+    return fallback;
+  }
 
-    // The original input is kept in the DOM (hidden) so PP form submission and value reads still work.
+  // Authoritative min/max for the currently selected service, straight from PP data.
+  // This is the same source recalcCharge() trusts, so it stays correct even when PP
+  // swaps the quantity input out from under us (which drops our min/max attributes).
+  function svcBounds(){
+    try {
+      var data = window.modules && window.modules.siteOrder;
+      var sel = document.getElementById('orderform-service');
+      if (data && data.services && sel && sel.value && data.services[sel.value]) {
+        var s = data.services[sel.value];
+        var mn = parseInt(s.min, 10), mx = parseInt(s.max, 10);
+        if (!isNaN(mn) && !isNaN(mx) && mx > mn) return { min: mn, max: mx };
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function boundsFor(group){
+    var num = realInput(group);
+    var sb = svcBounds();
+    var min, max;
+    if (sb) { min = sb.min; max = sb.max; }
+    else {
+      min = parseInt(num && num.getAttribute('min'), 10);
+      max = parseInt(num && num.getAttribute('max'), 10);
+    }
+    if (isNaN(min)) min = 0;
+    if (isNaN(max) || max <= min) max = ((num && parseInt(num.value, 10)) || 1000) * 10;
+    var step = (num && parseInt(num.getAttribute('step'), 10)) || Math.max(1, Math.round((max - min) / 500));
+    return { min: min, max: max, step: step };
+  }
+
+  function paint(group){
+    var range = group.querySelector('.qty-range');
+    if (!range) return;
+    var b = boundsFor(group);
+    var val = Math.min(Math.max(parseInt(range.value, 10) || b.min, b.min), b.max);
+    var pct = b.max > b.min ? (val - b.min) / (b.max - b.min) * 100 : 0;
+    // Filled portion uses the brand CTA gradient (#ff6255 → #ff8d64); resolve the track
+    // color at runtime so the gradient works even if CSS vars don't inherit.
+    var track = (getComputedStyle(range).getPropertyValue('--bg-3') || '').trim() || '#E3E5E5';
+    range.style.background = 'linear-gradient(to right, #ff6255 0%, #ff8d64 ' + pct + '%, ' + track + ' ' + pct + '%, ' + track + ' 100%)';
+  }
+
+  function buildTicks(group){
+    var ticks = group.querySelector('.qty-ticks');
+    if (!ticks) return;
+    var b = boundsFor(group);
+    ticks.innerHTML = '';
+    var vals = [b.min];
+    var st = niceStep((b.max - b.min) / 5);
+    for (var v = Math.ceil(b.min / st) * st; v < b.max; v += st) { if (v > b.min) vals.push(v); }
+    vals.push(b.max);
+    vals.forEach(function(v){
+      var pct = b.max > b.min ? (v - b.min) / (b.max - b.min) * 100 : 0;
+      var s = document.createElement('span');
+      s.textContent = fmtTick(v);
+      s.style.left = pct + '%';
+      s.style.transform = 'translateX(-' + pct + '%)';
+      ticks.appendChild(s);
+    });
+  }
+
+  // Push the real input's value onto the slider + display (called when idle).
+  function syncFromInput(group){
+    var range = group.querySelector('.qty-range');
+    var display = group.querySelector('.qty-display-value');
+    var num = realInput(group);
+    if (!range || !display || !num) return;
+    var b = boundsFor(group);
+    range.min = b.min; range.max = b.max; range.step = b.step;
+    var v = parseInt(num.value, 10);
+    if (isNaN(v)) v = b.min;
+    range.value = Math.min(Math.max(v, b.min), b.max);
+    if (document.activeElement !== display && document.activeElement !== range) {
+      display.value = fmtDisplay(parseInt(range.value, 10));
+    }
+    buildTicks(group); paint(group);
+  }
+
+  // Ensure the slider markup exists and PP's input sits (hidden) inside it.
+  function ensureControl(group){
+    var num = realInput(group);
+    if (!num) return false;
     num.classList.add('qty-original-input');
-
-    // Prefer the static control markup rendered with the page. Only build it when
-    // Perfect Panel injected a bare input (no slider markup present).
     var control = group.querySelector('.qty-control');
     if (!control) {
       control = document.createElement('div');
@@ -1308,126 +1405,113 @@ window.__pulseCategories = [
           '<div class="qty-ticks"></div>' +
         '</div>';
       num.parentNode.insertBefore(control, num);
-      control.appendChild(num); // re-parent the original input inside the control
-    } else if (num.parentNode !== control) {
-      control.appendChild(num);
     }
+    if (num.parentNode !== control) control.appendChild(num); // re-parent PP's (possibly replaced) input
+    return true;
+  }
 
-    var display = control.querySelector('.qty-display-value');
-    var range   = control.querySelector('.qty-range');
-    var ticks   = control.querySelector('.qty-ticks');
-    if (!display || !range || !ticks) return;
+  function sigOf(group){
+    var num = realInput(group);
+    var b = boundsFor(group);
+    return b.min + '|' + b.max + '|' + (num ? (num.value || '') : '');
+  }
 
-    function bounds(){
-      var min = parseInt(num.getAttribute('min'), 10);
-      var max = parseInt(num.getAttribute('max'), 10);
-      if (isNaN(min)) min = 0;
-      if (isNaN(max) || max <= min) max = (parseInt(num.value, 10) || 1000) * 10;
-      var step = parseInt(num.getAttribute('step'), 10) || Math.max(1, Math.round((max - min) / 500));
-      return { min: min, max: max, step: step };
-    }
-    function paint(b){
-      var val = Math.min(Math.max(parseInt(range.value, 10) || b.min, b.min), b.max);
-      var pct = b.max > b.min ? (val - b.min) / (b.max - b.min) * 100 : 0;
-      // Resolve track color at runtime so the gradient works even if CSS vars don't inherit.
-      // Filled portion uses the brand CTA gradient (#ff6255 → #ff8d64), matching the submit button.
-      var cs = getComputedStyle(range);
-      var track = (cs.getPropertyValue('--bg-3') || '').trim() || '#E3E5E5';
-      range.style.background = 'linear-gradient(to right, #ff6255 0%, #ff8d64 ' + pct + '%, ' + track + ' ' + pct + '%, ' + track + ' 100%)';
-    }
-    function buildTicks(b){
-      ticks.innerHTML = '';
-      var vals = [b.min];
-      var st = niceStep((b.max - b.min) / 5);
-      for (var v = Math.ceil(b.min / st) * st; v < b.max; v += st) { if (v > b.min) vals.push(v); }
-      vals.push(b.max);
-      vals.forEach(function(v){
-        var pct = b.max > b.min ? (v - b.min) / (b.max - b.min) * 100 : 0;
-        var s = document.createElement('span');
-        s.textContent = fmtTick(v);
-        s.style.left = pct + '%';
-        s.style.transform = 'translateX(-' + pct + '%)';
-        ticks.appendChild(s);
-      });
-    }
-    function sync(){
-      var b = bounds();
-      range.min = b.min; range.max = b.max; range.step = b.step;
-      range.value = Math.min(Math.max(parseInt(num.value, 10) || b.min, b.min), b.max);
-      if (document.activeElement !== display) {
-        display.value = fmtDisplay(parseInt(range.value, 10));
-      }
-      buildTicks(b); paint(b);
-    }
-
-    range.addEventListener('input', function(){
-      num.value = range.value;
-      if (document.activeElement !== display) {
-        display.value = fmtDisplay(parseInt(range.value, 10));
-      }
-      paint(bounds());
+  // ── Interactions: delegated on document so they never go stale ──────────────
+  document.addEventListener('input', function(e){
+    var t = e.target;
+    if (!t || !t.classList || !t.closest) return;
+    var group = t.closest('#order_quantity');
+    if (!group) return;
+    var num = realInput(group);
+    if (!num) return;
+    var b = boundsFor(group);
+    if (t.classList.contains('qty-range')) {
+      var rv = Math.min(Math.max(parseInt(t.value, 10) || b.min, b.min), b.max);
+      num.value = rv;
+      var disp = group.querySelector('.qty-display-value');
+      if (disp && document.activeElement !== disp) disp.value = fmtDisplay(rv);
+      paint(group);
+      group._qtySig = sigOf(group);
       fire(num, 'input'); fire(num, 'change');
-    });
-    num.addEventListener('input', function(){
-      var b = bounds();
-      var v = parseInt(num.value, 10);
-      if (!isNaN(v)) {
-        range.value = Math.min(Math.max(v, b.min), b.max);
-        if (document.activeElement !== display) {
-          display.value = fmtDisplay(parseInt(range.value, 10));
-        }
-      }
-      paint(b);
-    });
-
-    // Typing in the display field updates slider + hidden form input
-    display.addEventListener('input', function(){
-      var b = bounds();
-      var raw = (display.value || '').replace(/[^0-9]/g, '');
-      if (raw === '') { paint(b); return; }
-      var v = parseInt(raw, 10);
-      if (isNaN(v)) { paint(b); return; }
-      // While typing, allow values up to max — clamp the slider and hidden input
-      var clamped = Math.min(Math.max(v, b.min), b.max);
-      range.value = clamped;
+    } else if (t.classList.contains('qty-display-value')) {
+      var raw = (t.value || '').replace(/[^0-9]/g, '');
+      if (raw === '') { paint(group); return; }
+      var dv = parseInt(raw, 10);
+      if (isNaN(dv)) { paint(group); return; }
+      var clamped = Math.min(Math.max(dv, b.min), b.max);
+      var range = group.querySelector('.qty-range');
+      if (range) range.value = clamped;
       num.value = clamped;
-      paint(b);
+      paint(group);
+      group._qtySig = sigOf(group);
       fire(num, 'input'); fire(num, 'change');
-    });
-    display.addEventListener('focus', function(){
-      // Show raw digits so the user can edit without comma juggling
-      var raw = (display.value || '').replace(/[^0-9]/g, '');
-      display.value = raw;
-      setTimeout(function(){ try { display.select(); } catch(e){} }, 0);
-    });
-    display.addEventListener('blur', function(){
-      var b = bounds();
-      var v = parseInt((display.value || '').replace(/[^0-9]/g, ''), 10);
-      if (isNaN(v)) v = parseInt(range.value, 10) || b.min;
-      v = Math.min(Math.max(v, b.min), b.max);
-      display.value = fmtDisplay(v);
-      range.value = v;
-      num.value = v;
-      paint(b);
-      fire(num, 'input'); fire(num, 'change');
-    });
-    display.addEventListener('keydown', function(e){
-      if (e.key === 'Enter') { e.preventDefault(); display.blur(); }
-    });
-    // Re-sync if Perfect Panel updates min/max per selected service.
-    // NOTE: do NOT watch 'value' — PP writes the value attribute back on its own
-    // change handler, which would re-fire sync() mid-drag and snap the thumb/fill
-    // back to PP's value (the slider would look frozen). The design omits it too.
-    new MutationObserver(sync).observe(num, { attributes: true, attributeFilter: ['min', 'max', 'step'] });
+    } else if (t === num || /quantity/i.test(t.name || '')) {
+      // PP / external code wrote the real input — mirror it onto the slider when idle.
+      var rng = group.querySelector('.qty-range');
+      var nv = parseInt(num.value, 10);
+      if (rng && !isNaN(nv)) {
+        rng.min = b.min; rng.max = b.max; rng.step = b.step;
+        rng.value = Math.min(Math.max(nv, b.min), b.max);
+        var d = group.querySelector('.qty-display-value');
+        if (d && document.activeElement !== d) d.value = fmtDisplay(parseInt(rng.value, 10));
+      }
+      buildTicks(group); paint(group);
+      group._qtySig = sigOf(group);
+    }
+  });
+  document.addEventListener('focusin', function(e){
+    var t = e.target;
+    if (t && t.classList && t.classList.contains('qty-display-value')) {
+      var raw = (t.value || '').replace(/[^0-9]/g, '');
+      t.value = raw;
+      setTimeout(function(){ try { t.select(); } catch(_) {} }, 0);
+    }
+  });
+  document.addEventListener('focusout', function(e){
+    var t = e.target;
+    if (!(t && t.classList && t.classList.contains('qty-display-value') && t.closest)) return;
+    var group = t.closest('#order_quantity');
+    if (!group) return;
+    var num = realInput(group);
+    if (!num) return;
+    var b = boundsFor(group);
+    var range = group.querySelector('.qty-range');
+    var v = parseInt((t.value || '').replace(/[^0-9]/g, ''), 10);
+    if (isNaN(v)) v = parseInt(range && range.value, 10) || b.min;
+    v = Math.min(Math.max(v, b.min), b.max);
+    t.value = fmtDisplay(v);
+    if (range) range.value = v;
+    num.value = v;
+    paint(group);
+    group._qtySig = sigOf(group);
+    fire(num, 'input'); fire(num, 'change');
+  });
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && t.classList && t.classList.contains('qty-display-value') && e.key === 'Enter') {
+      e.preventDefault(); t.blur();
+    }
+  });
 
-    sync();
+  // ── Reconciler: build/relink controls and re-sync when idle ─────────────────
+  function process(group){
+    if (!ensureControl(group)) return;
+    var range = group.querySelector('.qty-range');
+    var display = group.querySelector('.qty-display-value');
+    var busy = (document.activeElement === range || document.activeElement === display);
+    var sig = sigOf(group);
+    if (!group._qtyReady || (group._qtySig !== sig && !busy)) {
+      group._qtyReady = true;
+      group._qtySig = sig;
+      syncFromInput(group);
+    }
   }
-
-  function scan(){
-    document.querySelectorAll('#order_quantity').forEach(enhance);
-  }
+  function scan(){ document.querySelectorAll('#order_quantity').forEach(process); }
   scan();
   var fields = document.getElementById('fields');
   if (fields) new MutationObserver(scan).observe(fields, { childList: true, subtree: true });
+  // Safety net: PP may re-render / re-bind the quantity input after window load in a
+  // way the MutationObserver timing misses; a light interval keeps it self-healing.
+  setInterval(scan, 500);
 })();
 </script>
