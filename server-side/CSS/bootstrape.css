@@ -1714,21 +1714,6 @@
    
    .services-card .table-responsive { border: 0; margin: 0; }
    
-   .services-table { margin: 0; font-size: 13.5px; width: 100%; }
-   .services-table thead th {
-       background: var(--bg-2);
-       border-bottom: 1px solid var(--line);
-       border-top: 0;
-       color: var(--ink-2);
-       font-size: 11px; font-weight: 600;
-       text-transform: uppercase; letter-spacing: 0.05em;
-       padding: 11px 14px; vertical-align: middle;
-   }
-   .services-table tbody td {
-       padding: 12px 14px;
-       border-top: 1px solid var(--line-2);
-       vertical-align: middle;
-   }
    .services-table .col-id { width: 60px; }
    .services-table .col-fav { width: 36px; }
    .services-table .col-rate, .services-table .col-min, .services-table .col-max, .services-table .col-avg { width: 110px; }
@@ -1736,39 +1721,8 @@
    .services-table .ink { color: var(--ink-1); font-weight: 500; }
    .services-table .service-name { color: var(--ink-1); }
    
-   /* Description column: collapsed by default (1 line ellipsis), expands on click */
-   .services-table .col-desc {
-       max-width: 320px;
-       font-size: 12.5px;
-   }
-   .services-table tbody td.col-desc {
-       color: var(--ink-2);
-       line-height: 1.5;
-       cursor: pointer;
-       position: relative;
-       padding-right: 36px !important;
-   }
-   .services-table .col-desc .desc-text {
-       display: -webkit-box;
-       -webkit-line-clamp: 1;
-       -webkit-box-orient: vertical;
-       overflow: hidden;
-       white-space: normal;
-   }
-   .services-table tr.is-desc-open .col-desc {
-       color: var(--ink-1);
-       vertical-align: top;
-       padding-top: 14px !important;
-       padding-bottom: 14px !important;
-   }
-   .services-table tr.is-desc-open .col-desc .desc-text {
-       -webkit-line-clamp: unset;
-       display: block;
-       overflow: visible;
-   }
    /* Structured list (built lazily) is only shown when the row is expanded.
       When collapsed, hide the list and show the truncated raw text. */
-   .services-table .col-desc .desc-list { display: none; }
    .services-table tr.is-desc-open .col-desc[data-parsed="1"] .desc-text { display: none; }
    .services-table tr.is-desc-open .col-desc .desc-list { display: flex; }
    /* Hide the raw <br> tags when expanded — JS rewrites the cell as a list */
@@ -2027,10 +1981,6 @@
            background: transparent !important;
            border: 0 !important;
        }
-       .services-table tr.services-cat-row .services-cat-head {
-           font-size: 11.5px;
-       }
-   
        /* Tap affordance: chevron at right of card */
        .services-table tbody > tr:not(.services-cat-row):not(.service-description-mobile)::after {
            content: "";
@@ -2054,12 +2004,6 @@
        border-top: 1px solid var(--line) !important;
        padding: 10px 14px !important;
    }
-   .services-cat-head {
-       display: flex; align-items: center; gap: 8px;
-       font-size: 12px; color: var(--ink-2);
-       text-transform: uppercase; letter-spacing: 0.04em;
-   }
-   .services-cat-head strong { color: var(--ink-1); font-weight: 600; }
    .services-cat-count {
        margin-left: auto;
        background: var(--bg-1);

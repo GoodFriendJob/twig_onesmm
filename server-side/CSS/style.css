@@ -147,7 +147,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
    --bg-1: rgba(255,255,255,.3);
    --bg-2: #F8F9FC;
    --bg-3: #EBEBEB;
-   --bg-4: #F9FBFC;
+   --bg-4: #E3E5E5;
    --bg-5: #f2f4f5;
    --bg-6: rgba(255,255,255,.4);
    --green: #22C55E;
@@ -1747,16 +1747,23 @@ select.form-control:focus {
 
 /* ─── Tables ─── */
 
-.table { margin-bottom: 0; }
-.table > thead > tr > th {
-   background: var(--bg-3);
-   color: var(--ink-1);
-   font-size: 12px;
-   font-weight: 500; 
-   text-align: center;
-   padding: 10px 15px;
-   vertical-align: middle;
+.table { 
+   margin-bottom: 0; 
+   width: 100%; min-width: 880px; 
+   border-collapse: separate; border-spacing: 0; color: var(--ink-2); 
+   table-layout: auto;
 }
+.table > thead > tr > th {
+   background: var(--bg-4);
+   color: var(--ink-1);
+   font-size: 14px;
+   font-weight: 400; 
+   vertical-align: middle;
+   padding:15px;
+   text-align: left;
+}
+.table > thead th:first-child { border-radius: 8px 0 0 8px; }
+.table > thead th:last-child { border-radius: 0 8px 8px 0; }
 .table-hover > tbody > tr:hover { background: var(--bg-2); }
 
 /* ─── Badges & labels ─── */
@@ -1766,7 +1773,7 @@ select.form-control:focus {
    padding: 3px 8px;
    background: var(--bg-3); color: var(--ink-1);
    border-radius: 999px;
-   font-size: 11.5px; font-weight: 600;
+   font-size: 12px; font-weight: 600;
    line-height: 1.4;
 }
 .badge-success, .label-success { background: var(--green-soft); color: var(--green); }
@@ -3757,59 +3764,6 @@ select.select2-hidden-accessible {
   wins regardless of source order. */
 .svc-more-panel:not(.is-open) > .svc-platform-tab { display: none; }
 
-/* Search row */
-.svc-search-wrap {
-   display: flex;
-   align-items: center;
-   gap: 12px;
-   flex-wrap: wrap;
-   margin-bottom:15px;
-}
-.svc-search {
-   display: flex;
-   align-items: center;
-   flex: 1;
-   max-width: 580px;
-   background: var(--bg-1);
-   border: 1px solid var(--line);
-   border-radius: var(--radius);
-   overflow: hidden;
-   padding: 0 0 0 16px;
-   transition: border-color var(--dur-fast), box-shadow var(--dur-normal) var(--ease-out-expo);
-}
-.svc-search:focus-within {
-   border-color: var(--brand);
-   box-shadow: var(--shadow-brand);
-}
-.svc-search__icon { flex-shrink: 0; color: var(--ink-3); }
-.svc-search__input {
-   flex: 1;
-   border: 0;
-   background: transparent;
-   padding: 13px 12px;
-   font-size: 14px;
-   color: var(--ink-1);
-   outline: none;
-}
-.svc-search__input::placeholder { color: var(--ink-3); }
-.svc-search__btn {
-   flex-shrink: 0;
-   width: 48px;
-   height: 48px;
-   background: var(--bg-2);
-   border: 0;
-   border-left: 1px solid var(--line);
-   color: var(--ink-2);
-   cursor: pointer;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   transition: background var(--dur-fast), color var(--dur-fast);
-   -webkit-appearance: none;
-}
-.svc-search__btn:hover { background: var(--brand-soft); color: var(--brand); }
-.svc-currency-dropdown { flex-shrink: 0; }
-
 /* Responsive — tab columns are container-aware via auto-fit above; only
   paddings/font/gap are tweaked here for narrow phones. */
 @media (max-width: 900px) {
@@ -3818,7 +3772,6 @@ select.select2-hidden-accessible {
 @media (max-width: 600px) {
    .svc-tabs-grid { gap: 8px; grid-template-columns: repeat(auto-fit, minmax(64px, 1fr)); }
    .svc-platform-tab { padding: 10px 8px; font-size: 11px; }
-   .svc-search { max-width: 100%; }
 }
 
 /* ─── Services page redesign ("Services List") ─── */
@@ -3833,13 +3786,6 @@ select.select2-hidden-accessible {
    position: relative; margin-bottom: 20px;
 }
 .svc-searchbar-ic { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--ink-3); pointer-events: none; }
-.svc-searchbar .svc-search__input {
-   width: 100%; box-sizing: border-box; height: 52px; padding: 0 16px 0 48px;
-   border: 1px solid var(--line); border-radius: 12px; background: var(--bg-1);
-   font-size: 14px; color: var(--ink-1); transition: border-color .15s;
-}
-.svc-searchbar .svc-search__input::placeholder { color: var(--ink-3); }
-.svc-searchbar .svc-search__input:focus { outline: 0; border-color: var(--brand); }
 
 /* Services table */
 .svc-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 14px 12px 8px; }
@@ -4040,7 +3986,6 @@ select.select2-hidden-accessible {
 }
 .services-card .table-responsive { border: 0; margin: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-.services-table { margin: 0; font-size: 13.5px; width: 100%; min-width: 1040px; table-layout: fixed; }
 /* Column widths come from the <colgroup>. Fixed table-layout keeps columns
   stable when the accordion opens — they don't reflow with body content.
   All columns have explicit widths so nothing depends on remainder
@@ -4054,25 +3999,9 @@ select.select2-hidden-accessible {
 .services-table > colgroup > col.col-avg      { width: 100px; }
 .services-table > colgroup > col.col-desc     { width: 220px; }
 .services-table > colgroup > col.col-order    { width: 92px; }
-.services-table thead th {
-   background: var(--bg-2);
-   border-bottom: 1px solid var(--line);
-   border-top: 0;
-   color: var(--ink-2);
-   font-size: 11px; font-weight: 600;
-   text-transform: uppercase; letter-spacing: 0.05em;
-   padding: 11px 14px; vertical-align: middle;
-}
-.services-table thead th.col-fav,
-.services-table thead th.col-order { text-align: center; padding-left: 8px; padding-right: 8px; }
 .services-table tbody tr {
    content-visibility: auto;
    contain-intrinsic-size: auto 48px;
-}
-.services-table tbody td {
-   padding: 12px 14px;
-   border-top: 1px solid var(--line-2);
-   vertical-align: middle;
 }
 .services-table tbody td.col-fav,
 .services-table tbody td.col-order { text-align: center; padding-left: 8px; padding-right: 8px; }
@@ -4102,7 +4031,6 @@ select.select2-hidden-accessible {
 /* Description column: collapsed by default (1 line ellipsis), expands on click */
 .services-table .col-desc {
    min-width: 320px;
-   font-size: 12px;
 }
 .services-table tbody td.col-desc {
    color: var(--ink-2);
@@ -4381,7 +4309,7 @@ gap: 6px;
        border: 0 !important;
    }
    .services-table tr.services-cat-row .services-cat-head {
-       font-size: 12px;
+      font-size: 12px;
    }
 
    /* Remove the chevron — order button is the CTA */
@@ -4402,8 +4330,11 @@ gap: 6px;
 .services-cat-row:hover td { background: var(--bg-3, #eef0f4) !important; }
 .services-cat-head {
    display: flex; align-items: center; gap: 8px;
-   font-size: 16px; color: var(--ink-1);
-   text-transform: uppercase; letter-spacing: 0.04em;
+   font-family: 'Poppins';
+   font-weight:600;
+   font-size: 16px; 
+   line-height:30px;
+   color: var(--ink-1);
 }
 .services-cat-head strong { color: var(--ink-1); font-weight: 600; }
 /* Chevron affordance — sits right next to the category name (not at the
@@ -4484,24 +4415,13 @@ gap: 6px;
 /* Table */
 .ord-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 14px 10px 8px; }
 .ord-table { width: 100%; min-width: 880px; border-collapse: separate; border-spacing: 0; color: var(--ink-2); table-layout: auto; }
-.ord-table thead th {
-   background: var(--bg-3); color: var(--ink-1);
-   font-size: 13px; font-weight: 500; text-align: center;
-   padding: 14px 12px; white-space: nowrap;
-}
-.ord-table thead th:first-child { border-radius: 8px 0 0 10px; }
-.ord-table thead th:last-child { border-radius: 0 10px 10px 0; }
-.ord-table tbody td {
-   padding: 14px 12px;
-   border-bottom: 1px solid var(--line-2); vertical-align: middle;
-}
+
 .ord-table tbody tr:last-child td { border-bottom: 0; }
 .ord-table tbody tr { transition: background-color .15s ease; }
 .ord-table tbody tr:hover td { background: var(--bg-4); }
 .ord-table .nowrap { white-space: nowrap; }
 .ord-table .tabular { font-variant-numeric: tabular-nums; }
 .ord-table .num,
-.ord-table thead th.num { text-align: center; }
 
 .ord-table .ord-id { color: var(--ink-2); }
 .ord-table .ord-date { white-space: nowrap; line-height: 1.35; }
@@ -4686,13 +4606,13 @@ flex-wrap: wrap;
 }
 
 .updates-table { margin: 0; font-size: 13.5px; }
-.updates-table thead th { background: var(--bg-2); border-bottom: 1px solid var(--line); border-top: 0; color: var(--ink-2); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 11px 14px; vertical-align: middle; }
+.updates-table thead th { background: var(--bg-2); border-bottom: 1px solid var(--line); border-top: 0; color: var(--ink-2); font-size: 12px; font-weight: 600; padding: 11px 14px; vertical-align: middle; }
 .updates-table tbody td { padding: 12px 14px; border-top: 1px solid var(--line-2); vertical-align: middle; }
 .updates-table .col-date { width: 160px; }
 .service-name {     
    gap: 8px;
    font-size: 14px;
-   font-weight: 700;
+   font-weight: 600;
    color: var(--ink-1);
 }
 .service-name .ink { color: var(--ink-1); font-weight: 500; }
@@ -4884,11 +4804,10 @@ flex-wrap: wrap;
 .data-table thead th {
    background: var(--bg-2); border-bottom: 1px solid var(--line); border-top: 0;
    color: var(--ink-2); font-size: 11px; font-weight: 600;
-   text-transform: uppercase; letter-spacing: 0.05em;
-   padding: 11px 14px; vertical-align: middle;
+   padding: 10px 15px; vertical-align: middle;
 }
 .data-table tbody td {
-   padding: 12px 14px; border-top: 1px solid var(--line-2); vertical-align: middle;
+   padding: 10px 15px; border-top: 1px solid var(--line-2); vertical-align: middle;
 }
 .data-table .col-id { width: 80px; color: var(--ink-2); }
 .data-table .nowrap { white-space: nowrap; }
@@ -6070,8 +5989,7 @@ justify-content: flex-end;
 .childpanel-section-divider {
    display: flex; align-items: center; gap: 12px;
    margin: 8px 0 14px;
-   font-size: 11.5px; font-weight: 600; color: var(--ink-3);
-   text-transform: uppercase; letter-spacing: 0.06em;
+   font-size: 12px; font-weight: 600; color: var(--ink-3);
 }
 .childpanel-section-divider::before,
 .childpanel-section-divider::after {
@@ -6632,11 +6550,10 @@ justify-content: flex-end;
 .notif-matrix thead th {
    background: var(--bg-2); border-bottom: 1px solid var(--line); border-top: 0;
    color: var(--ink-2); font-size: 11px; font-weight: 600;
-   text-transform: uppercase; letter-spacing: 0.05em;
-   padding: 11px 14px; vertical-align: middle;
+   padding: 10px 15px; vertical-align: middle;
 }
 .notif-matrix tbody td {
-   padding: 12px 14px; border-top: 1px solid var(--line-2); vertical-align: middle;
+   padding: 10px 15px; border-top: 1px solid var(--line-2); vertical-align: middle;
 }
 .notif-matrix-event { font-weight: 500; }
 .notif-matrix-channel { text-align: center; }
@@ -6839,7 +6756,6 @@ body.rtl .caret { margin-left: 0; margin-right: 4px; }
 .lp-eyebrow {
    display: inline-flex; align-items: center; gap: 8px;
    font-size: 12px; font-weight: 600;
-   letter-spacing: 0.06em; text-transform: uppercase;
    color: var(--brand);
    padding: 6px 12px;
    background: var(--brand-soft);
@@ -7476,8 +7392,6 @@ body.rtl .caret { margin-left: 0; margin-right: 4px; }
 .lp-pkg-card__cat {
    font-size: 10px;
    font-weight: 700;
-   text-transform: uppercase;
-   letter-spacing: 0.08em;
    color: var(--ink-3);
    margin-bottom: 6px;
    display: block;
@@ -7543,8 +7457,6 @@ body.rtl .caret { margin-left: 0; margin-right: 4px; }
    font-size: 12px;
    font-weight: 600;
    color: var(--ink-3);
-   text-transform: uppercase;
-   letter-spacing: 0.04em;
 }
 
 /* Platform-specific price tints */
@@ -7579,7 +7491,7 @@ body.rtl .caret { margin-left: 0; margin-right: 4px; }
 .lp-platform--tw:hover .lp-platform__price  { --price-bg-hover: rgba(145,70,255,0.14); }
 
 .lp-platform__cheap { display: flex; align-items: baseline; gap: 6px; font-size: 13px; color: var(--ink-2); }
-.lp-platform__cheap span { font-size: 10.5px; font-weight: 600; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
+.lp-platform__cheap span { font-size: 10.5px; font-weight: 600; color: var(--ink-3); }
 .lp-platform__cheap strong { font-size: 18px; color: var(--ink-1); font-weight: 600; margin: 0; }
 .lp-platforms--guides { grid-template-columns: repeat(2, 1fr); max-width: 640px; margin: 0 auto; }
 
@@ -7882,8 +7794,6 @@ body.rtl .caret { margin-left: 0; margin-right: 4px; }
 .lp-links-group-title {
    font-size: 14px;
    font-weight: 600;
-   text-transform: uppercase;
-   letter-spacing: 0.06em;
    color: var(--ink-3);
    margin: 32px 0 8px;
 }
@@ -8086,7 +7996,6 @@ body.rtl .caret { margin-left: 0; margin-right: 4px; }
 .lp-works__tag {
    display: inline-block;
    font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
-   text-transform: uppercase;
    color: var(--brand);
    background: var(--brand-soft);
    padding: 5px 14px; border-radius: 20px;
@@ -8706,8 +8615,6 @@ body.rtl .caret { margin-left: 0; margin-right: 4px; }
 .lp-why__h {
    font-size: 12px;
    font-weight: 700;
-   text-transform: uppercase;
-   letter-spacing: 0.06em;
    margin-bottom: 14px;
    padding-bottom: 12px;
    border-bottom: 1px solid currentColor;
@@ -8953,14 +8860,13 @@ box-shadow: var(--shadow-brand-lg);
    border-bottom: 1px solid var(--line);
 }
 .lp-dashprev__title {
-   font-size: 11.5px; font-weight: 600;
-   text-transform: uppercase; letter-spacing: 0.05em;
+   font-size: 12px; font-weight: 600;
    color: var(--ink-1);
 }
 .lp-dashprev__hint {
    margin-left: auto;
    color: var(--ink-3);
-   font-size: 11.5px;
+   font-size: 12px;
 }
 .lp-dashprev__body {
    padding: 18px;
@@ -8979,7 +8885,6 @@ box-shadow: var(--shadow-brand-lg);
 }
 .lp-dashprev__balance-lbl {
    font-size: 10.5px; font-weight: 600;
-   text-transform: uppercase; letter-spacing: 0.06em;
    color: var(--ink-3);
 }
 .lp-dashprev__balance-val {
@@ -9014,8 +8919,6 @@ box-shadow: var(--shadow-brand-lg);
 .lp-dashprev__stat-lbl {
    font-size: 10.5px;
    color: var(--ink-3);
-   text-transform: uppercase;
-   letter-spacing: 0.04em;
 }
 .lp-dashprev__chart {
    margin-top: auto;
@@ -9031,8 +8934,6 @@ box-shadow: var(--shadow-brand-lg);
    margin-top: 6px;
    font-size: 11px;
    color: var(--ink-3);
-   text-transform: uppercase;
-   letter-spacing: 0.04em;
    font-weight: 500;
 }
 
@@ -10356,7 +10257,7 @@ overflow-x: visible !important;
       font-size: 13px;
    }
    .services-table tbody > tr > td.col-svc-name {
-      font-size: 14px;
+      font-size: 12px;
    }
 }
 
