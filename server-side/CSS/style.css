@@ -1593,7 +1593,14 @@ transition: background var(--dur-fast) ease,
 .btn-xs { height: 26px; font-size: 12px; padding: 0 10px; }
 
 /* ─── Form controls (Pulse) ─── */
-
+.modal-body label, .control-label {
+   font-size: 12px;
+   font-weight: 400;
+   line-height: 1;
+   margin-bottom: 6px;
+   color: var(--shell-icon);
+   display: block;
+}
 .form-control {
    height: 48px;
    padding: 0 30px;
@@ -2520,12 +2527,6 @@ header .navbar-brand, header [class*="brand"] {
 .neworder-form .card-body { padding: 24px; }
 .neworder-form .form-group { margin-bottom: 20px; }
 .neworder-form .form-group:last-child { margin-bottom: 0; }
-.neworder-form .control-label {
-   font-size: 12px; font-weight: 400; color: var(--shell-icon);
-   line-height:1;
-   margin-bottom: 6px; display: block;
-}
-
 .search-dropdown .select2-selection { box-sizing: border-box; width: 100%; }
 .neworder-form textarea.form-control { height: auto; min-height: 80px; }
 .neworder-form #charge { background: var(--bg-2); cursor: not-allowed; }
@@ -3249,15 +3250,6 @@ select.select2-hidden-accessible {
 }
 
 /* ── Order Details fields (match design) ── */
-#fields .control-label,
-.details-card .control-label {
-   font-size: 12px;
-   font-weight: 400;
-   line-height:1;
-   margin-bottom: 6px;
-   color: var(--shell-icon);
-   display: block;
-}
 #order_quantity .min-max {
    font-size: 12px;
    color: var(--ink-3);
@@ -3282,47 +3274,23 @@ select.select2-hidden-accessible {
    font-size: 14px;
    font-weight: 400;
    line-height: 1;
-   color: var(--ink-1);
-   min-width: 72px;
+   min-width: 48px;
    width: auto;
    font-variant-numeric: tabular-nums;
-   padding: 4px;
    background: none;
-   border: 1.5px solid rgba(255, 98, 85, 0.22);
-   border-radius: 10px;
+   border: none;
+   color: var(--ink-1);
    outline: none;
    cursor: text;
    -webkit-appearance: none;
    appearance: none;
-   box-shadow:
-       0 0 0 4px rgba(255, 98, 85, 0.06),
-       0 1px 2px rgba(255, 98, 85, 0.10);
-   transition:
-       box-shadow 180ms ease,
-       border-color 180ms ease,
-       background 180ms ease;
-}
-.qty-display-value:hover {
-   border-color: rgba(255, 98, 85, 0.42);
-   background: rgba(255, 98, 85, 0.06);
-   box-shadow:
-       0 0 0 4px rgba(255, 98, 85, 0.09),
-       0 1px 3px rgba(255, 98, 85, 0.14);
-}
-.qty-display-value:focus,
-.qty-display-value:focus-visible {
-   border-color: var(--accent, #FF6255);
-   background: #fff;
-   box-shadow:
-       0 0 0 4px rgba(255, 98, 85, 0.18),
-       0 0 18px rgba(255, 98, 85, 0.24);
+   box-shadow:none;
 }
 .qty-display-value::-webkit-outer-spin-button,
 .qty-display-value::-webkit-inner-spin-button {
    -webkit-appearance: none;
    margin: 0;
 }
-.qty-display-value::selection { background: rgba(255, 98, 85, 0.22); }
 .qty-slider-wrap {
    display: flex;
    flex-direction: column;
@@ -3426,7 +3394,7 @@ select.select2-hidden-accessible {
    .neworder-grid { grid-template-columns: 1fr; }
    .neworder-summary { position: static; }
 }
-@media (max-width: 668px) {
+@media (max-width: 767px) {
    .qty-slider-wrap {
       display:none;
    }
@@ -3452,13 +3420,7 @@ select.select2-hidden-accessible {
 }
 .massorder-form { min-width: 0; }
 .massorder-form .card-body { padding: 24px; }
-.massorder-form .control-label {
-   font-size: 12px;
-   font-weight: 400;
-   margin-bottom: 6px;
-   color: var(--shell-icon);
-   display: block;
-}
+
 .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
 .massorder-textarea {
    width: 100%;
@@ -4041,6 +4003,7 @@ select.select2-hidden-accessible {
    .services-page .services-header .services-toolbar-right { flex: 1 1 200px; max-width: none; }
 }
 @media (max-width: 767px) {
+   .form-control { padding:15px;}
    .services-page { padding: 8px 0 24px; }
    .services-page .page-header { gap: 12px; margin-bottom: 12px; padding: 0 14px; }
    .services-page .page-header .h1 { font-size: 22px; }
@@ -5186,13 +5149,7 @@ flex-wrap: wrap;
 .ticket-reply { margin-top: 10px; }
 .viewticket-page .form-group,
 .account-page .form-group { margin-bottom: 14px; }
-.viewticket-page .control-label,
-.account-page .control-label { font-size: 12px; font-weight: 400; color: var(--shell-icon); margin-bottom: 6px; display: block; }
-.viewticket-page .form-control {
-   border: 1px solid var(--line); border-radius: 8px; background: var(--bg-1);
-   font-size: 14px; color: var(--ink-1);
-}
-.viewticket-page textarea.form-control { padding: 12px 14px; min-height: 110px; }
+.viewticket-page textarea.form-control { min-height: 110px; }
 
 /* OTP input on 2fa */
 .auth-otp {
@@ -5621,19 +5578,6 @@ padding: 22px 22px 24px;
    display: block;
 }
 .modal-body .form-group:last-child { margin-bottom: 4px; }
-.modal-body .control-label,
-.modal-body label {
-   display: block;
-   width: 100%;
-   text-align: left;
-   font-size: 12px;
-   font-weight: 500;
-   color: var(--ink-2);
-   text-transform: uppercase;
-   letter-spacing: 0.04em;
-   margin-bottom: 6px;
-   padding: 0;
-}
 .modal-body .form-control,
 .modal-body input[type="text"],
 .modal-body input[type="email"],
@@ -6853,7 +6797,7 @@ body.rtl .page-header-eyebrow { text-align: right; }
 
 /* Forms */
 body.rtl .form-control { text-align: right; }
-body.rtl .control-label { text-align: right; }
+body.rtl .control-label, body.rtl .modal-body label, body.rtl .control-label { text-align: right; }
 body.rtl label { text-align: right; }
 body.rtl .input-group .input-group-addon:first-child { border-radius: 0 8px 8px 0; border-right: 1px solid var(--line); border-left: 0; }
 body.rtl .input-group .input-group-addon:last-child { border-radius: 8px 0 0 8px; border-left: 1px solid var(--line); border-right: 0; }
