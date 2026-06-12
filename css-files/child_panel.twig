@@ -84,7 +84,7 @@
         <div class="cp-checkout">
           <div class="cp-price"><span class="cp-price-amt">{{ price }}</span> <span class="cp-price-per">/ per month</span></div>
           <div class="cp-currency">
-            <select class="cp-select" name="CreateOrderForm[currency]" aria-label="Currency">
+            <select class="form-control" name="CreateOrderForm[currency]" aria-label="Currency">
               {% for currency in currenciesList %}
                 <option value="{{ currency['code'] }}" {% if form['currency'] == currency['code'] %}selected{% endif %}>{{ currency['name'] }}{% if currency['code'] %} ({{ currency['code'] }}){% endif %}</option>
               {% endfor %}

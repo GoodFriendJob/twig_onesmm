@@ -43,7 +43,7 @@
         <div class="tk-form-row">
           <div class="tk-field">
             <label class="tk-label" for="ticket-category-field">{{ lang('tickets.category')|default('Category') }}</label>
-            <select id="ticket-category-field" name="TicketForm[category]" class="tk-input tk-select">
+            <select id="ticket-category-field" name="TicketForm[category]" class="form-control">
               <option value="">Select a Category</option>
               {% if additionalFieldsEnabled %}
                 {% for categoryField in additionalFields %}<option value="{{ categoryField.id }}">{{ categoryField.name }}</option>{% endfor %}
@@ -54,13 +54,13 @@
           </div>
           <div class="tk-field">
             <label class="tk-label" for="subject">{{ lang('tickets.subject')|default('Subject') }}</label>
-            <input type="text" class="tk-input" id="subject" name="TicketForm[subject]" placeholder="Brief Description of your issue">
+            <input type="text" class="form-control" id="subject" name="TicketForm[subject]" placeholder="Brief Description of your issue">
           </div>
         </div>
 
         <div class="tk-field">
           <label class="tk-label" for="message">{{ lang('tickets.message')|default('Message') }}</label>
-          <textarea class="tk-input tk-textarea" rows="6" id="message" name="TicketForm[message]" placeholder="Provide detailed information about your issue. The more details you provide, the faster we can help you"></textarea>
+          <textarea class="form-control" rows="6" id="message" name="TicketForm[message]" placeholder="Provide detailed information about your issue. The more details you provide, the faster we can help you"></textarea>
         </div>
 
         <div class="tk-field">
