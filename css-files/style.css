@@ -4643,7 +4643,6 @@ flex-wrap: wrap;
 
 /* Payment history (lives in the right aside, ~360px) */
 .addfunds-history .aff-card-head { padding: 18px 18px 12px; }
-.addfunds-history .aff-table-wrap { padding: 0 10px 12px; }
 .addfunds-history-table { table-layout: fixed; width: 100%; }
 .addfunds-history-table thead th,
 .addfunds-history-table tbody td {
@@ -5208,7 +5207,6 @@ flex-wrap: wrap;
 
 /* Tables (referred users / payment history) */
 .aff-card-head { padding: 22px 26px 16px; }
-.aff-table-wrap { padding: 0 14px 14px; }
 .aff-table { width: 100%; border-collapse: separate; border-spacing: 0; }
 .aff-table thead th {
    background: var(--bg-3); color: var(--ink-1);

@@ -4479,12 +4479,10 @@ gap: 6px;
   Below 760px each <tr> becomes a card; each <td> shows its label via
   data-label. The wide table layout (10–11 cols) is unreadable on phones
   even with horizontal scroll, so we restructure rather than shrink. */
+
 @media (max-width: 760px) {
    .ord-toolbar { padding: 15px 0; }
    .ord-search {margin: 0 0 30px;}
-   .ord-filters { gap: 8px; }
-   .ord-filter { height: 34px; padding: 0 14px; font-size: 13px; }
-
    .ord-table-wrap { padding: 8px 12px 12px; overflow: visible; }
    .ord-table { min-width: 0; display: block; }
    .ord-table thead { position: absolute; left: -9999px; }
@@ -4689,7 +4687,7 @@ flex-wrap: wrap;
 
 /* Selected method + instruction */
 .pay-selected { margin-bottom: 26px; }
-.pay-selected-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.pay-selected-head { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
 .pay-selected-ic { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; color: var(--ink-1); }
 .pay-selected-ic svg { width: 30px; height: 30px; display: block; }
 .pay-selected-ic .pay-tile-img { width: 30px; height: 30px; object-fit: contain; display: block; }
@@ -4697,15 +4695,12 @@ flex-wrap: wrap;
    font-family: 'Poppins','Inter',sans-serif;
    font-size: 22px; font-weight: 700; color: var(--ink-1); letter-spacing: -0.01em;
 }
-.pay-instr-title { font-size: 16px; font-weight: 700; color: var(--ink-1); margin: 0 0 12px; }
 .pay-instr-body { font-size: 14px; line-height: 1.7; color: var(--ink-2); }
 .pay-instr-body p { margin: 0 0 5px; }
 .pay-instr-body p:last-child { margin-bottom: 0; }
 .pay-instr-body strong, .pay-instr-body b { font-weight: 700; }
 
 /* Amount */
-.pay-amount { margin-bottom: 22px; }
-.pay-amount-label { display: block; font-size: 15px; font-weight: 700; color: var(--ink-1); margin-bottom: 10px; }
 .pay-amount-input {
    width: 100%; box-sizing: border-box;
    height: 56px; padding: 0 18px;
@@ -4731,7 +4726,6 @@ flex-wrap: wrap;
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* Payment history (lives in the right aside, ~360px) */
-.addfunds-history .aff-table-wrap { padding: 0 10px 12px; }
 .addfunds-history-table { table-layout: fixed; width: 100%; }
 .addfunds-history-table thead th,
 .addfunds-history-table tbody td {
@@ -4965,6 +4959,7 @@ flex-wrap: wrap;
 @media (max-width: 900px) {
    .tickets-page .tickets-grid { grid-template-columns: 1fr; }
 }
+
 
 /* ─── Ticket thread (viewticket) ─── */
 
@@ -5225,17 +5220,21 @@ flex-wrap: wrap;
 }
 
 /* Tables (referred users / payment history) */
-.aff-table-wrap { padding: 0 14px 14px; }
 .aff-table { width: 100%; border-collapse: separate; border-spacing: 0; }
-.aff-table thead th {
-   background: var(--bg-3); color: var(--ink-1);
-   font-size: 13px; font-weight: 500; text-align: left;
-   padding: 14px 16px; white-space: nowrap;
+.aff-table > thead > tr > th {
+   background: var(--bg-4);
+   color: var(--ink-1);
+   font-size: 14px;
+   font-weight: 400; 
+   vertical-align: middle;
+   padding:15px;
+   text-align: left;
 }
-.aff-table thead th:first-child { border-radius: 8px 0 0 10px; }
-.aff-table thead th:last-child { border-radius: 0 10px 10px 0; }
+.aff-table > thead th:first-child { border-radius: 8px 0 0 8px; }
+.aff-table > thead th:last-child { border-radius: 0 8px 8px 0; }
+
 .aff-table tbody td {
-   padding: 16px 16px; font-size: 14px;
+   padding: 10px; font-size: 14px;
    border-bottom: 1px solid var(--line-2);
    vertical-align: middle;
 }
@@ -6131,6 +6130,8 @@ justify-content: flex-end;
 }
 @media (max-width: 1280px) {
    .cp-ns-input { width:150px; }
+   .ord-filters, .pay-filters { gap: 8px; }
+   .ord-filter, .pay-filter { height: 34px; padding: 0 14px; font-size: 13px; }
 }
 @media (max-width: 1024px) {
    .childpanel-grid { grid-template-columns: 1fr; }
@@ -9145,6 +9146,7 @@ box-shadow: var(--shadow-brand-lg);
    font-weight:700;
    cursor: pointer;
    gap:15px;
+   margin:15px 0;
 }
 .lp-cta--gradient:hover {
    background: linear-gradient(90deg, #e8574b, #e67e5a);

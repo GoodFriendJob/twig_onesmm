@@ -99,7 +99,7 @@
             <span class="pay-selected-ic" id="pay-sel-ic"></span>
             <span class="pay-selected-name" id="pay-sel-name"></span>
           </div>
-          <h3 class="pay-instr-title">Instruction</h3>
+          <h3 class="card-head"><b>Instruction</b></h3>
           <div class="pay-instr-body" id="pay-instr-body">
             {% if addfunds %}{{ addfunds }}{% endif %}
           </div>
@@ -107,7 +107,7 @@
 
         {# Amount #}
         <div class="pay-amount">
-          <label for="amount" class="pay-amount-label">{{ lang('addfunds.amount') }}</label>
+          <label for="amount" class="card-head"><b>{{ lang('addfunds.amount') }}</b></label>
           <input type="text" inputmode="decimal" class="pay-amount-input tabular" name="AddFoundsForm[amount]" id="amount" placeholder="$15" autocomplete="off">
           <small class="pay-amount-hint">$1 minimum</small>
           <div class="amount-error" id="amount-error" role="alert"></div>
@@ -115,7 +115,7 @@
 
         {% if site['cpf_field'] %}
           <div class="pay-amount">
-            <label for="cpf" class="pay-amount-label">{{ lang('addfunds.cpf') }}</label>
+            <label for="cpf" class="card-head"><b>{{ lang('addfunds.cpf') }}</b></label>
             <input type="text" class="pay-amount-input" name="AddFoundsForm[cpf]" id="cpf">
           </div>
         {% endif %}
@@ -175,7 +175,7 @@
         <div class="card card-body2">
           <h3 class="card-head">Payment <b>History</b></h3>
           <div class="aff-table-wrap">
-            <table class="aff-table addfunds-history-table {% if site['rtl'] %}rtl-table{% endif %}">
+            <table class="table addfunds-history-table {% if site['rtl'] %}rtl-table{% endif %}">
               <thead>
                 <tr>
                   <th class="col-date">{{ lang('addfunds.date') }}</th>
