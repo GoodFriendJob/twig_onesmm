@@ -11,9 +11,14 @@
 
     {# ─── Search ─── #}
     <div class="ord-toolbar">
-      <form action="{{ page['url'] }}" method="get" id="history-search" class="ord-search">
-        <svg class="ord-search-ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input type="text" name="search" value="{{ search }}" placeholder="{{ lang('general.search.placeholder') }}">
+      <form action="{{ page['url'] }}" method="get" class="search-dropdown ord-search">
+        <div class="input-wrapper">
+          <span class="search-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"/><path opacity="0.4" d="M22 22L20 20"/></svg>
+          </span>
+          <input type="text" name="search" value="{{ search }}" placeholder="{{ lang('general.search.placeholder') }}" class="form-control with-icon" autocomplete="off">
+        </div>
+        <div class="pulse-search-results" id="pulse-search-results" style="display:none"></div>
       </form>
 
       {# ─── Status filter chips ─── #}
