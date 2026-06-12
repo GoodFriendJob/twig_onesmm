@@ -1381,25 +1381,6 @@
    }
    .platform-head .h3, .service-head .h3 { font-size: 15px; font-weight: 600; margin: 0; color: var(--ink-1); }
    
-   .platform-grid {
-       display: grid;
-       grid-template-columns: repeat(7, 1fr);
-       gap: 8px;
-   }
-   .pulse-platform-chip {
-       display: flex; flex-direction: column; align-items: center; justify-content: center;
-       gap: 8px; padding: 14px 8px;
-       background: #fff; border: 1px solid var(--line); border-radius: 10px;
-       color: var(--ink-1); font-size: 12px; font-weight: 500;
-       cursor: pointer; transition: all .15s;
-       min-height: 80px;
-   }
-   .pulse-platform-chip:hover { border-color: var(--brand); background: rgba(41,98,255,0.02); }
-   .pulse-platform-chip.is-active {
-       border-color: var(--brand); background: rgba(41,98,255,0.06);
-   }
-   .pulse-platform-chip.is-active .platform-name { color: var(--brand-strong); }
-   
    /* Coming-soon platforms — desaturated, non-active, "Soon" ribbon top-right.
       Tap is still allowed; JS shows a toast and snaps focus back to the active chip. */
    .pulse-platform-chip.is-coming-soon {
@@ -1456,7 +1437,6 @@
        display: inline-flex; align-items: center; justify-content: center;
        width: 32px; height: 32px;
    }
-   .platform-name { line-height: 1.2; text-align: center; }
    .platform-ig { color: #E1306C; }
    .platform-tiktok { color: #000; }
    .platform-yt { color: #FF0000; }

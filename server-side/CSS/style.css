@@ -1584,7 +1584,7 @@ transition: background var(--dur-fast) ease,
    background: var(--bg-2); border-color: var(--ink-4); color: var(--ink-1);
 }
 .btn-block { width: 100%; display: flex; }
-.btn-lg { height: 44px; font-size: 16px; padding: 0 20px; }
+.btn-lg { height: 50px; font-size: 16px; padding: 0 13px; }
 .btn-sm { height: 32px; font-size: 12px; padding: 0 12px; }
 .btn-xs { height: 26px; font-size: 12px; padding: 0 10px; }
 
@@ -2525,13 +2525,17 @@ header .navbar-brand, header [class*="brand"] {
 
 .search-dropdown .select2-selection { box-sizing: border-box; width: 100%; }
 .neworder-form textarea.form-control { height: auto; min-height: 80px; }
-.neworder-form #charge { background: var(--bg-2); cursor: not-allowed; }
 
 /* Fix oversized Link / Quantity / Charge fields (PerfectPanel + Bootstrap input-lg etc.)
   PerfectPanel injects Link/Quantity into #fields; IDs vary, so target by name/containers. */
-.neworder-form #fields .help-block {
-   font-size: 12px; margin-top: 6px; color: var(--ink-3);
+.help-block {
+   font-size: 12px; 
+   margin-top: 6px; 
+   color: var(--shell-icon);
    display:block;
+}
+.qty-control .help-block {
+   display: none;
 }
 
 /* ── Input-group fix: keep delete/action buttons beside fields (e.g. expiry) ── */
@@ -2836,9 +2840,9 @@ ul.select2-results__options {
    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;
 }
 .search-pill {
-   display: inline-flex; align-items: center; gap: 4px;
-   padding: 5px 11px; border-radius: 99px;
-   font-size: 11.5px; font-weight: 500; line-height: 1;
+   display: inline-flex; align-items: center; gap: 6px;
+   padding: 5px 10px; border-radius: 99px;
+   font-size: 12px; font-weight: 400; line-height: 1;
    border: 1px solid var(--line); background: var(--bg-1);
    color: var(--ink-2); cursor: pointer;
    transition: all .18s ease; white-space: nowrap;
@@ -3037,7 +3041,7 @@ ul.select2-results__options {
    gap: 8px;
    padding: 10px 6px 12px;
    background: var(--ctrl-bg, #fff); border: 1px solid var(--line); border-radius: 8px;
-   color: var(--ink-1); font-size: 12px; font-weight: 500;
+   color: var(--ink-1); font-size: 12px; font-weight: 600;
    cursor: pointer; transition: all .15s;
    min-height: 80px;
    min-width: 0;
@@ -3132,7 +3136,7 @@ ul.select2-results__options {
 .pulse-platform-chip:hover .platform-icon {
    color: var(--brand-3);
 }
-.platform-name { line-height: 1.2; text-align: center; word-break: break-word; }
+.platform-name { line-height: 1.2; font-weight:600; font-size:12px; text-align: center; }
    
 @media (max-width: 1690px) { .platform-grid { grid-template-columns: repeat(6, 1fr); } }
 @media (max-width: 1520px) { .platform-grid { grid-template-columns: repeat(5, 1fr); } }
@@ -3170,7 +3174,7 @@ select.select2-hidden-accessible {
 
 /* Constrain Select2 trigger height to match other form controls */
 .select2-container .select2-selection--single {
-   height: 42px !important;
+   height: 48px !important;
    border: 1px solid var(--line) !important;
    border-radius: 8px !important;
    background: var(--bg-1) !important;
@@ -3178,10 +3182,11 @@ select.select2-hidden-accessible {
 }
 .select2-container .select2-selection--single .select2-selection__rendered {
    line-height: 40px !important;
-   padding-left: 14px !important;
-   padding-right: 36px !important;
+   padding-left: 0 !important;
+   padding-right: 15px !important;
    color: var(--ink-1) !important;
-   font-size: 13.5px !important;
+   font-size: 14px !important;
+   font-weight:400 !important;
 }
 .select2-container .select2-selection--single .select2-selection__arrow {
    height: 40px !important;
@@ -3244,17 +3249,10 @@ select.select2-hidden-accessible {
    color: var(--shell-green);
    font-weight: 700;
    font-size: 24px !important;
-   height: 52px !important;
+   cursor: not-allowed;
 }
 
 /* ── Order Details fields (match design) ── */
-#order_quantity .min-max {
-   font-size: 12px;
-   color: var(--ink-3);
-   margin-top: 8px;
-}
-
-/* Quantity slider card — works with Perfect Panel's text-input quantity field */
 .qty-original-input {
    display: none !important;
 }
@@ -3371,8 +3369,8 @@ select.select2-hidden-accessible {
    background: var(--brand-faint, rgba(37,99,235,0.08)); color: var(--brand);
 }
 /* Service description (full, rendered as HTML) */
-.svc-desc-excerpt { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
-.svc-desc-text { font-size: 12px; line-height: 1.5; color: var(--shell-icon); margin: 20px 0; }
+.svc-desc-excerpt { margin-top: 20px; padding: 20px 0; border-top: 1px solid var(--line); }
+.svc-desc-text { font-size: 12px; line-height: 1.5; color: var(--shell-icon); }
 .svc-desc-text p { margin: 0 0 6px; }
 .svc-desc-text p:last-child { margin-bottom: 0; }
 
@@ -5465,8 +5463,6 @@ flex-wrap: wrap;
    font-size: 13px; font-weight: 500;
 }
 .account-secondary-btn:hover { background: var(--bg-1); border-color: var(--line-2); }
-
-.help-block { font-size: 12px; margin-top: 6px; }
 
 .api-key-row { display: flex; gap: 8px; }
 .api-key-row .form-control {
@@ -9281,13 +9277,16 @@ box-shadow: var(--shadow-brand-lg);
    background: linear-gradient(90deg, #ff6255, #ff8d64);
    color: #fff;
    border: none;
+   padding:13px 54px;
    border-radius: 8px;
    box-shadow: 0 8px 10px rgba(255,98,85,0.3);
+   text-decoration: none;
+   font-family: 'Inter';
+   font-weight:700;
+   cursor: pointer;
 }
 .lp-cta--gradient:hover {
    background: linear-gradient(90deg, #e8574b, #e67e5a);
-   color: #fff;
-   text-decoration: none;
    transform: translateY(-2px);
    box-shadow: 0 12px 20px rgba(255,98,85,0.35);
 }
@@ -16225,25 +16224,25 @@ max-width: 180px;
 .topbar-wallet { display: inline-flex; align-items: center; gap: 6px; }
 .topbar-wallet-ic { width: 24px; height: 24px; color: var(--shell-item); flex-shrink: 0; }
 .topbar-balance-pill {
-display: inline-flex;
-align-items: center;
-gap: 0;
-height: 32px;
-padding: 0 10px;
-border-radius: 8px;
-background: var(--shell-green-soft);
-border: 1px solid var(--shell-green-soft);
-color: var(--shell-green);
-font-size: 13px;
-font-weight: 700;
-white-space: nowrap;
+   display: inline-flex;
+   align-items: center;
+   gap: 0;
+   height: 32px;
+   padding: 0 10px;
+   border-radius: 8px;
+   background: var(--shell-green-soft);
+   border: 1px solid var(--shell-green-soft);
+   color: var(--shell-green);
+   font-size: 14px;
+   font-weight: 500;
+   white-space: nowrap;
 }
 .topbar-balance-pill .topbar-balance-amount {
-display: inline !important;
-font-family: 'Inter', sans-serif;
-font-weight: 500;
-font-size: 14px;
-color: var(--shell-green);
+   display: inline !important;
+   font-family: 'Inter', sans-serif;
+   font-weight: 500;
+   font-size: 14px;
+   color: var(--shell-green);
 }
 .topbar-currency-btn {
 display: inline-flex;
