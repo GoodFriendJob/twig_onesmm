@@ -12,6 +12,9 @@
     <div class="massorder-form">
       <div class="card">
         <div class="card-body">
+          <div class="platform-head">
+            <div class="h3">One order per line in format</div>
+          </div>
           <form {% if site['rtl'] %}class="rtl-form"{% endif %} method="post" action="{{ page['url'] }}">
             <input type="hidden" name="_csrf" value="{{ csrftoken }}">
 
@@ -54,7 +57,7 @@
 
             <button type="submit" class="btn btn-primary btn-lg btn-block lp-cta--gradient">
               {{ lang('massorder.button') }}
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              <svg width="16" height="16" viewBox="0 0 6 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"><path d="M0.75 0.749913L4.01 4.00991C4.395 4.39491 4.395 5.02491 4.01 5.40991L0.75 8.66992"/></svg>
             </button>
           </form>
         </div>
@@ -65,10 +68,10 @@
     <aside class="massorder-help">
       <div class="card">
         <div class="card-body">
-          <div class="h3" style="margin: 0 0 12px;">Format</div>
-          <p class="muted" style="font-size: 13px; margin: 0 0 12px;">One order per line. Use this exact format:</p>
+          <div class="h3">Format</div>
+          <p class="muted">One order per line. Use this exact format:</p>
           <pre class="format-pre">service_id|link|quantity</pre>
-          <div class="h4" style="margin: 18px 0 8px; font-size: 13px;">Example</div>
+          <div class="h3">Example</div>
           <pre class="format-pre">4287|https://instagram.com/profile|1000
 5102|https://tiktok.com/@user/video/123|5000
 6014|https://youtube.com/watch?v=abc|500</pre>

@@ -146,7 +146,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
    --line-4: #ffffff;
    --bg-1: rgba(255,255,255,.3);
    --bg-2: #F8F9FC;
-   --bg-3: #E3E5E5;
+   --bg-3: #EBEBEB;
    --bg-4: #F9FBFC;
    --bg-5: #f2f4f5;
    --bg-6: rgba(255,255,255,.4);
@@ -158,8 +158,8 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
    --red-soft: #FEF2F2;
    --blue: #4A6CF7;
    --blue-soft: #B2D9FF;
-   --radius-sm: 6px;
    --radius: 8px;
+   --radius-sm: 6px;
    --radius-lg: 14px;
    --shadow-1: 0 0 20px 0 rgba(51,68,102,.1);
    --shadow-2: 0 4px 16px rgba(26,26,46,.06);
@@ -1609,6 +1609,7 @@ transition: background var(--dur-fast) ease,
    font-weight:400;
    color: var(--ink-1);
    transition: border-color .15s, box-shadow .15s;
+   width:100%;
 }
 .form-control::placeholder {
    color: var(--line-3);
@@ -1625,9 +1626,6 @@ transition: background var(--dur-fast) ease,
    box-shadow:
        0 0 0 4px rgba(255, 98, 85, 0.18),
        0 0 18px rgba(255, 98, 85, 0.24);
-}
-input.form-control {
-   width:100%;
 }
 .form-control[readonly] { background: var(--bg-2); color: var(--ink-2); }
 .form-control.with-icon { padding-left: 38px; }
@@ -1743,6 +1741,9 @@ select.form-control:focus {
 }
 .card-header { padding: 16px 20px; border-bottom: 1px solid var(--line); }
 .card-body { padding: 30px; }
+.card-body p {
+   font-size:12px;
+}
 
 /* ─── Tables ─── */
 
@@ -2521,8 +2522,6 @@ header .navbar-brand, header [class*="brand"] {
    align-items: start;
 }
 .neworder-form { min-width: 0; }
-.neworder-form .card-body { padding: 24px; }
-
 .search-dropdown .select2-selection { box-sizing: border-box; width: 100%; }
 .neworder-form textarea.form-control { height: auto; min-height: 80px; }
 
@@ -3016,7 +3015,6 @@ ul.select2-results__options {
 }
 
 /* Platform chips */
-.platform-card .card-body { padding: 24px; }
 .platform-head, .service-head {
    display: flex; align-items: center; gap: 10px;
    margin: 10px 0 20px 0;
@@ -3243,7 +3241,6 @@ select.select2-hidden-accessible {
    float: none; opacity: .5; font-size: 18px; line-height: 1;
 }
 .neworder-form > .alert > .close:hover { opacity: 1; }
-.details-card .card-body { padding-top: 22px; overflow: visible; }
 /* Charge — large green value (match design) */
 .details-card #charge {
    color: var(--shell-green);
@@ -3414,44 +3411,17 @@ select.select2-hidden-accessible {
    gap: 10px;
    align-items: start;
 }
-.massorder-form { min-width: 0; }
-.massorder-form .card-body { padding: 24px; }
-
-.mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
-.massorder-textarea {
-   width: 100%;
-   min-height: 320px;
-   padding: 14px;
-   border: 1px solid var(--line);
-   border-radius: 8px;
-  box-sizing: border-box;
-  display: block;
-  margin-bottom: 14px;
-   background: var(--bg-1);
-   font-size: 13px;
-   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-   line-height: 1.6;
-   color: var(--ink-1);
-   resize: vertical;
-   transition: border-color .15s, box-shadow .15s;
-}
-.massorder-textarea:focus {
-   border-color: var(--brand);
-   outline: 0;
-   box-shadow: none;
-}
 .format-pre {
-   background: var(--bg-2);
-   border: 1px solid var(--line);
-   border-radius: 6px;
-   padding: 10px 12px;
-   margin: 30px 0 20px;
-   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+   padding: 10px;
+   margin: 20px 0;
    font-size: 12px;
    color: var(--ink-1);
+   background: var(--bg-3);
+   border: 1px solid var(--line);
+   border-radius: var(--radius);
    white-space: pre-wrap;
    word-break: break-all;
-   line-height: 1.6;
+   line-height: 1.5;
 }
 .massorder-tips {
    list-style: none; padding: 16px 0 0; margin: 16px 0 0;
@@ -3626,7 +3596,6 @@ select.select2-hidden-accessible {
 }
 
 .api-methods { display: flex; flex-direction: column; gap: 16px; }
-.api-method .card-body { padding: 24px; }
 .api-method-head {
       display: flex; align-items: center; gap: 12px;
       margin-bottom: 16px; flex-wrap: wrap;
@@ -5162,7 +5131,6 @@ flex-wrap: wrap;
    align-items: start;
 }
 
-.faq-content .card-body { padding: 32px; }
 .faq-content h1, .faq-content h2, .faq-content h3, .faq-content h4 {
    color: var(--ink-1); font-weight: 600; letter-spacing: -0.01em;
    margin: 28px 0 12px;
@@ -5378,7 +5346,6 @@ flex-wrap: wrap;
 /* ─── Terms ─── */
 .terms-content-wrap { max-width: 880px; margin: 0 auto; width: 100%; }
 .terms-content { max-width: none; margin: 0; }
-.terms-content .card-body { padding: 40px; }
 
 /* ─── Account page ─── */
 
@@ -5391,7 +5358,6 @@ flex-wrap: wrap;
 }
 .account-card-wide { grid-column: 1 / -1; }
 
-.account-card .card-body { padding: 22px 24px; }
 .account-card-head {
    display: flex; justify-content: space-between; align-items: flex-start;
    gap: 12px; margin-bottom: 16px;
@@ -5966,11 +5932,6 @@ justify-content: flex-end;
 .cmspage-article {
    max-width: 880px; margin: 0 auto;
 }
-.cmspage-article .card-body { padding: 40px; }
-@media (max-width: 700px) {
-   .cmspage-article .card-body { padding: 24px; }
-}
-
 /* ─── Child panel order (layout + fields match New Order) ─── */
 
 .childpanel-order-page {
@@ -5987,8 +5948,6 @@ justify-content: flex-end;
    margin: 0 0 20px;
    box-sizing: border-box;
 }
-.childpanel-intro .card-body { padding: 24px 28px; }
-
 .childpanel-grid {
    display: grid;
    grid-template-columns: 1fr 360px;
@@ -6003,7 +5962,6 @@ justify-content: flex-end;
 
 .childpanel-form { min-width: 0; }
 .childpanel-form .card { margin-bottom: 0; overflow: visible; }
-.childpanel-form .card-body { padding: 24px; }
 .childpanel-form .form-group:last-child { margin-bottom: 0; }
 .childpanel-form textarea.form-control {
    height: auto;
@@ -10276,7 +10234,7 @@ overflow-x: visible !important;
    .lp-feed { border-radius: 8px; }
    .lp-dashprev { border-radius: 8px; }
    .neworder-page { padding: 4px 0 24px; }
-   .neworder-form .card-body { padding: 16px; }
+   .card-body { padding: 15px; }
    .platform-grid { gap: 6px; }
    .pulse-platform-chip,
    .platform-more-chip { padding: 10px 6px; min-height: 70px; font-size: 11px; }
@@ -10401,58 +10359,58 @@ overflow-x: visible !important;
 
 /* ─── Blog page: prevent table overflow + touch targets ─── */
 @media (max-width: 768px) {
-.blog-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-}
-.blog-card-body {
-    padding: 16px 18px;
-}
-.blog-card-title {
-    font-size: 16px;
-}
-.blog-card-excerpt {
-    font-size: 13.5px;
-}
-.blog-card-cta {
-    font-size: 14px;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 0;
-}
-/* Prevent any raw HTML tables from overflowing inside blog content */
-.blogpost-page .card-body table,
-.blog-card table {
-    display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    max-width: 100%;
-}
-.blogpost-page .card-body {
-    overflow-x: clip;
-}
+   .blog-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+   }
+   .blog-card-body {
+      padding: 16px 18px;
+   }
+   .blog-card-title {
+      font-size: 16px;
+   }
+   .blog-card-excerpt {
+      font-size: 13.5px;
+   }
+   .blog-card-cta {
+      font-size: 14px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 0;
+   }
+   /* Prevent any raw HTML tables from overflowing inside blog content */
+   .blogpost-page .card-body table,
+   .blog-card table {
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      max-width: 100%;
+   }
+   .blogpost-page .card-body {
+      overflow-x: clip;
+   }
 }
 
 /* ─── Signup page: labels, links, stats ─── */
 @media (max-width: 768px) {
-.auth-field__label {
-    font-size: 13px;
-}
-.auth-field__forgot {
-    font-size: 13px;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-}
-/* "Already have an account? Sign in" links */
-.auth-form a,
-.auth-card a {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    font-size: 14px;
-}
+   .auth-field__label {
+      font-size: 13px;
+   }
+   .auth-field__forgot {
+      font-size: 13px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+   }
+   /* "Already have an account? Sign in" links */
+   .auth-form a,
+   .auth-card a {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 14px;
+   }
 }
 
 /* ─── Landing pages (instagram/telegram): Order links + feed text ─── */
@@ -10507,14 +10465,11 @@ overflow-x: visible !important;
 
 /* ─── Terms page: eyebrow + meta text ─── */
 @media (max-width: 768px) {
-.terms-page .page-header-eyebrow,
-.affiliates-page .page-header-eyebrow,
-.faq-page .page-header-eyebrow {
-    font-size: 12px;
-}
-.terms-content .card-body {
-    padding: 20px 16px;
-}
+   .terms-page .page-header-eyebrow,
+   .affiliates-page .page-header-eyebrow,
+   .faq-page .page-header-eyebrow {
+      font-size: 12px;
+   }
 }
 
 /* ─── Global: prevent any page-level horizontal overflow ─── */
