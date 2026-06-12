@@ -3468,15 +3468,25 @@ select.select2-hidden-accessible {
 .svc-desc-text p { margin: 0 0 6px; }
 .svc-desc-text p:last-child { margin-bottom: 0; }
 
-@media (max-width: 1024px) {
-   .neworder-grid { grid-template-columns: 1fr; }
-   .neworder-summary { position: static; }
-
-}
 @media (max-width: 1280px) {
    .qty-control {
       flex-direction: column;
       padding: 14px 18px;
+   }
+   .qty-display-value {
+      width:100%;
+   }
+   .qty-slider-wrap {
+      width:100%;
+   }
+}
+@media (max-width: 1024px) {
+   .neworder-grid { grid-template-columns: 1fr; }
+   .neworder-summary { position: static; }
+}
+@media (max-width: 668px) {
+   .qty-slider-wrap {
+      display:none;
    }
 }
 
