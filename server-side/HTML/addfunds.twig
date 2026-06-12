@@ -14,7 +14,7 @@
   <div class="addfunds-layout">
 
     {# ─── LEFT: payment form ─── #}
-    <div class="addfunds-main subpage-card">
+    <div class="card card-body">
       <form method="post" action="" id="addfunds-form" {% if site['rtl'] %}class="rtl-form"{% endif %}>
         <input type="hidden" name="_csrf" value="{{ csrftoken }}">
 
@@ -50,21 +50,21 @@
           {% for payment in paymentsList %}
             {% set isSel = currentPayment == payment['id'] or (currentPayment is empty and loop.first) %}
             <label class="pay-tile{% if isSel %} is-active{% endif %}"
-                   data-cat="{{ payment['category']|default('other') }}"
-                   data-payment-id="{{ payment['id'] }}"
-                   data-name="{{ payment['name'] }}"
-                   data-icon="{{ payment['icon']|default('') }}"
-                   data-instruction="{{ payment['instruction']|default('') }}">
+                  data-cat="{{ payment['category']|default('other') }}"
+                  data-payment-id="{{ payment['id'] }}"
+                  data-name="{{ payment['name'] }}"
+                  data-icon="{{ payment['icon']|default('') }}"
+                  data-instruction="{{ payment['instruction']|default('') }}">
               <input type="radio" class="pay-tile-radio" name="AddFoundsForm[type]" value="{{ payment['id'] }}"{% if isSel %} checked{% endif %}>
               <span class="pay-tile-ic">
                 {# Perfect Panel gives no icon/icon_key server-side — only the name.
-                   1) use payment['icon'] if an install ever provides it,
-                   2) else pick a logo by matching keywords in the name,
-                   3) else fall back to the first letter. #}
+                  1) use payment['icon'] if an install ever provides it,
+                  2) else pick a logo by matching keywords in the name,
+                  3) else fall back to the first letter. #}
                 {% set _pn = payment['name']|lower %}
                 {% if payment['icon'] %}
                   <img src="{{ payment['icon'] }}" alt="{{ payment['name'] }}" class="pay-tile-img" loading="lazy"
-                       onerror="this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='';}">
+                      onerror="this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='';}">
                   <span class="pay-ic-letter" style="display:none">{{ payment['name']|first|upper }}</span>
                 {% elseif 'cryptomus' in _pn %}
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5"/><path d="M12 22V12"/></svg>
@@ -138,12 +138,12 @@
     {# ─── RIGHT: trust signals + history ─── #}
     <aside class="addfunds-side">
       {% if addfunds_aside %}
-        <div class="subpage-card">
+        <div class="card card-body">
           <h2 class="box-title">Good to <b>know</b></h2>
           <div class="box-sub">{{ addfunds_aside }}</div>
         </div>
       {% else %}
-        <div class="subpage-card addfunds-trust">
+        <div class="card card-body2">
           <h2 class="box-title">Why deposit <b>with OneSMM</b></h2>
           <ul class="trust-list">
             <li class="trust-item">
@@ -178,7 +178,7 @@
       {% endif %}
 
       {% if paymentList %}
-        <div class="subpage-card subpage-card--flush addfunds-history">
+        <div class="card card-body2">
           <div class="aff-card-head"><h2 class="box-title">Payment <b>History</b></h2></div>
           <div class="aff-table-wrap">
             <table class="aff-table addfunds-history-table {% if site['rtl'] %}rtl-table{% endif %}">

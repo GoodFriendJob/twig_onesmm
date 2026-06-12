@@ -735,8 +735,6 @@
        overflow: hidden;
    }
    .card-header { padding: 16px 20px; border-bottom: 1px solid var(--line); }
-   .card-body { padding: 20px; }
-   
    
    /* ─── Tables ─── */
    
@@ -1368,7 +1366,6 @@
    }
    
    /* Platform chips */
-   .platform-card .card-body { padding: 22px 24px; }
    .platform-head, .service-head {
        display: flex; align-items: center; gap: 10px;
        margin-bottom: 16px;
@@ -1523,7 +1520,6 @@
    
    .neworder-form .card { margin-bottom: 16px; }
    .neworder-form .card:last-child { margin-bottom: 0; }
-   .details-card .card-body { padding-top: 22px; }
    
    /* Summary card */
    .neworder-summary { position: sticky; top: 84px; align-self: flex-start; }
@@ -1575,7 +1571,6 @@
        align-items: start;
    }
    .massorder-form { min-width: 0; }
-   .massorder-form .card-body { padding: 24px; }
    .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
    .massorder-textarea {
        width: 100%;
@@ -1840,7 +1835,6 @@
            border: 0;
        }
        .services-card { box-shadow: none; border: 0; background: transparent; padding: 0; }
-       .services-card .card-body { padding: 0; }
    
        /* Card container */
        .services-table tbody > tr:not(.services-cat-row):not(.service-description-mobile) {
@@ -2057,7 +2051,6 @@
    .addfunds-page .page-header .muted { font-size: 13.5px; color: var(--ink-3); margin: 0; display: block; }
    
    .addfunds-grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; margin-bottom: 28px; }
-   .addfunds-grid .card-body { padding: 24px; }
    .addfunds-grid #amount { font-size: 22px; font-weight: 600; height: 52px; letter-spacing: -0.01em; }
    
    .amount-presets { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
@@ -2066,7 +2059,6 @@
    
    .addfunds-pay { margin-top: 8px; }
    
-   .addfunds-aside .card-body { padding: 22px; }
    .aside-h { font-size: 13px; font-weight: 600; color: var(--ink-1); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
    .aside-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 16px; }
    .aside-list li { display: flex; gap: 12px; align-items: flex-start; }
@@ -2314,7 +2306,6 @@
        align-items: start;
    }
    
-   .faq-content .card-body { padding: 32px; }
    .faq-content h1, .faq-content h2, .faq-content h3, .faq-content h4 {
        color: var(--ink-1); font-weight: 600; letter-spacing: -0.01em;
        margin: 28px 0 12px;
@@ -2487,7 +2478,6 @@
        letter-spacing: -0.01em;
    }
    
-   .aff-content .card-body { padding: 28px; }
    .aff-content h2 { font-size: 18px; }
    .aff-content h3 { font-size: 15px; }
    
@@ -2503,7 +2493,6 @@
    
    /* ─── Terms ─── */
    .terms-content { max-width: 880px; margin: 0 auto; }
-   .terms-content .card-body { padding: 40px; }
    
    
    /* ─── Account page ─── */
@@ -2517,7 +2506,6 @@
    }
    .account-card-wide { grid-column: 1 / -1; }
    
-   .account-card .card-body { padding: 22px 24px; }
    .account-card-head {
        display: flex; justify-content: space-between; align-items: flex-start;
        gap: 12px; margin-bottom: 16px;
@@ -2595,7 +2583,6 @@
    }
    
    .blog-intro { max-width: 880px; margin: 0 auto 24px; }
-   .blog-intro .card-body { padding: 28px 32px; }
    
    .blog-grid {
        display: grid;
@@ -2739,7 +2726,6 @@
            height: clamp(180px, 42vw, 260px);
            max-height: min(260px, 38vh);
        }
-       .blog-intro .card-body { padding: 22px; }
    }
    
    
@@ -2777,7 +2763,6 @@
    .panel-domain:hover { color: var(--brand); }
    
    .empty-state-card { text-align: center; }
-   .empty-state-card .card-body { padding: 56px 24px; }
    .empty-state-icon {
        width: 56px; height: 56px; border-radius: 14px;
        background: var(--bg-2); color: var(--ink-3);
@@ -2794,10 +2779,6 @@
    .cmspage-article {
        max-width: 880px; margin: 0 auto;
    }
-   .cmspage-article .card-body { padding: 40px; }
-   @media (max-width: 700px) {
-       .cmspage-article .card-body { padding: 24px; }
-   }
    
    
    /* ─── Child panel order ─── */
@@ -2808,7 +2789,6 @@
    }
    
    .childpanel-intro { max-width: 880px; margin: 0 auto 20px; }
-   .childpanel-intro .card-body { padding: 24px 28px; }
    
    .childpanel-grid {
        display: grid;

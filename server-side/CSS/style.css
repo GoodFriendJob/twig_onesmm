@@ -1694,13 +1694,10 @@ select.form-control:focus {
 
 /* Content box — shared white card used for every section */
 .subpage-card {
-   background: var(--bg-1);
-   border: 1px solid var(--line);
-   border-radius: var(--radius-lg);
    box-shadow: var(--shadow-1);
-   padding: 26px 28px;
+   padding: 0 15px;
 }
-.subpage-card--flush { padding: 0; overflow: hidden; }
+.subpage-card--flush { overflow: hidden; }
 
 /* In-card heading — leading words muted, key word(s) in <b> bold dark */
 .box-title {
@@ -1714,7 +1711,7 @@ select.form-control:focus {
 
 @media (max-width: 640px) {
    .subpage-title { font-size: 24px; }
-   .subpage-card { padding: 20px 18px; }
+   .subpage-card { padding: 0 10px; }
 }
 
 .card {
@@ -1741,7 +1738,8 @@ select.form-control:focus {
 }
 .card-header { padding: 16px 20px; border-bottom: 1px solid var(--line); }
 .card-body { padding: 30px; }
-.card-body p {
+.card-body2 { padding: 30px 20px; }
+.card-body p, .card-body2 p {
    font-size:12px;
 }
 
@@ -2800,7 +2798,7 @@ ul.select2-results__options {
    height: auto !important;
 }
 
-.search-dropdown { width: 100%; box-sizing: border-box; }
+.search-dropdown { width: 100%; box-sizing: border-box; min-width:300px; max-width:595px;}
 #pulse-service-search { box-sizing: border-box; }
 .search-dropdown .input-wrapper { position: relative; width: 100%; box-sizing: border-box; }
 .search-dropdown .select2-container { max-width: 100% !important; width: 100% !important; box-sizing: border-box; }
@@ -4387,30 +4385,28 @@ gap: 6px;
 .services-cat-row .col-order { background: transparent; }
 /* ─── Orders page ("Orders Status") ─── */
 
-.ord-toolbar { padding: 22px 24px 4px; }
+.ord-toolbar { padding: 30px 0; }
 
 /* Search */
-.ord-search { position: relative; display: block; margin-bottom: 22px; }
-.ord-search-ic { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--ink-3); pointer-events: none; }
-.ord-search input {
-   width: 100%; box-sizing: border-box; height: 52px; padding: 0 16px 0 48px;
-   border: 1px solid var(--line); border-radius: 12px; background: var(--bg-1);
-   font-size: 14px; color: var(--ink-1); transition: border-color .15s;
-}
-.ord-search input::placeholder { color: var(--ink-3); }
-.ord-search input:focus { outline: 0; border-color: var(--brand); }
+.ord-search { margin:0 0 60px; }
 
 /* Status filter chips */
 .ord-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 6px; }
 .ord-filter {
-   display: inline-flex; align-items: center; height: 40px; padding: 0 20px;
+   display: inline-flex; align-items: center; height: 50px; padding: 10px 30px;
    border: 1px solid var(--ink-2); border-radius: 999px;
-   font-size: 14px; font-weight: 500; color: var(--ink-2);
+   font-size: 14px; font-weight: 600; 
+   color: var(--ink-2);
    background: var(--bg-1); text-decoration: none;
    transition: background .15s, color .15s, border-color .15s;
 }
 .ord-filter:hover { border-color: var(--ink-1); color: var(--ink-1); }
-.ord-filter.is-active { background: var(--brand); color: #fff; border-color: var(--brand); }
+.ord-filter.is-active { 
+   background: var(--brand); 
+   color: #fff; 
+   border-color: rgba(0, 0, 0, 0.08);
+   box-shadow: 0 4px 5px 0 rgba(73, 140, 232, 0.3);
+}
 
 /* Table */
 .ord-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 14px 10px 8px; }
@@ -4488,8 +4484,8 @@ gap: 6px;
   data-label. The wide table layout (10–11 cols) is unreadable on phones
   even with horizontal scroll, so we restructure rather than shrink. */
 @media (max-width: 760px) {
-   .ord-toolbar { padding: 16px 16px 4px; }
-   .ord-search input { height: 46px; font-size: 14px; }
+   .ord-toolbar { padding: 15px 0; }
+   .ord-search {margin: 0 0 30px;}
    .ord-filters { gap: 8px; }
    .ord-filter { height: 34px; padding: 0 14px; font-size: 13px; }
 
@@ -4862,9 +4858,9 @@ flex-wrap: wrap;
 .account-page .form-group > select:focus,
 .account-page .form-group > input:focus,
 .account-page .form-group > textarea:focus,
-.account-page .account-card .card-body select:focus,
-.account-page .account-card .card-body input:focus,
-.account-page .account-card .card-body textarea:focus { border-color: var(--brand); outline: 0; box-shadow: none; }
+.account-page .account-card select:focus,
+.account-page .account-card input:focus,
+.account-page .account-card textarea:focus { border-color: var(--brand); outline: 0; box-shadow: none; }
 
 .tickets-page textarea.form-control.input-lg {
    height: auto;
@@ -5298,15 +5294,15 @@ flex-wrap: wrap;
 .account-page .form-group > select,
 .account-page .form-group > input,
 .account-page .form-group > textarea,
-.account-page .account-card .card-body select,
-.account-page .account-card .card-body input[type="text"],
-.account-page .account-card .card-body input[type="email"],
-.account-page .account-card .card-body input[type="password"],
-.account-page .account-card .card-body input[type="number"],
-.account-page .account-card .card-body input[type="search"],
-.account-page .account-card .card-body input[type="tel"],
-.account-page .account-card .card-body input[type="url"],
-.account-page .account-card .card-body textarea {
+.account-page .account-card select,
+.account-page .account-card input[type="text"],
+.account-page .account-card input[type="email"],
+.account-page .account-card input[type="password"],
+.account-page .account-card input[type="number"],
+.account-page .account-card input[type="search"],
+.account-page .account-card input[type="tel"],
+.account-page .account-card input[type="url"],
+.account-page .account-card textarea {
    width: 100%;
    max-width: 100%;
    display: block;
@@ -5323,7 +5319,7 @@ flex-wrap: wrap;
 }
 .account-page textarea.form-control,
 .account-page .form-group > textarea,
-.account-page .account-card .card-body textarea {
+.account-page .account-card textarea {
    height: auto;
    padding: 12px 14px;
    line-height: 1.55;
@@ -5331,7 +5327,7 @@ flex-wrap: wrap;
    font-size: 13px;
 }
 .account-page .form-group > select,
-.account-page .account-card .card-body select,
+.account-page .account-card select,
 .account-page select.form-control {
    appearance: none;
    -webkit-appearance: none;
@@ -10139,6 +10135,7 @@ overflow-x: visible !important;
    .lp-dashprev { border-radius: 8px; }
    .neworder-page { padding: 4px 0 24px; }
    .card-body { padding: 15px; }
+   .card-body2 { padding: 15px 10px; }
    .platform-grid { gap: 6px; }
    .pulse-platform-chip,
    .platform-more-chip { padding: 10px 6px; min-height: 70px; font-size: 11px; }
@@ -10284,7 +10281,7 @@ overflow-x: visible !important;
       padding: 8px 0;
    }
    /* Prevent any raw HTML tables from overflowing inside blog content */
-   .blogpost-page .card-body table,
+   .blogpost-page table,
    .blog-card table {
       display: block;
       overflow-x: auto;
