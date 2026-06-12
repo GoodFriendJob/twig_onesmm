@@ -1594,17 +1594,54 @@ transition: background var(--dur-fast) ease,
 
 /* ─── Form controls (Pulse) ─── */
 
-.form-control, .input {
-   height: 38px;
-   padding: 0 12px;
+.form-control {
+   height: 48px;
+   padding: 0 30px;
    border: 1px solid var(--line);
-   border-radius: 8px;
-   background: var(--bg-1);
-   font-size: 14px; color: var(--ink-1);
-   transition: border-color .15s;
+   border-radius: 12px;
+   background: var(--line-4);
+   font-size: 14px; 
+   font-weight:400;
+   color: var(--ink-1);
+   transition: border-color .15s, box-shadow .15s;
 }
-.form-control:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(240,101,67,.08); }
-textarea.form-control { height: auto; padding: 10px 12px; }
+.form-control::placeholder {
+   color: var(--line-3);
+}
+
+.form-control:hover {
+   border-color: rgba(255, 98, 85, 0.42);
+   box-shadow:
+       0 0 0 4px rgba(255, 98, 85, 0.09),
+       0 1px 3px rgba(255, 98, 85, 0.14);
+}
+.form-control:focus,
+.form-control:focus-visible {
+   border-color: var(--accent, #FF6255);
+   box-shadow:
+       0 0 0 4px rgba(255, 98, 85, 0.18),
+       0 0 18px rgba(255, 98, 85, 0.24);
+}
+
+input.form-control {
+   width:100%;
+}
+.form-control[readonly] { background: var(--bg-2); color: var(--ink-2); }
+.form-control.with-icon { padding-left: 38px; }
+textarea.form-control { height: auto; padding: 15px 30px; line-height:1.4;}
+
+select.form-control {
+   appearance: none;
+   -webkit-appearance: none;
+   padding-right: 42px;
+   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20'%3E%3Cpath d='M5 7.5 10 12.5 15 7.5' fill='none' stroke='%2364748b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+   background-repeat: no-repeat;
+   background-position: right 14px center;
+   background-size: 16px 16px;
+}
+select.form-control:focus {
+   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20'%3E%3Cpath d='M5 12.5 10 7.5 15 12.5' fill='none' stroke='%232962ff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
 
 /* ─── Cards / page header ─── */
 
@@ -2484,103 +2521,17 @@ header .navbar-brand, header [class*="brand"] {
 .neworder-form .form-group { margin-bottom: 20px; }
 .neworder-form .form-group:last-child { margin-bottom: 0; }
 .neworder-form .control-label {
-   font-size: 12px; font-weight: 500; color: var(--ink-2);
-   letter-spacing: 0.04em;
-   margin-bottom: 4px; display: block;
+   font-size: 12px; font-weight: 400; color: var(--shell-icon);
+   line-height:1;
+   margin-bottom: 6px; display: block;
 }
-.neworder-form .form-control {
-   height: 42px;
-   padding: 0 14px;
-   border: 1px solid var(--line);
-   border-radius: 8px;
-   background: var(--bg-1);
-   font-size: 14px; color: var(--ink-1);
-   width: 100%;
-   transition: border-color .15s, box-shadow .15s;
-}
-.neworder-form .form-control:focus {
-   border-color: var(--brand);
-   outline: 0;
-   box-shadow: none;
-}
-.neworder-form .form-control.with-icon { padding-left: 38px; }
+
 .search-dropdown .select2-selection { box-sizing: border-box; width: 100%; }
-.neworder-form textarea.form-control { height: auto; padding: 10px 14px; min-height: 80px; }
+.neworder-form textarea.form-control { height: auto; min-height: 80px; }
 .neworder-form #charge { background: var(--bg-2); cursor: not-allowed; }
 
 /* Fix oversized Link / Quantity / Charge fields (PerfectPanel + Bootstrap input-lg etc.)
   PerfectPanel injects Link/Quantity into #fields; IDs vary, so target by name/containers. */
-.neworder-form #charge,
-.neworder-form #order_link input,
-.neworder-form #order_link textarea,
-.neworder-form #order_quantity input,
-.neworder-form #order_quantity textarea,
-.neworder-form #fields input[name="link"],
-.neworder-form #fields input[name="username"],
-.neworder-form #order_quantity input[name="quantity"],
-.neworder-form #order_quantity textarea[name="quantity"] {
-   height: 42px !important;
-   padding: 0 14px !important;
-   font-size: 14px !important;
-   font-weight:400;
-   line-height: 1 !important;
-   box-sizing: border-box !important;
-}
-
-/* Neutralize Bootstrap's large input sizing if applied */
-.neworder-form #charge.input-lg,
-.neworder-form #order_link input.input-lg,
-.neworder-form #order_link textarea.input-lg,
-.neworder-form #order_quantity input.input-lg,
-.neworder-form #order_quantity textarea.input-lg,
-.neworder-form #fields input.input-lg[name="link"],
-.neworder-form #fields input.input-lg[name="username"],
-.neworder-form #order_quantity input.input-lg[name="quantity"],
-.neworder-form #order_quantity textarea.input-lg[name="quantity"],
-.neworder-form #charge.form-control.input-lg,
-.neworder-form #order_link input.form-control.input-lg,
-.neworder-form #order_link textarea.form-control.input-lg,
-.neworder-form #order_quantity input.form-control.input-lg,
-.neworder-form #order_quantity textarea.form-control.input-lg,
-.neworder-form #fields input.form-control.input-lg[name="link"],
-.neworder-form #fields input.form-control.input-lg[name="username"],
-.neworder-form #order_quantity input.form-control.input-lg[name="quantity"],
-.neworder-form #order_quantity textarea.form-control.input-lg[name="quantity"] {
-   height: 42px !important;
-   padding: 0 14px !important;
-   font-size: 14px !important;
-   line-height: 1.2 !important;
-}
-
-/* PP-injected fields — normalize ALL inputs/textareas/selects inside #fields */
-.neworder-form #fields .form-control {
-   height: 42px; padding: 0 14px;
-   border: 1px solid var(--line); border-radius: 8px;
-   background: var(--bg-1); font-size: 14px; color: var(--ink-1);
-   width: 100%; box-sizing: border-box;
-   transition: border-color .15s, box-shadow .15s;
-}
-.neworder-form #fields .form-control:focus {
-   border-color: var(--brand); outline: 0;
-   box-shadow: none;
-}
-.neworder-form #fields textarea.form-control {
-   height: auto; min-height: 80px; padding: 10px 14px;
-   line-height: 1.5; resize: vertical;
-}
-.neworder-form #fields select.form-control {
-   appearance: none;
-   background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-   background-repeat: no-repeat; background-position: right 14px center;
-   padding-right: 36px;
-}
-.neworder-form #fields .form-group.fields { margin-bottom: 16px; }
-.neworder-form #fields .control-label,
-.neworder-form #fields label {
-   font-size: 12px; font-weight: 400; color: var(--shell-icon);
-   line-height: 1;
-   margin-bottom: 2px; display: block;
-}
 .neworder-form #fields .help-block {
    font-size: 12px; margin-top: 6px; color: var(--ink-3);
    display:block;
@@ -2589,9 +2540,6 @@ header .navbar-brand, header [class*="brand"] {
 /* ── Input-group fix: keep delete/action buttons beside fields (e.g. expiry) ── */
 .neworder-form #fields .input-group {
    display: flex; align-items: flex-start; width: 100%;
-}
-.neworder-form #fields .input-group .form-control {
-   flex: 1 1 0%; width: auto; border-radius: 8px 0 0 8px;
 }
 .neworder-form #fields .input-group .input-group-btn {
    display: flex; white-space: nowrap; flex-shrink: 0;
@@ -3303,18 +3251,12 @@ select.select2-hidden-accessible {
 /* ── Order Details fields (match design) ── */
 #fields .control-label,
 .details-card .control-label {
-   display: block;
    font-size: 12px;
-   font-weight: 500;
-   color: var(--ink-3);
+   font-weight: 400;
+   line-height:1;
    margin-bottom: 6px;
-}
-#fields .form-control {
-   height: 48px;
-   border-radius: 8px;
-   border: 1px solid var(--line);
-   background: var(--bg-1);
-   font-size: 14px;
+   color: var(--shell-icon);
+   display: block;
 }
 #order_quantity .min-max {
    font-size: 12px;
@@ -3337,24 +3279,21 @@ select.select2-hidden-accessible {
    border-radius: 12px;
 }
 .qty-display-value {
-   font-family: inherit;
-   font-size: 24px;
-   font-weight: 700;
-   color: var(--ink-1);
-   min-width: 96px;
-   width: auto;
+   font-size: 14px;
+   font-weight: 400;
    line-height: 1;
+   color: var(--ink-1);
+   min-width: 72px;
+   width: auto;
    font-variant-numeric: tabular-nums;
-   text-align: center;
-   padding: 10px 14px;
-   background: rgba(255, 98, 85, 0.04);
+   padding: 4px;
+   background: none;
    border: 1.5px solid rgba(255, 98, 85, 0.22);
    border-radius: 10px;
    outline: none;
    cursor: text;
    -webkit-appearance: none;
    appearance: none;
-   /* Soft ambient orange glow — signals "live + editable" */
    box-shadow:
        0 0 0 4px rgba(255, 98, 85, 0.06),
        0 1px 2px rgba(255, 98, 85, 0.10);
@@ -3515,10 +3454,9 @@ select.select2-hidden-accessible {
 .massorder-form .card-body { padding: 24px; }
 .massorder-form .control-label {
    font-size: 12px;
-   font-weight: 500;
-   color: var(--ink-2);
-   letter-spacing: 0.04em;
-   margin-bottom: 4px;
+   font-weight: 400;
+   margin-bottom: 6px;
+   color: var(--shell-icon);
    display: block;
 }
 .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
@@ -4139,22 +4077,6 @@ select.select2-hidden-accessible {
 .services-toolbar .input-with-icon .input-icon {
    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
    color: var(--ink-3);
-}
-.services-toolbar .input-with-icon .form-control {
-   width: 100%;
-   height: 38px;
-   padding: 0 14px 0 34px;
-   border: 1px solid var(--line);
-   border-radius: 8px;
-   background: var(--bg-1);
-   font-size: 13.5px;
-   color: var(--ink-1);
-   transition: border-color .15s;
-}
-.services-toolbar .input-with-icon .form-control:focus {
-   border-color: var(--brand);
-   outline: 0;
-   box-shadow: none;
 }
 
 .dropdown-max-height { max-height: 360px; overflow-y: auto; }
@@ -4778,7 +4700,6 @@ gap: 6px;
 .updates-toolbar .updates-search { margin-left: auto; flex: 1; max-width: 360px; min-width: 220px; }
 .updates-toolbar .input-with-icon { position: relative; }
 .updates-toolbar .input-with-icon .input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--ink-3); pointer-events: none; }
-.updates-toolbar .input-with-icon .form-control { width: 100%; height: 38px; padding-left: 34px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg-1); font-size: 13.5px; }
 .updates-toolbar {
 display: flex;
 align-items: center;
@@ -5024,11 +4945,6 @@ flex-wrap: wrap;
 .page-search .input-icon {
    position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--ink-3); pointer-events: none;
 }
-.page-search .form-control {
-   width: 100%; height: 38px; padding-left: 34px;
-   border: 1px solid var(--line); border-radius: 8px; background: var(--bg-1); font-size: 13.5px;
-}
-
 .data-card {
    background: var(--bg-1); border: 1px solid var(--line);
    border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-1);
@@ -5091,75 +5007,27 @@ flex-wrap: wrap;
    max-width: 100%;
    box-sizing: border-box;
 }
-.tickets-page .control-label {
-   font-size: 12px; font-weight: 500; color: var(--ink-2);
-   text-transform: uppercase; letter-spacing: 0.04em;
-   margin-bottom: 8px; display: block;
-}
-.tickets-page .form-control {
-   height: 42px;
-   padding: 0 14px;
-   border: 1px solid var(--line);
-   border-radius: 8px;
-   background: var(--bg-1);
-   font-size: 14px;
-   color: var(--ink-1);
-   width: 100%;
-   max-width: 100%;
-   box-sizing: border-box;
-   display: block;
-   transition: border-color .15s, box-shadow .15s;
-}
 .tickets-page textarea.form-control {
    height: auto;
    min-height: 140px;
-   padding: 12px 14px;
-   line-height: 1.55;
-}
-.tickets-page select.form-control {
-   appearance: none;
-   -webkit-appearance: none;
-   padding-right: 42px;
-   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20'%3E%3Cpath d='M5 7.5 10 12.5 15 7.5' fill='none' stroke='%2364748b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-   background-repeat: no-repeat;
-   background-position: right 14px center;
-   background-size: 16px 16px;
-}
-.tickets-page select.form-control:focus {
-   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20'%3E%3Cpath d='M5 12.5 10 7.5 15 12.5' fill='none' stroke='%232962ff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 .tickets-page .input-group {
    width: 100%;
    max-width: 100%;
    box-sizing: border-box;
 }
-.tickets-page .form-control:focus,
-.viewticket-page .form-control:focus,
-.account-page .form-control:focus,
 .account-page .form-group > select:focus,
 .account-page .form-group > input:focus,
 .account-page .form-group > textarea:focus,
 .account-page .account-card .card-body select:focus,
 .account-page .account-card .card-body input:focus,
 .account-page .account-card .card-body textarea:focus { border-color: var(--brand); outline: 0; box-shadow: none; }
-.tickets-page .form-control.input-lg,
-.tickets-page input.form-control.input-lg,
-.tickets-page select.form-control.input-lg {
-   height: 42px !important;
-   min-height: 42px !important;
-   padding: 0 14px !important;
-   font-size: 14px !important;
-   line-height: 1.2 !important;
-   width: 100% !important;
-   max-width: 100% !important;
-   box-sizing: border-box !important;
-}
+
 .tickets-page textarea.form-control.input-lg {
-   height: auto !important;
-   min-height: 140px !important;
-   padding: 12px 14px !important;
+   height: auto;
+   min-height: 140px;
 }
-.tickets-page select.form-control.input-lg { padding-right: 42px !important; }
+.tickets-page select.form-control.input-lg { padding-right: 42px; }
 
 /* Toolbar search: .tickets-page .form-control resets horizontal padding and erases room for the icon */
 .tickets-page .page-search .form-control,
@@ -5319,7 +5187,7 @@ flex-wrap: wrap;
 .viewticket-page .form-group,
 .account-page .form-group { margin-bottom: 14px; }
 .viewticket-page .control-label,
-.account-page .control-label { font-size: 12px; font-weight: 500; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; display: block; }
+.account-page .control-label { font-size: 12px; font-weight: 400; color: var(--shell-icon); margin-bottom: 6px; display: block; }
 .viewticket-page .form-control {
    border: 1px solid var(--line); border-radius: 8px; background: var(--bg-1);
    font-size: 14px; color: var(--ink-1);
@@ -5340,7 +5208,7 @@ flex-wrap: wrap;
 .affiliates-page .page-header-eyebrow,
 .terms-page .page-header-eyebrow,
 .childpanels-page .page-header-eyebrow,
-.childpanel-order-page .page-header-eyebrow { font-size: 11.5px; font-weight: 600; color: var(--brand); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.childpanel-order-page .page-header-eyebrow { font-size: 12px; font-weight: 600; color: var(--brand); margin-bottom: 2px; }
 
 .faq-grid {
    display: grid;
@@ -6219,45 +6087,9 @@ padding: 22px 22px 24px;
    box-sizing: border-box;
 }
 .childpanel-form .form-group:last-child { margin-bottom: 0; }
-.childpanel-form .control-label {
-   font-size: 12px;
-   font-weight: 500;
-   color: var(--ink-2);
-   text-transform: uppercase;
-   letter-spacing: 0.04em;
-   margin-bottom: 8px;
-   display: block;
-}
-.childpanel-form .form-control {
-   height: 42px;
-   padding: 0 14px;
-   border: 1px solid var(--line);
-   border-radius: 8px;
-   background: var(--bg-1);
-   font-size: 14px;
-   color: var(--ink-1);
-   width: 100%;
-   max-width: 100%;
-   box-sizing: border-box;
-   display: block;
-   transition: border-color .15s, box-shadow .15s;
-}
 .childpanel-form textarea.form-control {
    height: auto;
    min-height: 80px;
-   padding: 10px 14px;
-}
-.childpanel-form select.form-control {
-   appearance: none;
-   -webkit-appearance: none;
-   padding-right: 42px;
-   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20'%3E%3Cpath d='M5 7.5 10 12.5 15 7.5' fill='none' stroke='%2364748b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-   background-repeat: no-repeat;
-   background-position: right 14px center;
-   background-size: 16px 16px;
-}
-.childpanel-form select.form-control:focus {
-   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20'%3E%3Cpath d='M5 12.5 10 7.5 15 12.5' fill='none' stroke='%232962ff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 .childpanel-form .input-group {
    width: 100%;
@@ -6265,11 +6097,7 @@ padding: 22px 22px 24px;
    box-sizing: border-box;
 }
 .childpanel-form .form-control[readonly] { background: var(--bg-2); color: var(--ink-2); }
-.childpanel-form .form-control:focus {
-   border-color: var(--brand);
-   outline: 0;
-   box-shadow: none;
-}
+
 /* Same as New Order — PP/Bootstrap input-lg */
 .childpanel-form .form-control.input-lg,
 .childpanel-form input.form-control.input-lg,
@@ -6491,14 +6319,6 @@ padding: 22px 22px 24px;
 .cp-price-amt { font-family: 'Poppins','Inter',sans-serif; font-size: 30px; font-weight: 800; color: var(--green); letter-spacing: -0.02em; }
 .cp-price-per { font-size: 14px; color: var(--ink-3); }
 .cp-currency { margin-left: auto; min-width: 260px; }
-.cp-select {
-   width: 100%; box-sizing: border-box; height: 48px; padding: 0 40px 0 16px;
-   border: 1px solid var(--line); border-radius: 8px; background: var(--bg-1);
-   font-size: 14px; color: var(--ink-1); cursor: pointer;
-   appearance: none; -webkit-appearance: none;
-   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20'%3E%3Cpath d='M5 7.5 10 12.5 15 7.5' fill='none' stroke='%2364748b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-   background-repeat: no-repeat; background-position: right 14px center;
-}
 .cp-submit { width: 100%; height: 54px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 700; }
 
 /* What's included */
@@ -6788,19 +6608,7 @@ padding: 22px 22px 24px;
 .tk-field { margin-bottom: 18px; }
 .tk-label { display: block; font-size: 13px; color: var(--ink-3); margin-bottom: 8px; }
 .tk-optional { color: var(--brand); }
-.tk-input {
-   width: 100%; box-sizing: border-box; height: 48px; padding: 0 16px;
-   border: 1px solid var(--line); border-radius: 8px; background: var(--bg-1);
-   font-size: 14px; color: var(--ink-1); transition: border-color .15s;
-}
-.tk-input::placeholder { color: var(--ink-3); }
-.tk-input:focus { outline: 0; border-color: var(--brand); }
-.tk-textarea { height: auto; min-height: 150px; padding: 14px 16px; line-height: 1.6; resize: vertical; }
-.tk-select {
-   appearance: none; -webkit-appearance: none; padding-right: 40px; cursor: pointer;
-   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20'%3E%3Cpath d='M5 7.5 10 12.5 15 7.5' fill='none' stroke='%2364748b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-   background-repeat: no-repeat; background-position: right 14px center;
-}
+.tk-textarea { height: auto; min-height: 150px; }
 .tk-dropzone {
    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
    padding: 26px; border: 1.5px dashed var(--line); border-radius: 12px;
@@ -7106,12 +6914,10 @@ body.rtl .platform-grid { direction: rtl; }
 body.rtl .pulse-platform-chip { direction: rtl; }
 
 /* Form fields */
-body.rtl .neworder-form .control-label { text-align: right; }
-body.rtl .neworder-form .form-control { text-align: right; }
-body.rtl .neworder-form .form-control.with-icon { padding-left: 14px; padding-right: 38px; }
-body.rtl .neworder-form select.form-control { background-position: left 12px center; padding-left: 32px; padding-right: 14px; }
-body.rtl .neworder-form #fields .input-group .form-control { border-radius: 0 8px 8px 0; }
-body.rtl .neworder-form #fields .input-group .input-group-btn .btn { border-radius: 8px 0 0 8px; }
+body.rtl .form-control.with-icon { padding-left: 14px; padding-right: 38px; }
+body.rtl select.form-control { background-position: left 12px center; padding-left: 32px; padding-right: 14px; }
+body.rtl #fields .input-group .form-control { border-radius: 0 8px 8px 0; }
+body.rtl #fields .input-group .input-group-btn .btn { border-radius: 8px 0 0 8px; }
 
 /* RTL: service detail card trust signals */
 body.rtl .summary-trust { flex-direction: row-reverse; }
@@ -11760,42 +11566,42 @@ color: var(--red);
 border: 1px solid var(--red);
 }
 .ft-status--used {
-background: var(--amber-soft);
-color: var(--amber);
-border: 1px solid var(--amber);
+   background: var(--amber-soft);
+   color: var(--amber);
+   border: 1px solid var(--amber);
 }
 .ft-status__title {
-font-weight: 700;
-margin-bottom: 4px;
+   font-weight: 700;
+   margin-bottom: 4px;
 }
 
 /* How-it-works 3-step grid */
 .ft-steps {
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-gap: 32px;
-max-width: 960px;
-margin: 0 auto;
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 32px;
+   max-width: 960px;
+   margin: 0 auto;
 }
 .ft-step {
-text-align: center;
-padding: 28px 20px;
-background: var(--bg-1);
-border-radius: var(--radius-lg);
-border: 1px solid var(--line);
+   text-align: center;
+   padding: 28px 20px;
+   background: var(--bg-1);
+   border-radius: var(--radius-lg);
+   border: 1px solid var(--line);
 }
 .ft-step__num {
-display: inline-flex;
-align-items: center;
-justify-content: center;
-width: 40px;
-height: 40px;
-border-radius: 50%;
-background: var(--brand-soft);
-color: var(--brand);
-font-weight: 700;
-font-size: 16px;
-margin-bottom: 14px;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 40px;
+   height: 40px;
+   border-radius: 50%;
+   background: var(--brand-soft);
+   color: var(--brand);
+   font-weight: 700;
+   font-size: 16px;
+   margin-bottom: 14px;
 }
 .ft-step__title {
 font-size: 16px;
@@ -13551,12 +13357,12 @@ width: 1px;
 background: var(--line);
 }
 .lp-stat__num {
-font-size: 28px;
-font-weight: 700;
-color: var(--ink-1);
-line-height: 1.1;
-margin-bottom: 4px;
-font-variant-numeric: tabular-nums;
+   font-size: 28px;
+   font-weight: 700;
+   color: var(--ink-1);
+   line-height: 1.1;
+   margin-bottom: 4px;
+   font-variant-numeric: tabular-nums;
 }
 .lp[data-platform] .lp-stat__num { color: var(--plat); }.lp-stat__label {
 font-size: 12px;

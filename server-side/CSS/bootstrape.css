@@ -717,21 +717,6 @@
    .btn-xs { height: 26px; font-size: 12px; padding: 0 10px; }
    
    
-   /* ─── Form controls (Pulse) ─── */
-   
-   .form-control, .input {
-       height: 38px;
-       padding: 0 12px;
-       border: 1px solid var(--line);
-       border-radius: 8px;
-       background: var(--bg-1);
-       font-size: 14px; color: var(--ink-1);
-       transition: border-color .15s;
-   }
-   .form-control:focus { border-color: var(--brand); }
-   textarea.form-control { height: auto; padding: 10px 12px; }
-   
-   
    /* ─── Cards / page header ─── */
    
    .page-header {
@@ -1146,66 +1131,6 @@
    
    /* ─── New Order page ─── */
    
-   .neworder-page { padding: 8px 0 32px; width: 100%; max-width: none; }
-   .neworder-page .page-header {
-       display: block;
-       border: 0; padding: 8px 0 4px; margin: 0 0 18px;
-       text-align: left;
-   }
-   .neworder-page .page-header > div { display: block; }
-   .neworder-page .page-header .h1 {
-       font-size: 26px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 4px; color: var(--ink-1);
-       display: block;
-   }
-   .neworder-page .page-header .muted { font-size: 13.5px; color: var(--ink-3); margin: 0; display: block; }
-   
-   .neworder-grid {
-       display: grid;
-       grid-template-columns: 1fr 360px;
-       gap: 20px;
-       align-items: start;
-   }
-   .neworder-form { min-width: 0; }
-   .neworder-form .card { margin-bottom: 0; }
-   .neworder-form .card-body { padding: 24px; }
-   .neworder-form .form-group { margin-bottom: 18px; }
-   .neworder-form .form-group:last-child { margin-bottom: 0; }
-   .neworder-form .control-label {
-       font-size: 12px; font-weight: 500; color: var(--ink-2);
-       letter-spacing: 0.04em;
-       margin-bottom: 8px; display: block;
-   }
-   .neworder-form .form-control {
-       height: 42px;
-       padding: 0 14px;
-       border: 1px solid var(--line);
-       border-radius: 8px;
-       background: var(--bg-1);
-       font-size: 14px; color: var(--ink-1);
-       width: 100%;
-       transition: border-color .15s, box-shadow .15s;
-   }
-   .neworder-form .form-control:focus {
-       border-color: var(--brand);
-       outline: 0;
-       box-shadow: 0 0 0 3px rgba(41,98,255,0.12);
-   }
-   .neworder-form .form-control.with-icon { padding-left: 38px; }
-   .neworder-form textarea.form-control { height: auto; padding: 10px 14px; min-height: 80px; }
-   .neworder-form #charge { background: var(--bg-2); cursor: not-allowed; }
-   
-   /* Perfect Panel field visibility — hidden class must always win */
-   #fields .form-group.hidden,
-   #fields .fields.hidden,
-   .form-group.fields.hidden,
-   .fields.hidden {
-       display: none !important;
-   }
-   
-   /* Perfect Panel uses Select2 — fix dropdown overlay so it doesn't bleed into description */
-   .neworder-form .card { overflow: visible; }
-   .neworder-form .card-body { overflow: visible; }
-   
    /* Select2 container/trigger */
    .select2-container { z-index: 1; }
    .select2-container--open { z-index: 1060 !important; }
@@ -1566,13 +1491,6 @@
        font-style: italic;
    }
    
-   /* Hide native <select> on Perfect Panel form — Select2 takes over */
-   #order-form select.form-control,
-   #order-form select[name="category"],
-   #order-form select[name="service"] {
-       /* Select2 hides via inline display:none, but if it loads late the native select flashes.
-          This belt-and-braces hides it whenever Select2's wrapper is present as a sibling. */
-   }
    .select2-container + select,
    select.select2-hidden-accessible {
        position: absolute !important;
@@ -1812,15 +1730,6 @@
    .services-toolbar .input-with-icon .input-icon {
        position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
        color: var(--ink-3);
-   }
-   .services-toolbar .input-with-icon .form-control {
-       width: 100%;
-       height: 38px;
-       padding-left: 34px;
-       border: 1px solid var(--line);
-       border-radius: 8px;
-       background: var(--bg-1);
-       font-size: 13.5px;
    }
    
    .dropdown-max-height { max-height: 360px; overflow-y: auto; }
@@ -2235,8 +2144,6 @@
    .addfunds-grid .card-body { padding: 24px; }
    .addfunds-grid .form-group { margin-bottom: 18px; }
    .addfunds-grid .control-label { font-size: 12px; font-weight: 500; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; display: block; }
-   .addfunds-grid .form-control { height: 42px; padding: 0 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg-1); font-size: 14px; color: var(--ink-1); width: 100%; transition: border-color .15s, box-shadow .15s; }
-   .addfunds-grid .form-control:focus { border-color: var(--brand); outline: 0; box-shadow: 0 0 0 3px rgba(41,98,255,0.12); }
    .addfunds-grid #amount { font-size: 22px; font-weight: 600; height: 52px; letter-spacing: -0.01em; }
    
    .amount-presets { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
@@ -2385,18 +2292,6 @@
        text-transform: uppercase; letter-spacing: 0.04em;
        margin-bottom: 8px; display: block;
    }
-   .tickets-page .form-control {
-       border: 1px solid var(--line); border-radius: 8px; background: var(--bg-1);
-       font-size: 14px; color: var(--ink-1);
-       transition: border-color .15s, box-shadow .15s;
-   }
-   .tickets-page input.form-control { height: 42px; padding: 0 14px; }
-   .tickets-page select.form-control { height: 42px; padding: 0 14px; }
-   .tickets-page textarea.form-control { padding: 12px 14px; min-height: 140px; line-height: 1.55; }
-   .tickets-page .form-control:focus {
-       border-color: var(--brand); outline: 0;
-       box-shadow: 0 0 0 3px rgba(41,98,255,0.12);
-   }
    
    .tickets-tips { background: var(--bg-2); border: 1px solid var(--line); }
    .tickets-tips .h3 { font-size: 14px; font-weight: 600; margin: 0 0 12px; color: var(--ink-1); }
@@ -2494,15 +2389,6 @@
        font-size: 12px; font-weight: 500; color: var(--ink-2);
        text-transform: uppercase; letter-spacing: 0.04em;
        margin-bottom: 6px; display: block;
-   }
-   .viewticket-page .form-control {
-       border: 1px solid var(--line); border-radius: 8px; background: var(--bg-1);
-       font-size: 14px; color: var(--ink-1);
-   }
-   .viewticket-page textarea.form-control { padding: 12px 14px; min-height: 110px; }
-   .viewticket-page .form-control:focus {
-       border-color: var(--brand); outline: 0;
-       box-shadow: 0 0 0 3px rgba(41,98,255,0.12);
    }
    
    /* OTP input on 2fa */
@@ -2678,12 +2564,6 @@
    .aff-link-row {
        display: flex; gap: 8px; margin-bottom: 16px;
    }
-   .aff-link-row .form-control {
-       flex: 1; height: 42px; padding: 0 14px;
-       border: 1px solid var(--line); border-radius: 8px;
-       background: var(--bg-2); color: var(--ink-1);
-       font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-   }
    .aff-copy-btn {
        display: inline-flex; align-items: center; gap: 6px;
        height: 42px; padding: 0 16px;
@@ -2758,21 +2638,6 @@
        font-size: 12px; font-weight: 500; color: var(--ink-2);
        text-transform: uppercase; letter-spacing: 0.04em;
        margin-bottom: 6px; display: block;
-   }
-   .account-page .form-control {
-       border: 1px solid var(--line); border-radius: 8px; background: var(--bg-1);
-       font-size: 14px; color: var(--ink-1);
-       transition: border-color .15s, box-shadow .15s;
-   }
-   .account-page input.form-control,
-   .account-page select.form-control { height: 42px; padding: 0 14px; }
-   .account-page input.form-control[readonly] {
-       background: var(--bg-2); color: var(--ink-2); cursor: default;
-   }
-   .account-page textarea.form-control { padding: 12px 14px; line-height: 1.55; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
-   .account-page .form-control:focus {
-       border-color: var(--brand); outline: 0;
-       box-shadow: 0 0 0 3px rgba(41,98,255,0.12);
    }
    
    .account-secondary-btn {
@@ -3062,21 +2927,7 @@
    }
    
    .childpanel-form .form-group { margin-bottom: 14px; }
-   .childpanel-form .control-label {
-       font-size: 12px; font-weight: 500; color: var(--ink-2);
-       text-transform: uppercase; letter-spacing: 0.04em;
-       margin-bottom: 6px; display: block;
-   }
-   .childpanel-form .form-control {
-       border: 1px solid var(--line); border-radius: 8px; background: var(--bg-1);
-       font-size: 14px; color: var(--ink-1); height: 42px; padding: 0 14px;
-       transition: border-color .15s, box-shadow .15s;
-   }
-   .childpanel-form .form-control[readonly] { background: var(--bg-2); color: var(--ink-2); }
-   .childpanel-form .form-control:focus {
-       border-color: var(--brand); outline: 0;
-       box-shadow: 0 0 0 3px rgba(41,98,255,0.12);
-   }
+   
    .childpanel-form .form-row {
        display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
    }
