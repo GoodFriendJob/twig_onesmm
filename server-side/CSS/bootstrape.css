@@ -756,15 +756,6 @@
    /* ─── Tables ─── */
    
    .table { margin-bottom: 0; }
-   .table > thead > tr > th {
-       background: var(--bg-2);
-       border-bottom: 1px solid var(--line);
-       border-top: 0;
-       color: var(--ink-2);
-       font-size: 11.5px; font-weight: 600;
-       padding: 10px 14px;
-       vertical-align: middle;
-   }
    .table-hover > tbody > tr:hover { background: var(--bg-2); }
    
    
@@ -1738,135 +1729,6 @@
    .massorder-tips li svg { flex-shrink: 0; margin-top: 3px; }
    .massorder-tips strong { color: var(--ink-1); font-weight: 600; }
    
-   
-   /* ─── API page ─── */
-   
-   .api-page { padding: 8px 0 32px; width: 100%; max-width: none; }
-   .api-page .page-header {
-       display: flex !important;
-       align-items: center;
-       justify-content: space-between;
-       gap: 16px;
-       border: 0; padding: 0; margin: 0 0 22px;
-       flex-wrap: wrap;
-   }
-   .api-page .page-header > div { display: block; }
-   .api-page .page-header .h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 4px; color: var(--ink-1); }
-   .api-page .page-header .muted { font-size: 13.5px; color: var(--ink-3); margin: 0; }
-   .api-example-link {
-       display: inline-flex; align-items: center; gap: 8px;
-       height: 38px; padding: 0 14px;
-       background: var(--bg-1);
-       border: 1px solid var(--line);
-       border-radius: 8px;
-       color: var(--ink-1);
-       font-size: 13px; font-weight: 500;
-       text-decoration: none;
-   }
-   .api-example-link:hover { background: var(--bg-2); color: var(--ink-1); text-decoration: none; }
-   
-   .api-connection { margin-bottom: 20px; }
-   .api-conn-list {
-       display: grid;
-       grid-template-columns: 160px 1fr;
-       gap: 12px 24px;
-       margin: 0;
-       font-size: 14px;
-   }
-   .api-conn-list dt {
-       color: var(--ink-2); font-weight: 500; margin: 0;
-       font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em;
-       padding-top: 4px;
-   }
-   .api-conn-list dd { color: var(--ink-1); margin: 0; word-break: break-all; }
-   .api-conn-list code {
-       background: var(--bg-2);
-       border: 1px solid var(--line);
-       border-radius: 5px;
-       padding: 2px 8px;
-       font-size: 12.5px;
-       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-       color: var(--ink-1);
-   }
-   
-   .api-methods { display: flex; flex-direction: column; gap: 16px; }
-   .api-method .card-body { padding: 24px; }
-   .api-method-head {
-       display: flex; align-items: center; gap: 12px;
-       margin-bottom: 16px; flex-wrap: wrap;
-   }
-   .api-method-pill {
-       display: inline-flex; align-items: center;
-       height: 22px; padding: 0 9px;
-       background: var(--brand-soft, #e8f0ff);
-       color: var(--brand);
-       border-radius: 5px;
-       font-size: 11px; font-weight: 600;
-       text-transform: uppercase; letter-spacing: 0.06em;
-       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-   }
-   .api-method-title { font-size: 17px; font-weight: 600; margin: 0; color: var(--ink-1); letter-spacing: -0.01em; }
-   
-   .api-params-table {
-       margin: 0 0 18px;
-       border: 1px solid var(--line);
-       border-radius: 8px;
-       overflow: hidden;
-       width: 100%;
-   }
-   .api-params-table thead th {
-       background: var(--bg-2);
-       border-bottom: 1px solid var(--line);
-       border-top: 0;
-       color: var(--ink-2);
-       font-size: 11px; font-weight: 600;
-       text-transform: uppercase; letter-spacing: 0.05em;
-       padding: 10px 14px; vertical-align: middle;
-   }
-   .api-params-table tbody td {
-       padding: 11px 14px;
-       border-top: 1px solid var(--line-2, var(--line));
-       font-size: 13.5px;
-       vertical-align: top;
-   }
-   .api-params-table .col-param { width: 38%; }
-   .api-params-table code {
-       background: var(--bg-2);
-       border: 1px solid var(--line);
-       border-radius: 4px;
-       padding: 1px 6px;
-       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-       font-size: 12.5px;
-       color: var(--ink-1);
-   }
-   
-   .api-example-head {
-       font-size: 11px; font-weight: 600;
-       text-transform: uppercase; letter-spacing: 0.05em;
-       color: var(--ink-2); margin: 4px 0 8px;
-   }
-   .api-example-pre {
-       background: #0f172a;
-       color: #e2e8f0;
-       border: 0;
-       border-radius: 8px;
-       padding: 16px;
-       margin: 0;
-       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-       font-size: 12.5px;
-       line-height: 1.6;
-       overflow-x: auto;
-       white-space: pre;
-   }
-   
-   @media (max-width: 1024px) {
-       .massorder-grid { grid-template-columns: 1fr; }
-       .api-conn-list { grid-template-columns: 1fr; gap: 4px; }
-       .api-conn-list dt { padding-top: 12px; }
-       .api-conn-list dt:first-child { padding-top: 0; }
-   }
-   
-   
    /* ─── Services page ─── */
    
    .services-page { padding: 8px 0 32px; width: 100%; max-width: none; }
@@ -1969,13 +1831,6 @@
    .cat-icon { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; font-size: 14px; }
    .cat-icon-img { width: 18px; height: 18px; border-radius: 4px; object-fit: cover; }
    
-   .services-card {
-       background: var(--bg-1);
-       border: 1px solid var(--line);
-       border-radius: var(--radius-lg);
-       overflow: hidden;
-       box-shadow: var(--shadow-1);
-   }
    .services-card .table-responsive { border: 0; margin: 0; }
    
    .services-table { margin: 0; font-size: 13.5px; width: 100%; }
