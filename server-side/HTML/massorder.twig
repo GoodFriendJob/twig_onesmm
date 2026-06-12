@@ -12,9 +12,7 @@
     <div class="massorder-form">
       <div class="card">
         <div class="card-body">
-          <div class="platform-head">
-            <div class="h3">One order per line in format</div>
-          </div>
+          <h3 class="card-head">One order per line in format</h3>
           <form {% if site['rtl'] %}class="rtl-form"{% endif %} method="post" action="{{ page['url'] }}">
             <input type="hidden" name="_csrf" value="{{ csrftoken }}">
 

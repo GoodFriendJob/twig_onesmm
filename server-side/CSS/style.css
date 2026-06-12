@@ -1598,6 +1598,7 @@ transition: background var(--dur-fast) ease,
    margin-bottom: 6px;
    color: var(--shell-icon);
    display: block;
+   padding:10px 0;
 }
 .form-control {
    height: 48px;
@@ -3020,18 +3021,14 @@ ul.select2-results__options {
 }
 
 /* Platform chips */
-.platform-head, .service-head {
-   display: flex; align-items: center; gap: 10px;
-   margin: 10px 0 20px 0;
-}
 .platform-step-num {
    width: 24px; height: 24px; border-radius: 6px;
    background: var(--bg-2); color: var(--ink-2);
    font-size: 12px; font-weight: 600;
    display: inline-flex; align-items: center; justify-content: center;
 }
-.platform-head .h3, .service-head .h3 { font-family: 'Poppins','Inter',sans-serif; font-size: 16px; font-weight: 600; margin: 0; color: var(--shell-icon); }
-.platform-head .h3 b, .service-head .h3 b { font-weight: 600; color: var(--ink-1); }
+.card-head { font-family: 'Poppins','Inter',sans-serif; font-size: 16px; font-weight: 600; margin: 0 0 15px; color: var(--shell-icon); }
+.card-head b { font-weight: 600; color: var(--ink-1); }
 
 .platform-grid {
    display: grid;
@@ -3179,7 +3176,7 @@ select.select2-hidden-accessible {
 .select2-container .select2-selection--single {
    height: 48px !important;
    border: 1px solid var(--line) !important;
-   border-radius: 8px !important;
+   border-radius: 12px !important;
    background: var(--bg-1) !important;
    transition: border-color 0.15s, box-shadow 0.15s;
 }
@@ -3773,7 +3770,6 @@ select.select2-hidden-accessible {
 }
 
 /* ─── Services page redesign ("Services List") ─── */
-.svc-platform-card .platform-head { margin-bottom: 18px; }
 .svc-platform-grid { grid-template-columns: repeat(11, 1fr); }
 @media (max-width: 1280px) { .svc-platform-grid { grid-template-columns: repeat(6, 1fr); } }
 @media (max-width: 880px)  { .svc-platform-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -6692,8 +6688,7 @@ body.rtl .neworder-page .page-header { text-align: right; }
 body.rtl .neworder-grid { direction: rtl; }
 
 /* Step headings (1 Choose a platform, 2 Pick a service, etc.) */
-body.rtl .platform-head, body.rtl .service-head { flex-direction: row-reverse; }
-body.rtl .platform-head .h3, body.rtl .service-head .h3 { text-align: right; }
+body.rtl .card-head { flex-direction: row-reverse; text-align: right; }
 
 /* Stepper progress bar in summary */
 body.rtl .neworder-stepper { flex-direction: row-reverse; }

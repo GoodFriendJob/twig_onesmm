@@ -1366,17 +1366,12 @@
    }
    
    /* Platform chips */
-   .platform-head, .service-head {
-       display: flex; align-items: center; gap: 10px;
-       margin-bottom: 16px;
-   }
    .platform-step-num {
        width: 24px; height: 24px; border-radius: 6px;
        background: var(--bg-2); color: var(--ink-2);
        font-size: 12px; font-weight: 600;
        display: inline-flex; align-items: center; justify-content: center;
    }
-   .platform-head .h3, .service-head .h3 { font-size: 15px; font-weight: 600; margin: 0; color: var(--ink-1); }
    
    /* Coming-soon platforms — desaturated, non-active, "Soon" ribbon top-right.
       Tap is still allowed; JS shows a toast and snaps focus back to the active chip. */
