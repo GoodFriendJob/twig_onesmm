@@ -159,7 +159,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
    --blue: #4A6CF7;
    --blue-soft: #B2D9FF;
    --radius: 8px;
-   --radius-sm: 6px;
+   --radius-sm: 4px;
    --radius-lg: 14px;
    --shadow-1: 0 0 20px 0 rgba(51,68,102,.1);
    --shadow-2: 0 4px 16px rgba(26,26,46,.06);
@@ -1394,7 +1394,7 @@ display: block;
    height: 42px;
    padding: 0 14px 0 38px;
    border: 1px solid var(--line);
-   border-radius: var(--radius-sm);
+   border-radius: var(--radius);
    background: var(--bg-1);
    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
    font-size: 14px;
@@ -1454,7 +1454,7 @@ flex: 0 0 auto;
 min-width: 150px;
 height: 46px;
 border: 0;
-border-radius: var(--radius-sm);
+border-radius: var(--radius);
 background: var(--brand);
 color: #fff;
 font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -3362,8 +3362,10 @@ select.select2-hidden-accessible {
 /* Quality badges */
 .svc-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
 .svc-badge {
-   font-size: 10.5px; font-weight: 600; padding: 2px 8px; border-radius: 4px;
-   background: var(--brand-faint, rgba(37,99,235,0.08)); color: var(--brand);
+   font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: var(--radius-sm);
+   background: var(--brand-faint, rgba(37,99,235,0.08)); 
+   color: var(--blue);
+   border: 1px solid var(--blue);
 }
 /* Service description (full, rendered as HTML) */
 .svc-desc-excerpt { margin-top: 20px; padding: 20px 0; border-top: 1px solid var(--line); }
@@ -9242,6 +9244,7 @@ box-shadow: var(--shadow-brand-lg);
    font-family: 'Inter';
    font-weight:700;
    cursor: pointer;
+   gap:15px;
 }
 .lp-cta--gradient:hover {
    background: linear-gradient(90deg, #e8574b, #e67e5a);
