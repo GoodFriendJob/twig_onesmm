@@ -38,12 +38,12 @@
       <div class="svc-platform-tabs" role="tablist">
 
         <button class="svc-platform-tab svc-platform-tab--active" role="tab" data-filter-platform="all" aria-selected="true">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 8.27V4.23C22 2.64 21.36 2 19.77 2H15.73C14.14 2 13.5 2.64 13.5 4.23V8.27C13.5 9.86 14.14 10.5 15.73 10.5H19.77C21.36 10.5 22 9.86 22 8.27Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 8.52V3.98C10.5 2.57 9.86 2 8.27 2H4.23C2.64 2 2 2.57 2 3.98V8.51C2 9.93 2.64 10.49 4.23 10.49H8.27C9.86 10.5 10.5 9.93 10.5 8.52Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 19.77V15.73C10.5 14.14 9.86 13.5 8.27 13.5H4.23C2.64 13.5 2 14.14 2 15.73V19.77C2 21.36 2.64 22 4.23 22H8.27C9.86 22 10.5 21.36 10.5 19.77Z" stroke-linecap="round" stroke-linejoin="round"/><path opacity="0.4" d="M15 15.5H21" stroke-linecap="round"/><path opacity="0.4" d="M15 19.5H21" stroke-linecap="round"/></svg>
           <span>All</span>
         </button>
 
         <button class="svc-platform-tab" role="tab" data-filter-platform="Telegram" aria-selected="false">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.464.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21.95 4.27 18.7 19.6c-.24 1.08-.88 1.35-1.78.84l-4.92-3.63-2.37 2.28c-.26.26-.48.48-.99.48l.36-5.05 9.18-8.3c.4-.36-.09-.55-.62-.2L6.21 13.16 1.32 11.62c-1.06-.33-1.08-1.06.22-1.57l19.12-7.37c.88-.33 1.65.2 1.29 1.59z"/></svg>
           <span>Telegram</span>
         </button>
 
@@ -221,7 +221,7 @@
     {# ─── Services table ─── #}
     <div class="card services-card">
       <div class="table-responsive">
-        <table class="table services-table {% if site['rtl'] %}rtl-table{% endif %}" id="service-table">
+        <table class="table ord-table services-table {% if site['rtl'] %}rtl-table{% endif %}" id="service-table">
           {# Column widths defined here so the layout doesn't shift when the
              accordion opens (category-header-only state has no body cells to
              anchor column widths to). #}
@@ -242,9 +242,8 @@
               {% if user.favorite_services %}<th class="col-fav" scope="col" aria-label="{{ lang('services.favorite') }}"></th>{% endif %}
               <th class="col-id" scope="col">{{ lang('services.id') }}</th>
               <th class="col-svc-name" scope="col">{{ lang('services.name') }}</th>
-              <th class="nowrap col-rate" scope="col">Price</th>
-              <th class="nowrap col-min" scope="col">{{ lang('services.min') }}</th>
-              <th class="nowrap col-max" scope="col">{{ lang('services.max') }}</th>
+              <th class="nowrap col-min" scope="col">Min / Max</th>
+              <th class="nowrap col-rate" scope="col"><b>Cost per K</b></th>
               {% if site['average_time'] %}
                 <th class="nowrap col-avg" scope="col">
                   {{ lang('services.average_time') }}
@@ -254,7 +253,7 @@
                 </th>
               {% endif %}
               {% if serviceDescription %}
-                <th class="hidden-xs hidden-sm service-description__th col-desc" scope="col">{{ lang('services.description') }}</th>
+                <th class="hidden-xs hidden-sm service-description__th col-desc" scope="col"><b>{{ lang('services.description') }}</b></th>
               {% endif %}
               {# Empty action header — matches the convention used by orders/subscriptions tables. #}
               <th class="col-order" scope="col" aria-label="{{ lang('services.order') }}"></th>
@@ -332,15 +331,14 @@
                   {% endif %}
                   <td class="tabular ink col-id" data-filter-table-service-id="{{ service.id }}">{{ service['id'] }}</td>
                   <td class="service-name col-svc-name" data-filter-table-service-name="true">{{ service['name'] }}</td>
-                  <td class="tabular ink nowrap col-rate">
+                  <td>{{ service['min'] }} - {{ service['max'] }}</td>
+                  <td class="tabular nowrap col-rate">
                     {% if converted %}
                       <span data-toggle="tooltip" data-placement="top" title="{{ service.original_rate }}">{{ service.rate }}</span>
                     {% else %}
                       {{ service.rate }}
                     {% endif %}
                   </td>
-                  <td class="tabular muted col-min">{{ service['min'] }}</td>
-                  <td class="tabular muted col-max">{{ service['max'] }}</td>
                   {% if site['average_time'] %}
                     <td class="nowrap muted col-avg">{{ service['average_time'] }}</td>
                   {% endif %}

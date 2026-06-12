@@ -67,11 +67,15 @@
             </div>
             <div class="platform-grid" id="platform-grid">
               <button type="button" class="pulse-platform-chip is-active" data-pulse-platform="all" data-keywords="all">
-                <span class="platform-icon platform-all"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
+                <span class="platform-icon platform-all">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 8.27V4.23C22 2.64 21.36 2 19.77 2H15.73C14.14 2 13.5 2.64 13.5 4.23V8.27C13.5 9.86 14.14 10.5 15.73 10.5H19.77C21.36 10.5 22 9.86 22 8.27Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 8.52V3.98C10.5 2.57 9.86 2 8.27 2H4.23C2.64 2 2 2.57 2 3.98V8.51C2 9.93 2.64 10.49 4.23 10.49H8.27C9.86 10.5 10.5 9.93 10.5 8.52Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 19.77V15.73C10.5 14.14 9.86 13.5 8.27 13.5H4.23C2.64 13.5 2 14.14 2 15.73V19.77C2 21.36 2.64 22 4.23 22H8.27C9.86 22 10.5 21.36 10.5 19.77Z" stroke-linecap="round" stroke-linejoin="round"/><path opacity="0.4" d="M15 15.5H21" stroke-linecap="round"/><path opacity="0.4" d="M15 19.5H21" stroke-linecap="round"/></svg>
+                </span>
                 <span class="platform-name">All</span>
               </button>
               <button type="button" class="pulse-platform-chip" data-pulse-platform="telegram" data-platform-id="6" data-keywords="telegram tg">
-                <span class="platform-icon platform-tg"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21.95 4.27 18.7 19.6c-.24 1.08-.88 1.35-1.78.84l-4.92-3.63-2.37 2.28c-.26.26-.48.48-.99.48l.36-5.05 9.18-8.3c.4-.36-.09-.55-.62-.2L6.21 13.16 1.32 11.62c-1.06-.33-1.08-1.06.22-1.57l19.12-7.37c.88-.33 1.65.2 1.29 1.59z"/></svg></span>
+                <span class="platform-icon platform-tg">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21.95 4.27 18.7 19.6c-.24 1.08-.88 1.35-1.78.84l-4.92-3.63-2.37 2.28c-.26.26-.48.48-.99.48l.36-5.05 9.18-8.3c.4-.36-.09-.55-.62-.2L6.21 13.16 1.32 11.62c-1.06-.33-1.08-1.06.22-1.57l19.12-7.37c.88-.33 1.65.2 1.29 1.59z"/></svg>
+                </span>
                 <span class="platform-name">Telegram</span>
               </button>
               <button type="button" class="pulse-platform-chip is-coming-soon" data-pulse-platform="instagram" data-platform-id="1" data-coming-soon="true" data-keywords="instagram insta ig">
@@ -210,7 +214,16 @@
                 </div>
                 <div class="form-group fields" id="order_quantity">
                   <label class="control-label">Quantity</label>
-                  <input type="number" class="form-control" name="quantity" value="5000" min="500" max="40000" step="100">
+                  {# Static slider control — rendered on page load. The JS below only
+                     wires behaviour onto these elements (no DOM building). #}
+                  <div class="qty-control">
+                    <input type="text" class="qty-display-value" inputmode="numeric" autocomplete="off" spellcheck="false" aria-label="Quantity" title="Click to type a quantity" value="5,000">
+                    <div class="qty-slider-wrap">
+                      <input type="range" class="qty-range">
+                      <div class="qty-ticks"></div>
+                    </div>
+                    <input type="number" class="form-control qty-original-input" name="quantity" value="5000" min="500" max="40000" step="100">
+                  </div>
                   <div class="min-max">Min: 500 - Max: 40,000</div>
                 </div>
               {% endif %}
@@ -1276,43 +1289,34 @@ window.__pulseCategories = [
     if (!group) return;
     var num = group.querySelector('input[type="number"], input[type="text"][name*="quantity"], input[name="quantity"], input[name*="quantity"]');
     if (!num) return;
-    if (group.querySelector('.qty-range')) return; // already enhanced
+    if (num.dataset.qtyEnhanced) return; // already wired
+    num.dataset.qtyEnhanced = '1';
 
-    // Hide the original input — kept in DOM so PP form submission and value reads still work
+    // The original input is kept in the DOM (hidden) so PP form submission and value reads still work.
     num.classList.add('qty-original-input');
 
-    // Build new control: [value]  [slider + ticks]
-    var control = document.createElement('div');
-    control.className = 'qty-control';
+    // Prefer the static control markup rendered with the page. Only build it when
+    // Perfect Panel injected a bare input (no slider markup present).
+    var control = group.querySelector('.qty-control');
+    if (!control) {
+      control = document.createElement('div');
+      control.className = 'qty-control';
+      control.innerHTML =
+        '<input type="text" class="qty-display-value" inputmode="numeric" autocomplete="off" spellcheck="false" aria-label="Quantity" title="Click to type a quantity">' +
+        '<div class="qty-slider-wrap">' +
+          '<input type="range" class="qty-range">' +
+          '<div class="qty-ticks"></div>' +
+        '</div>';
+      num.parentNode.insertBefore(control, num);
+      control.appendChild(num); // re-parent the original input inside the control
+    } else if (num.parentNode !== control) {
+      control.appendChild(num);
+    }
 
-    var display = document.createElement('input');
-    display.type = 'text';
-    display.className = 'qty-display-value';
-    display.inputMode = 'numeric';
-    display.autocomplete = 'off';
-    display.spellcheck = false;
-    display.setAttribute('aria-label', 'Quantity');
-    display.title = 'Click to type a quantity';
-    display.value = fmtDisplay(parseInt(num.value, 10));
-    control.appendChild(display);
-
-    var wrap = document.createElement('div');
-    wrap.className = 'qty-slider-wrap';
-
-    var range = document.createElement('input');
-    range.type = 'range';
-    range.className = 'qty-range';
-    wrap.appendChild(range);
-
-    var ticks = document.createElement('div');
-    ticks.className = 'qty-ticks';
-    wrap.appendChild(ticks);
-
-    control.appendChild(wrap);
-
-    // Move control into place, then re-parent the original input inside it
-    num.parentNode.insertBefore(control, num);
-    control.appendChild(num);
+    var display = control.querySelector('.qty-display-value');
+    var range   = control.querySelector('.qty-range');
+    var ticks   = control.querySelector('.qty-ticks');
+    if (!display || !range || !ticks) return;
 
     function bounds(){
       var min = parseInt(num.getAttribute('min'), 10);
