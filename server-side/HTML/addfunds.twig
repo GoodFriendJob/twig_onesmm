@@ -18,10 +18,8 @@
       <form method="post" action="" id="addfunds-form" {% if site['rtl'] %}class="rtl-form"{% endif %}>
         <input type="hidden" name="_csrf" value="{{ csrftoken }}">
 
-        <div class="box-head">
-          <h2 class="box-title">Choose a <b>Payment Method</b></h2>
-          <p class="box-sub">Pick how you'd like to top up. Most methods credit your balance automatically within seconds of confirmation.</p>
-        </div>
+        <h3 class="card-head">Choose a <b>Payment Method</b></h3>
+        <p>Pick how you'd like to top up. Most methods credit your balance automatically within seconds of confirmation.</p>
 
         {% if success %}
           <div class="alert alert-success alert-dismissible {% if site['rtl'] %}rtl-alert{% endif %}">
@@ -57,10 +55,6 @@
                   data-instruction="{{ payment['instruction']|default('') }}">
               <input type="radio" class="pay-tile-radio" name="AddFoundsForm[type]" value="{{ payment['id'] }}"{% if isSel %} checked{% endif %}>
               <span class="pay-tile-ic">
-                {# Perfect Panel gives no icon/icon_key server-side — only the name.
-                  1) use payment['icon'] if an install ever provides it,
-                  2) else pick a logo by matching keywords in the name,
-                  3) else fall back to the first letter. #}
                 {% set _pn = payment['name']|lower %}
                 {% if payment['icon'] %}
                   <img src="{{ payment['icon'] }}" alt="{{ payment['name'] }}" class="pay-tile-img" loading="lazy"
@@ -139,12 +133,12 @@
     <aside class="addfunds-side">
       {% if addfunds_aside %}
         <div class="card card-body">
-          <h2 class="box-title">Good to <b>know</b></h2>
-          <div class="box-sub">{{ addfunds_aside }}</div>
+          <h3 class="card-head">Good to <b>know</b></h3>
+          <p>{{ addfunds_aside }}</p>
         </div>
       {% else %}
         <div class="card card-body2">
-          <h2 class="box-title">Why deposit <b>with OneSMM</b></h2>
+          <h3 class="card-head">Why deposit <b>with OneSMM</b></h3>
           <ul class="trust-list">
             <li class="trust-item">
               <span class="trust-ic" aria-hidden="true">
@@ -179,7 +173,7 @@
 
       {% if paymentList %}
         <div class="card card-body2">
-          <div class="aff-card-head"><h2 class="box-title">Payment <b>History</b></h2></div>
+          <h3 class="card-head">Payment <b>History</b></h3>
           <div class="aff-table-wrap">
             <table class="aff-table addfunds-history-table {% if site['rtl'] %}rtl-table{% endif %}">
               <thead>
