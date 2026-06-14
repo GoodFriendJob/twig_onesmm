@@ -21,12 +21,12 @@
       {% endif %}
 
       {# Order details #}
-      <div class="subpage-card">
+      <div class="card card-body">
         <h3 class="card-head">Order <b>Details</b></h3>
 
-        <div class="cp-field">
-          <label for="domain" class="cp-label">{{ lang('child_panel.form.domain') }}</label>
-          <input type="text" class="cp-input" id="domain" name="CreateOrderForm[domain]" value="{{ form['domain'] }}" placeholder="Panel.Example.com">
+        <div class="form-group">
+          <label for="domain" class="control-label">{{ lang('child_panel.form.domain') }}</label>
+          <input type="text" class="form-control" id="domain" name="CreateOrderForm[domain]" value="{{ form['domain'] }}" placeholder="Panel.Example.com">
         </div>
 
         {# Gradient name-servers card #}
@@ -55,17 +55,17 @@
       </div>
 
       {# Admin account #}
-      <div class="subpage-card">
+      <div class="card card-body">
         <h3 class="card-head">Admin <b>Account</b></h3>
         <div class="cp-row2">
-          <div class="cp-field">
-            <label for="cp-username" class="cp-label">{{ lang('child_panel.form.username') }}</label>
-            <input type="text" id="cp-username" class="cp-input" name="CreateOrderForm[username]" value="{{ form['username'] }}" placeholder="Panel.Example.com">
+          <div class="form-group">
+            <label for="cp-username" class="control-label">{{ lang('child_panel.form.username') }}</label>
+            <input type="text" id="cp-username" class="form-control" name="CreateOrderForm[username]" value="{{ form['username'] }}" placeholder="Panel.Example.com">
           </div>
-          <div class="cp-field">
-            <label for="cp-password" class="cp-label">{{ lang('child_panel.form.password') }}</label>
+          <div class="form-group">
+            <label for="cp-password" class="control-label">{{ lang('child_panel.form.password') }}</label>
             <div class="cp-pass-wrap">
-              <input type="password" id="cp-password" class="cp-input" name="CreateOrderForm[password]" autocomplete="new-password" placeholder="Panel.Example.com">
+              <input type="password" id="cp-password" class="form-control" name="CreateOrderForm[password]" autocomplete="new-password" placeholder="Panel.Example.com">
               <button type="button" class="cp-pass-toggle" aria-label="Show password" onclick="
                 var i = document.getElementById('cp-password');
                 var show = i.type === 'password'; i.type = show ? 'text' : 'password';
@@ -80,7 +80,7 @@
       </div>
 
       {# Price + submit #}
-      <div class="subpage-card">
+      <div class="card card-body">
         <div class="cp-checkout">
           <div class="cp-price"><span class="cp-price-amt">{{ price }}</span> <span class="cp-price-per">/ per month</span></div>
           <div class="cp-currency">
@@ -101,7 +101,7 @@
 
     {# ─── RIGHT: what's included ─── #}
     <aside class="cp-side">
-      <div class="subpage-card">
+      <div class="card card-body">
         <h3 class="card-head"><b>What's included</b></h3>
         <ul class="cp-features">
           {% for f in features %}

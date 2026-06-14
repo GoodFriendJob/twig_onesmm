@@ -107,9 +107,10 @@
 
         {# Amount #}
         <div class="pay-amount">
-          <label for="amount" class="card-head"><b>{{ lang('addfunds.amount') }}</b></label>
-          <input type="text" inputmode="decimal" class="pay-amount-input tabular" name="AddFoundsForm[amount]" id="amount" placeholder="$15" autocomplete="off">
-          <small class="pay-amount-hint">$1 minimum</small>
+          <h3 class="card-head"><b>{{ lang('addfunds.amount') }}</b></h3>
+          <label for="amount" class="control-label">{{ lang('addfunds.amount') }}</label>
+          <input type="text" inputmode="decimal" class="pay-amount-input form-control" name="AddFoundsForm[amount]" id="amount" placeholder="$15" autocomplete="off">
+          <small class="control-label">$1 minimum</small>
           <div class="amount-error" id="amount-error" role="alert"></div>
         </div>
 
@@ -186,11 +187,11 @@
               <tbody>
                 {% for payment in paymentList %}
                   <tr>
-                    <td class="aff-date tabular">
+                    <td class="aff-date">
                       <span class="hist-date">{{ payment['date'] }}</span>
                       {% if payment['time'] %}<span class="hist-time">{{ payment['time'] }}</span>{% endif %}
                     </td>
-                    <td class="aff-comm tabular hist-amount">{{ payment['amount'] }}</td>
+                    <td class="hist-amount">${{ payment['amount'] }}</td>
                     <td class="hist-method{% if payment['affiliation'] %} hist-affil{% endif %}" title="{{ payment['method'] }}">{{ payment['method'] }}</td>
                   </tr>
                 {% endfor %}

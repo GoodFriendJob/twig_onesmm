@@ -172,7 +172,7 @@
     </div>
 
     {# ─── Reward cards ─── #}
-    <div class="gv-grid">
+    <div class="card gv-grid">
       {% for g in giveaways %}
         <div class="gv-card">
           <div class="gv-card-body">
@@ -220,28 +220,28 @@
     {% endfor %}
 
     {# ─── How to participate ─── #}
-    <div class="subpage-card gv-how">
-      <div class="gv-how-head">
+    <div class="card card-body">
+      <div class="lv-how-head">
         <h3 class="card-head">How <b>to Participate</b></h3>
-        <p class="gv-how-sub">It takes just a few simple steps</p>
+        <p class="lv-how-sub">It takes just a few simple steps</p>
       </div>
-      <div class="gv-steps">
+      <div class="lv-steps">
         {% for step in giveaway_steps %}
-          <div class="gv-step">
-            <div class="gv-step-ic"><img src="{{ step_icons[step['icon_key']]|default(step_icons['check']) }}" alt=""></div>
-            <div class="gv-step-num">{{ step['num'] }}</div>
-            <div class="gv-step-title">{{ step['title'] }}</div>
-            <div class="gv-step-desc">{{ step['desc'] }}</div>
+          <div class="lv-step">
+            <div class="lv-step-ic"><img src="{{ step_icons[step['icon_key']]|default(step_icons['check']) }}" alt=""></div>
+            <div class="lv-step-num">{{ step['num'] }}</div>
+            <div class="lv-step-title">{{ step['title'] }}</div>
+            <div class="lv-step-desc">{{ step['desc'] }}</div>
           </div>
           {% if not loop.last %}
-            <div class="gv-step-arrow"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
+            <div class="lv-step-arrow"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
           {% endif %}
         {% endfor %}
       </div>
     </div>
 
     {# ─── General rules ─── #}
-    <div class="gv-rules">
+    <div class="card card-body">
       <h3 class="card-head">General <b>Rules</b></h3>
       <p>Please read and follow all rules carefully.</p>
       <ul class="gv-rules-list">

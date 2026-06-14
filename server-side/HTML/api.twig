@@ -17,7 +17,7 @@
   {# ─── Connection card ─── #}
   <div class="card api-connection">
     <div class="card-body">
-      <div class="h3" style="margin: 0 0 14px;">Connection</div>
+      <h3 class="api-method-title">Connection</h3>
       <dl class="api-conn-list">
         <dt>HTTP method</dt>
         <dd><code>POST</code></dd>
@@ -41,10 +41,7 @@
     {% for method, methodDetails in methods %}
       <section class="card api-method" id="api-{{ method }}">
         <div class="card-body">
-          <div class="api-method-head">
-            <span class="api-method-pill">{{ method }}</span>
-            <h2 class="api-method-title">{{ methodDetails['title'] }}</h2>
-          </div>
+          <h3 class="api-method-title "><span class="api-method-pill">{{ method }}</span> {{ methodDetails['title'] }}</h3>
 
           {% if 'add' == method %}
             {% if methodDetails['types']|length > 1 %}

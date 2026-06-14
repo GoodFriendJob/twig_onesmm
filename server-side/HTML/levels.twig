@@ -87,7 +87,7 @@
   <div class="subpage-body">
 
     {# ─── Hero: current level + progress ─── #}
-    <div class="subpage-card lv-hero">
+    <div class="card card-body lv-hero">
       <div class="lv-hero-user">
         {% if user['avatar'] %}
           <img class="lv-avatar" src="{{ user['avatar'] }}" alt="{{ _displayName }}">
@@ -95,7 +95,7 @@
           <span class="lv-avatar lv-avatar--initials" aria-hidden="true">{{ _initials }}</span>
         {% endif %}
         <div>
-          <div class="lv-hero-name">{{ _displayName }}</div>
+          <h3 class="lv-hero-name">{{ _displayName }}</h3>
           <div class="lv-hero-meta">
             <img class="lv-hero-badge" src="{{ level_icons[_currentLevelId]|default(level_icons[1]) }}" alt="">
             <span class="lv-hero-level">{{ _currentTitle }}</span>
@@ -129,7 +129,7 @@
     </div>
 
     {# ─── How it works ─── #}
-    <div class="subpage-card">
+    <div class="card card-body">
       <div class="lv-how-head">
         <h3 class="card-head">How <b>it works</b></h3>
         <p class="lv-how-sub">Spend, level up, and save automatically on every order.</p>
@@ -163,7 +163,7 @@
     </div>
 
     {# ─── Levels table ─── #}
-    <div class="subpage-card">
+    <div class="card card-body">
       <h3 class="card-head">Member <b>Levels</b></h3>
       <p class="lv-desc-sub">Every order moves you closer to the next tier. Higher levels unlock an automatic discount on every order you place.</p>
       <table class="lv-table">
@@ -194,7 +194,7 @@
     </div>
 
     {# ─── Level cards ─── #}
-    <div class="subpage-card">
+    <div class="card card-body">
       <h3 class="card-head">All <b>Tiers</b></h3>
       <p class="lv-desc-sub">Your current level is highlighted below. Keep ordering to unlock the next discount.</p>
       <div class="lv-cards">

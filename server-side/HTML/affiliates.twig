@@ -26,22 +26,22 @@
       </div>
       <div class="aff-kpi">
         <div class="aff-kpi-label">{{ lang('affiliates.visits') }}</div>
-        <div class="aff-kpi-value tabular">{{ statistics['visits'] }}</div>
+        <div class="aff-kpi-value">{{ statistics['visits'] }}</div>
         <svg class="aff-kpi-wm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
       </div>
       <div class="aff-kpi">
         <div class="aff-kpi-label">{{ lang('affiliates.registrations') }}</div>
-        <div class="aff-kpi-value tabular">{{ statistics['registrations'] }}</div>
+        <div class="aff-kpi-value">{{ statistics['registrations'] }}</div>
         <svg class="aff-kpi-wm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m16 11 2 2 4-4"/></svg>
       </div>
       <div class="aff-kpi">
         <div class="aff-kpi-label">{{ lang('affiliates.referrals') }}</div>
-        <div class="aff-kpi-value tabular">{{ statistics['referrals'] }}</div>
+        <div class="aff-kpi-value">{{ statistics['referrals'] }}</div>
         <svg class="aff-kpi-wm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       </div>
       <div class="aff-kpi">
         <div class="aff-kpi-label">{{ lang('affiliates.conversion_rate') }}</div>
-        <div class="aff-kpi-value tabular">{{ statistics['conversion_rate'] }}</div>
+        <div class="aff-kpi-value">{{ statistics['conversion_rate'] }}</div>
         <svg class="aff-kpi-wm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
       </div>
     </div>
@@ -50,8 +50,8 @@
     <div class="aff-row2">
       <div class="aff-reflink">
         <svg class="aff-wm-one aff-wm-one--reflink" viewBox="0 0 125 192" fill="#fff" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M75.5494 0H125L63.1868 62.1583H83.7912C85.2484 62.1583 86.646 62.7404 87.6764 63.7766C88.7068 64.8127 89.2857 66.2181 89.2857 67.6835V186.475C89.2857 187.94 88.7068 189.346 87.6764 190.382C86.646 191.418 85.2484 192 83.7912 192H45.3297C43.8724 192 42.4749 191.418 41.4445 190.382C40.414 189.346 39.8352 187.94 39.8352 186.475V75.9712H0L75.5494 0Z"/></svg>
-        <div class="aff-reflink-title">{{ lang('affiliates.referral_link') }}</div>
-        <p class="aff-reflink-sub">Share this link anywhere — Telegram, Discord, your site, your bio. Every signup is tagged to you forever.</p>
+        <h3 class="aff-reflink-title">{{ lang('affiliates.referral_link') }}</h3>
+        <p class="control-label">Share this link anywhere — Telegram, Discord, your site, your bio. Every signup is tagged to you forever.</p>
         <div class="aff-reflink-row">
           <input type="text" id="aff-referral-input" class="aff-reflink-input" value="{{ referral_link }}" readonly>
           <button type="button" class="aff-copy-btn" title="Copy link" onclick="
@@ -81,10 +81,10 @@
     </div>
 
     {# ── Referred users ── #}
-    <div class="subpage-card subpage-card--flush">
+    <div class="card card-body">
       <h3 class="card-head">Referred <b>Users</b></h3>
       <div class="aff-table-wrap">
-        <table class="aff-table {% if site['rtl'] %}rtl-table{% endif %}">
+        <table class="table aff-table {% if site['rtl'] %}rtl-table{% endif %}">
           <thead>
             <tr>
               <th>{{ lang('affiliates.user') }}</th>

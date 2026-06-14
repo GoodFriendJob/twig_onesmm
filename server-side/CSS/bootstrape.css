@@ -2320,32 +2320,6 @@
        text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;
    }
    
-   .aff-kpi-grid {
-       display: grid;
-       grid-template-columns: repeat(3, 1fr);
-       gap: 16px;
-       margin-bottom: 20px;
-   }
-   .aff-kpi {
-       background: var(--bg-1); border: 1px solid var(--line);
-       border-radius: var(--radius-lg); padding: 22px 24px;
-       box-shadow: var(--shadow-1);
-   }
-   .aff-kpi-label {
-       font-size: 12px; font-weight: 500; color: var(--ink-3);
-       text-transform: uppercase; letter-spacing: 0.05em;
-       margin-bottom: 10px;
-   }
-   .aff-kpi-value {
-       font-size: 30px; font-weight: 600; color: var(--ink-1);
-       letter-spacing: -0.02em; line-height: 1.1;
-   }
-   .aff-kpi-accent {
-       background: linear-gradient(135deg, #2962FF 0%, #1c4dd9 100%);
-       border-color: transparent; color: #fff;
-   }
-   .aff-kpi-accent .aff-kpi-label { color: rgba(255,255,255,0.75); }
-   .aff-kpi-accent .aff-kpi-value { color: #fff; }
    .aff-payout-btn {
        margin-top: 14px;
        display: inline-flex; align-items: center; gap: 6px;

@@ -261,7 +261,7 @@
             {% for category in serviceCategoryList %}
               {% if category['name'] %}
                 <tr class="services-cat-row" data-filter-table-category-id="{{ category.id }}">
-                  <td colspan="100%">
+                  <td colspan="7">
                     <div class="services-cat-head">
                       {% set _cn = category['name']|lower %}
                       {% if 'instagram' in _cn %}
@@ -359,7 +359,7 @@
                 </tr>
                 {% if serviceDescription and service['description'] %}
                   <tr data-filter-table-category-id="{{ category.id }}" class="visible-xs visible-sm service-description-mobile">
-                    <td colspan="100%">{{ service['description'] }}</td>
+                    <td colspan="7">{{ service['description'] }}</td>
                   </tr>
                 {% endif %}
               {% endfor %}

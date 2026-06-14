@@ -13,7 +13,7 @@
   <div class="subpage-body">
 
     {# ── Need support? ── #}
-    <div class="subpage-card">
+    <div class="card card-body">
       <h3 class="card-head">Need <b>Support?</b></h3>
       <div class="tk-actions">
         <button type="button" class="tk-btn tk-btn--new" id="tk-new-toggle">New Ticket
@@ -33,7 +33,7 @@
     </div>
 
     {# ── New ticket form (toggled) ── #}
-    <div class="subpage-card tk-form-card" id="tk-form-card" hidden>
+    <div class="card card-body" id="tk-form-card" hidden>
       <h3 class="card-head">New <b>Ticket</b></h3>
       <form method="post" action="" id="ticketsend" class="tk-form {% if site['rtl'] %}rtl-form{% endif %}">
         <div class="alert alert-dismissible alert-danger ticket-danger {% if site['rtl'] %}rtl-alert{% endif %}" style="display:none">
@@ -81,17 +81,15 @@
     </div>
 
     {# ── Your tickets ── #}
-    <div class="subpage-card subpage-card--flush">
-      <div class="tk-list-head">
-        <h3 class="card-head">Your <b>Tickets</b></h3>
-        <form action="{{ page['url'] }}" method="get" class="tk-search">
-          <div class="tk-search-input">
-            <input type="text" name="search" value="{{ search }}" placeholder="{{ lang('general.search.placeholder') }}">
-            <svg class="tk-search-ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          </div>
-          <button type="submit" class="tk-search-go" aria-label="Search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
-        </form>
-      </div>
+    <div class="card card-body">
+      <h3 class="card-head">Your <b>Tickets</b></h3>
+      <form action="{{ page['url'] }}" method="get" class="tk-search">
+        <div class="tk-search-input">
+          <input type="text" name="search" value="{{ search }}" placeholder="{{ lang('general.search.placeholder') }}">
+          <svg class="tk-search-ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </div>
+        <button type="submit" class="tk-search-go" aria-label="Search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </form>
 
       <div class="tk-table-wrap">
         <table class="tk-table {% if site['rtl'] %}rtl-table{% endif %}">
